@@ -97,6 +97,9 @@ const URL = {
     userLogin: "/user/login",
     userLoginStatus: "/user/loginstatus",
     userLogout:"/user/logout",
-    getGeoPopular:"/geodata/populardata"
+    getGeoPopular:"/geodata/populardata",
+    getPaperNew:"/studentpaper/selectnew",
+    getJournalNew:"/academicpaper/selectnew",
+    getLectureNew:"/lecture/selectnew",
 };
 export default URL;

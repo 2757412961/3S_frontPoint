@@ -74,7 +74,6 @@ export default {
   name: "managerUser",
   data() {
     return {
-      dialoguserVisible:false,
       inputusers:'',
       inputvalue:'',
       totalCount:'',

@@ -26,18 +26,19 @@
 
         <div style="padding-top: 80%">
           <div style="text-align:center;padding-bottom: 20px" >
-            <img src="../../assets/timg.jpg" height="100" width="100"/>
+            <img id="userAvatar" src="../../assets/timg.jpg" height="100" width="100" />
           </div>
           <div style="left: 15%;padding-left: 10%;">
-            <table border="0" class="manager-font" cellspacing="20">
+            <table border="0" class="manager-font" cellspacing="15">
               <tr>
                 <td>ID:</td>
-                <td id="userid">200</td>
+                <td id="userid">null</td>
               </tr>
               <tr>
                 <td>权限:</td>
-                <td id="userrole">500</td>
+                <td id="userrole">null</td>
               </tr>
+              <el-button type="success" icon="el-icon-info" @click="getUsersInfo">个人资料</el-button>
             </table>
           </div>
         </div>
@@ -55,6 +56,42 @@
         <p style="color: #ffffff;margin-bottom: 0;display: inline-block">版权所有Copyright © 浙江大学地球科学学院</p>
       </div>
     </el-footer>
+<!--    用户信息详情弹窗-->
+
+      <el-dialog
+              title="用户详情"
+              :visible.sync="dialogUserInfoVisible"
+              width="60%">
+        <div style="text-align:center;">
+          <table border="0" class="dialog-font" cellspacing="30" :data="userTableData">
+            <tr>
+              <td>姓名:</td>
+              <td id="name"></td>
+              <td>电话:</td>
+              <td id="phone"></td>
+            </tr>
+            <tr>
+              <td>邮箱:</td>
+              <td id="email"></td>
+              <td>国家:</td>
+              <td id="COUNTRY"></td>
+            </tr>
+            <tr>
+              <td>所属组织:</td>
+              <td id="NSTITUTE" ></td>
+              <td>组织类型:</td>
+              <td id="INSTITUTETYPE"></td>
+            </tr>
+            <tr>
+              <td>领域:</td>
+              <td id="FIELD"></td>
+              <td>用途</td>
+              <td id="PURPOSE"></td>
+            </tr>
+          </table>
+        </div>
+      </el-dialog>
+
 
     </el-container>
 
@@ -64,19 +101,23 @@
 
 
     export default {
-        name: "manager",
-        components: {
+      name: "manager",
+      components: {
 
         },
         data() {
             return {
-
+              avatarURL:"",
+              dialogUserInfoVisible:false,
+              userTableData:{}
             }
         },
       mounted() {
         console.log("mounted")
         this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
         this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
+        this.avatarURL=JSON.parse(sessionStorage.user).icon
+        document.getElementById("userAvatar").src=this.avatarURL
         document.getElementById("userid").innerText=this.$store.getters.username
         document.getElementById("userrole").innerText=this.$store.getters.role
         if(this.$store.getters.role=='manager'){
@@ -113,7 +154,73 @@
           testfuc(){
             document.getElementById("logbutton").style.display='none'
             document.getElementById("userbutton").style.display='none'
-          }
+          },
+          getUsersInfo()
+          {
+            let that=this;
+            that.dialogUserInfoVisible = true
+            let userName=this.$store.getters.username
+            let userSearchURL=that.$URL.searchUsersByName+userName
+            that.$axios.get(userSearchURL,"").then(
+                      res => {
+                        if (res.code == 1002){
+                          that.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                          });
+                        }
+                        else if(res.code == 200){
+                          that.$message({
+                            message: "查询成功",
+                            type: 'success'
+                          });
+                          let userInfo={
+                            id: res.body.id,
+                            name: res.body.name,
+                            phone: res.body.phone,
+                            email:res.body.email,
+                            userPrivileges:res.body.role,
+                          }
+                          document.getElementById("name").innerText=res.body.name
+                          try{
+                            document.getElementById("phone").innerText=res.body.phone;
+                          }catch(err){
+                            document.getElementById("phone").innerText='';
+                          }
+                          try{
+                            document.getElementById("email").innerText=res.body.email;
+                          }catch(err){
+                            document.getElementById("email").innerText='';
+                          }
+                          try{
+                            document.getElementById("COUNTRY").innerText=res.body.country;
+                          }catch(err){
+                            document.getElementById("COUNTRY").innerText='';
+                          }
+                          try{
+                            document.getElementById("NSTITUTE").innerText=res.body.institute;
+                          }catch(err){
+                            document.getElementById("NSTITUTE").innerText='';
+                          }
+                          try{
+                            document.getElementById("INSTITUTETYPE").innerText=res.body.institutetype;
+                          }catch(err){
+                            document.getElementById("INSTITUTETYPE").innerText='';
+                          }
+                          try{
+                            document.getElementById("FIELD").innerText=res.body.field;
+                          }catch(err){
+                            document.getElementById("FIELD").innerText='';
+                          }
+                          try{
+                            document.getElementById("PURPOSE").innerText=res.body.purpose;
+                          }catch(err){
+                            document.getElementById("PURPOSE").innerText='';
+                          }
+                        }
+                      }
+              )
+          },
         }
     }
 </script>
@@ -135,5 +242,12 @@
   color: white;
   font-size: 20px;
 }
+.dialog-font{
+  color: #000000;
+  font-size: 20px;
+}
+  td{
+    width:400px
+  }
 
 </style>

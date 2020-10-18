@@ -74,12 +74,17 @@
             }
         },
       mounted() {
-          console.log("mounted")
+        console.log("mounted")
+        this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
+        this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
         document.getElementById("userid").innerText=this.$store.getters.username
         document.getElementById("userrole").innerText=this.$store.getters.role
         if(this.$store.getters.role=='manager'){
           document.getElementById("logbutton").style.display='block'
           document.getElementById("userbutton").style.display='block'
+        }
+        else if(this.$store.getters.role=='visitor'){
+          this.$router.push('/index')
         }
         else {
           document.getElementById("logbutton").style.display='none'

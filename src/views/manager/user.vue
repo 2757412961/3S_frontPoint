@@ -3,11 +3,14 @@
     <!--    条件选择器-->
     <div>
       <div class="managerSearchMenu" style="float: right">
-        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchUsers">搜索</el-button>
       </div>
-      <div class="managerSearchMenu">
-        <el-input v-model="inputvalue" placeholder="请输入用户名称"></el-input>
-      </div>
+      <el-form :model="userForm">
+        <div class="managerSearchMenu">
+          <el-input id="userSearchCriteria" v-model="userForm.userName" placeholder="请输入用户名称"></el-input>
+        </div>
+      </el-form>
+
     </div>
     <!--数据记录表格-->
     <div style="padding-top: 10px">
@@ -16,20 +19,26 @@
           stripe
           style="width: 100%">
         <el-table-column
-            prop="operateID"
+            prop="id"
             label="ID"
-            width="120"
+            width="350"
             align="center">
         </el-table-column>
         <el-table-column
-            prop="userName"
+            prop="name"
             label="用户名"
-            width="200"
+            width="100"
             align="center">
         </el-table-column>
         <el-table-column
-            prop="userInfo"
-            label="用户信息"
+                prop="phone"
+                label="电话"
+
+                align="center">
+        </el-table-column>
+        <el-table-column
+            prop="email"
+            label="邮箱"
             align="center">
         </el-table-column>
         <el-table-column
@@ -43,42 +52,20 @@
             label="操作"
             width="200"
             align="center">
+          <el-button type="warning" size="mini" @click="resetPassword">重置密码</el-button>
+          <el-button type="danger" size="mini" @click="deleteByUser">删除用户</el-button>
         </el-table-column>
       </el-table>
-    </div>
-    <!-- 页码选择器-->
-    <div class="block" style="position: absolute;right: 0%;bottom: 6%">
+      <!-- 页码选择器-->
       <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage1"
-          :page-size="12"
-          layout="total, prev, pager, next"
-          :total="120">
+              :current-page.sync="currentPage1"
+              :page-size="12"
+              layout="total, prev, pager, next"
+              :total="this.totalCount"
+              @current-change="ChangePage"
+              style="float: right">
       </el-pagination>
     </div>
-<!--    用户信息按钮-->
-    <div style="position:absolute;bottom: 45px">
-      <el-button type="success" icon="el-icon-info" circle @click="dialoguserVisible = true"></el-button>
-    </div>
-<!--    用户信息弹窗-->
-    <div>
-      <el-dialog
-          title="用户信息"
-          :visible.sync="dialoguserVisible"
-          width="30%">
-        <img src="../../assets/timg.jpg" height="101" width="96"/>
-        <div style="float: left;padding-left: 150px">
-          <p class="dataInfo">123</p>
-          <p class="dataInfo">123</p>
-          <p class="dataInfo">123</p>
-        </div>
-
-
-      </el-dialog>
-    </div>
-
-
   </el-main>
 </template>
 
@@ -88,30 +75,153 @@ export default {
   data() {
     return {
       dialoguserVisible:false,
+      inputusers:'',
       inputvalue:'',
+      totalCount:'',
+      activeName:'',
+      goodlist:{},
+      currentPage:{},
+      userForm:{
+        userName:''
+      },
       tableData:[
-        {
-          operateID: '123456',
-          userName: '张三',
-          userInfo: 'ASDFGHJKL',
-          userPrivileges:'普通用户',
-          operate:'shanchu',
-        },
-        {
-          operateID: '123456',
-          userName: '张三',
-          userInfo: 'ASDFGHJKL',
-          userPrivileges:'普通用户',
-          operate:'shanchu',
-        },
+
       ]
     };
   },
+  mounted() {
+    let that=this;
+    that.searchAll()
+  },
   methods: {
-    searchAllUsers() {
-      this.$axios.get(this.$URL.searchAllUsers).then(
+    ChangePage(currentPage)
+    {
+      let that=this;
+      //每次调整页码的时候获取到对应的页码,存入currentPage对象中
+      this.currentPage[this.activeName]=currentPage;
+      //调用后端接口，传入pagesize，当前页，当前类别，通过refresh函数实现
+      that.searchAll(currentPage)
+    },
 
-      );
+    searchAll(currentPage=1){
+      let that=this;
+      let pageNo=currentPage
+      let needURL=that.$URL.searchAllUsers+"?pageNo="+pageNo+"&pageSize=12"
+      that.$axios.get(needURL,"").then(
+              res => {
+                if (res.code == 1002){
+                  that.$message({
+                    message: "查询用户失败",
+                    type: 'warning'
+                  });
+                }
+                else if(res.code == 200){
+                  that.$message({
+                    message: "查询用户成功",
+                    type: 'success'
+                  });
+
+                  this.totalCount=res.body.totalCount
+
+                  let getlist=res.body.result
+                  that.tableData.length=0
+                  for (let i = 0; i < getlist.length; i++) {
+                    let userInfoJson=getlist[i]
+                    let userInfo={
+                      id: userInfoJson.id,
+                      name: userInfoJson.name,
+                      phone: userInfoJson.phone,
+                      email:userInfoJson.email,
+                      userPrivileges:userInfoJson.role,
+                    }
+                    that.tableData.push(userInfo)
+                  }
+                }
+              }
+      )
+    },
+
+    searchUsers()
+    {
+      let that=this;
+      let userName=document.getElementById('userSearchCriteria').value
+      if (userName==''){
+        that.tableData.length=0
+        that.searchAll()
+      }else{
+        let userSearchURL=that.$URL.searchUsersByName+userName
+        that.$axios.get(userSearchURL,"").then(
+                res => {
+                  if (res.code == 1002){
+                    that.$message({
+                      message: "查询失败：用户不存在",
+                      type: 'warning'
+                    });
+                  }
+                  else if(res.code == 200){
+                    that.$message({
+                      message: "查询成功",
+                      type: 'success'
+                    });
+                    let userInfo={
+                      id: res.body.id,
+                      name: res.body.name,
+                      phone: res.body.phone,
+                      email:res.body.email,
+                      userPrivileges:res.body.role,
+                    }
+                    that.tableData.length=0
+                    that.tableData.push(userInfo)
+                  }
+                }
+        )
+      }
+    },
+  deleteByUser(){
+    let that=this;
+    let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
+    console.log(userId)
+    that.$axios.remove(that.$URL.deleteUserById+userId,"").then(
+            res => {
+              if (res.code == 1002){
+                that.$message({
+                  message: "删除失败",
+                  type: 'warning'
+                });
+              }
+              else if(res.code == 200){
+                that.$message({
+                  message: "删除成功",
+                  type: 'success'
+                })
+                that.tableData.length=0
+                that.searchAll()
+              }
+            }
+    )
+
+
+  },
+    resetPassword(){
+      let that=this;
+      let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
+      let resetParams={id: userId, password:edu123456}
+      that.$axios.post(that.$URL.updateUserInfo,resetParams).then(
+              res => {
+                if (res.code == 9002){
+                  that.$message({
+                    message: "重置失败",
+                    type: 'warning'
+                  });
+                }
+                else if(res.code == 200){
+                  that.$message({
+                    message: "重置成功",
+                    type: 'success'
+                  })
+                }
+              }
+      )
     }
   },
 }

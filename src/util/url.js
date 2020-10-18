@@ -83,6 +83,8 @@ const URL = {
     addMapUrl: '/tile/gttileservice/setOpt/',
     getBands: "/tile/gttileservice/getbands/",
 
-    getmapService:"mapservice/allselect"
+    getmapService:"mapservice/allselect",
+    baseUrl:'http://10.79.231.81',
+    getEduCasesUrl: "/teachModel/allselect"
 };
 export default URL;

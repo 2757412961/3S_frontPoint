@@ -872,8 +872,8 @@
                                 params=JSON.parse(p);
                             }
                             //解析参数
-                            let modelin=0;
-                            let modelout=0;
+                            let modelin=-1;
+                            let modelout=-1;
                             let myparams=[];
                             for(let item of params)
                             {

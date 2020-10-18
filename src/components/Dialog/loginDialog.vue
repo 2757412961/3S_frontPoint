@@ -103,18 +103,16 @@ export default {
                   });
                   that.$refs.ruleForm.resetFields();
                   that.logining = false;
+                } else if (res.code == 1002) {
+                  that.$refs.ruleForm.resetFields();
+                  that.$message({
+                    message: "该用户不存在",
+                    type: 'error'
+                  });
+                  that.logining = false;
                 }
               }
-          ).catch(err => {
-            if (err.data.code == 1002) {
-              that.$refs.ruleForm.resetFields();
-              that.$message({
-                message: "该用户不存在",
-                type: 'error'
-              });
-              that.logining = false;
-            }
-          });
+          );
         }
       });
     },

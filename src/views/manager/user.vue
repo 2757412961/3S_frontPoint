@@ -202,7 +202,7 @@
       resetPassword(){
         let that=this;
         let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
-        let resetParams={id: userId, password:edu123456}
+        let resetParams={id: userId, password:123456}
         that.$axios.post(that.$URL.updateUserInfo,resetParams).then(
                 res => {
                   if (res.code == 9002){
@@ -214,6 +214,26 @@
                   else if(res.code == 200){
                     that.$message({
                       message: "重置成功",
+                      type: 'success'
+                    })
+                  }
+                }
+        )
+
+        let timestamp = (new Date()).getTime();
+        let logParams = {actid:this.$store.getters.username , role:this.$store.getters.role,time:timestamp,tablename:'user',objectid:userId,type:'修改'};
+        console.log(logParams)
+        that.$axios.put(that.$URL.addLog,logParams).then(
+                res => {
+                  if (res.code == 9002){
+                    that.$message({
+                      message: "写入失败",
+                      type: 'warning'
+                    });
+                  }
+                  else if(res.code == 200){
+                    that.$message({
+                      message: "写入成功",
                       type: 'success'
                     })
                   }

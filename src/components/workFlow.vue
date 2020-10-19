@@ -74,7 +74,7 @@
                        :style="{'color':defaultColor}">清空</el-button>
         </div>
         <modelParams></modelParams>
-        <dagSave @refreshDags="refreshWfs"></dagSave>
+        <dagSave @refreshDags="refreshWfs" @dagSaveback="saveDagback(arguments)"></dagSave>
         <workflowInfo></workflowInfo>
 
     </div>
@@ -337,9 +337,64 @@
             this.refreshWfs();
         },
         methods: {
+            saveDagback(args)
+            {
+                debugger;
+                 this.dagName=args[0];
+                 this.dagDescription=args[1];
+            },
             Run()
             {
+                console.log(JSON.stringify({
+                    name:this.dagName,
+                        description:this.dagDescription,
+                    connections:this.Links,
+                    nodes:this.NodesInfo,
+                    style:JSON.stringify({
+                    'nodes':this.Nodes,
+                    'nodesLink':this.NodesLink,
+                    'nodesInfo':this.NodesInfo
+                })
+                }));
+                 if(this.dagName==='') this.$message.warning('请先保存当前工作流');
+                 else
+                 {
+                     this.$axios.post(this.$platfromUrl.saveDagUrl,{
+                         name:this.dagName,
+                         description:this.dagDescription,
+                         connections:this.links,
+                         nodes:this.nodes,
+                         style:JSON.stringify({
+                             'nodes':this.Nodes,
+                             'nodesLink':this.NodesLink,
+                             'nodesInfo':this.NodesInfo
+                         })
+                     }).then(res=>{
+                         debugger;
+                         console.log(res);
+                         if(res.code===200)
+                         {
+                             this.$message.success('为您更新当前工作流');
+                             this.$axios.post(this.$platfromUrl.runDag,{
+                                 name:this.dagName,
+                                 description:this.dagDescription,
+                                 connections:this.Links,
+                                 nodes:this.NodesInfo,
+                                 style:JSON.stringify({
+                                     'nodes':this.Nodes,
+                                     'nodesLink':this.NodesLink,
+                                     'nodesInfo':this.NodesInfo
+                                 })
+                             }).then(res=>{
 
+                             }).catch(err=>{})
+                         }
+                         else
+                         {
+                             this.$message.warning('保存失败');
+                         }
+                     }).catch(err=>{})
+                 }
             },
             searchWf()
             {
@@ -372,6 +427,8 @@
                       debugger;
                       if(res.code===200)
                       {
+                          this.dagName=res.body.name;
+                          this.dagDescription=res.body.description;
                           let styleJson=JSON.parse(res.body.style);
                           that.Nodes=styleJson.nodes;
                           that.NodesInfo=styleJson.nodesInfo;
@@ -899,7 +956,7 @@
                                     'in':item.in,'out':item.out,'option':item.option?item.option.split(','):''})
                             }
                             console.log(myparams);
-                            this.NodesInfo.push({'name':data,'in':modelin+1,'out':modelout+1,'params':myparams});
+                            this.NodesInfo.push({'taskName':data+'Task','modelId':data,'in':modelin+1,'out':modelout+1,'params':myparams});
                             console.log(this.NodesInfo);
                             console.log(that.NodesLink);
                             myChart.setOption({

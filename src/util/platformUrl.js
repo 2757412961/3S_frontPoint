@@ -16,6 +16,8 @@ const platformUrl={
    deleteDagbyName:'workflow/dags/delete/',
    getDagbyName:'workflow/dags/',
    searchDagbyName:'workflow/dags/search/',
+   runDag:'workflow/tasks/submit',
+
    workFlowTaskList:'/workflow/tasks/all?pageSize=',
    workFlowTask:'/workflow/tasks/',
    workFlowTaskDelete:'/workflow/tasks/delete/'

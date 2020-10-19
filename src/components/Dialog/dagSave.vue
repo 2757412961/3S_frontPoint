@@ -53,6 +53,7 @@
                   console.log(res);
                   if(res.code===200)
                   {
+                      this.$emit('dagSaveback',this.dagName,this.dagDescription);
                       this.$message.success(res.message);
                       this.$emit('refreshDags')
                   }

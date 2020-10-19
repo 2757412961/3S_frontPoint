@@ -228,7 +228,7 @@
             downloadResult(index,row){
                 console.log(row.name);
                 debugger;
-                this.$axios.get(this.$platfromUrl.getDagbyName+'zjupanghu').then(res=>{
+                this.$axios.get(this.$platfromUrl.getDagbyName+row.name).then(res=>{
                     debugger;
                     let style=JSON.parse(res.body.style);
                     let nodesInfo=style.nodesInfo;
@@ -244,7 +244,7 @@
                         }
                     }
                     console.log(outputlist);
-                    outputlist=['/data/LCRA.tsv','/result/clipR.tsv'];
+                    //outputlist=['/data/LCRA.tsv','/result/clipR.tsv'];
                     axios.post(this.$platfromUrl.downloadOutput,{'fileList':outputlist},{
                         headers:{
                             'Content-Type':'text/plain'

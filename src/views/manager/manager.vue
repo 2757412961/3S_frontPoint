@@ -107,7 +107,9 @@
         },
         data() {
             return {
-
+              name: JSON.parse(sessionStorage.user).name,
+              role: JSON.parse(sessionStorage.user).role,
+              isManager: false
             }
         },
       mounted() {

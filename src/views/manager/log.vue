@@ -37,7 +37,7 @@
         <el-table-column
                 prop="id"
                 label="ID"
-                width="120"
+                width="350"
                 align="center">
         </el-table-column>
         <el-table-column
@@ -49,18 +49,18 @@
         <el-table-column
                 prop="dataID"
                 label="资源名称"
+                width="350"
                 align="center">
         </el-table-column>
         <el-table-column
                 prop="operateName"
                 label="操作人ID"
-                width="200"
+                width="350"
                 align="center">
         </el-table-column>
         <el-table-column
                 prop="operateDate"
                 label="操作时间"
-                width="200"
                 align="center">
         </el-table-column>
       </el-table>
@@ -78,8 +78,6 @@
               style="float: right">
       </el-pagination>
     </div>
-
-
   </el-main>
 </template>
 
@@ -103,7 +101,12 @@
         typevalue:'',
         inputvalue:'',
         totalCount:'',
+        currentPage:{},
       };
+    },
+    mounted() {
+      let that=this;
+      that.searchAll()
     },
     methods:{
       ChangePage(currentPage)
@@ -119,7 +122,7 @@
         let that=this;
         let pageNo=currentPage
         //searchAllLog
-        let needURL=that.$URL.searchAllGeoData+"?pageNo="+pageNo+"&pageSize=12"
+        let needURL=that.$URL.searchAllLog+"?pageNo="+pageNo+"&pageSize=12"
         that.$axios.get(needURL,"").then(
                 res => {
                   if (res.code == 1002){
@@ -140,12 +143,13 @@
                     that.tableData.length=0
                     for (let i = 0; i < getlist.length; i++) {
                       let userInfoJson=getlist[i]
+                      console.log(userInfoJson)
                       let userInfo={
                         id: userInfoJson.id,
-                        TYPE: userInfoJson.TYPE,
-                        dataID: userInfoJson.dataID,
-                        email:userInfoJson.email,
-                        userPrivileges:userInfoJson.role,
+                        TYPE: userInfoJson.type,
+                        dataID: userInfoJson.objectId,
+                        operateName:userInfoJson.actId,
+                        operateDate:userInfoJson.time,
                       }
                       that.tableData.push(userInfo)
                     }

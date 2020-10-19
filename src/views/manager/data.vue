@@ -81,7 +81,6 @@
                         label="操作"
                         align="center">
                     <el-button type="success" size="mini" @click="getDetails">查看</el-button>
-                    <el-button type="warning" size="mini" @click="resetPassword">修改</el-button>
                     <el-button type="danger" size="mini" @click="deleteData">删除</el-button>
                 </el-table-column>
             </el-table>

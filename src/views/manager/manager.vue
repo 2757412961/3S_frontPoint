@@ -17,10 +17,10 @@
           <el-button type="primary" icon="el-icon-folder" @click="goTomanager">用户数据管理</el-button>
         </div>
         <div id='logbutton' class="asideButton">
-          <el-button type="primary" icon="el-icon-s-order" @click="goTolog">平台数据日志</el-button>
+          <el-button type="primary" icon="el-icon-s-order" @click="goTolog" v-if="isManager">平台数据日志</el-button>
         </div>
         <div id='userbutton' class="asideButton">
-          <el-button type="primary" icon="el-icon-s-custom" @click="goTouser">平台用户管理</el-button>
+          <el-button type="primary" icon="el-icon-s-custom" @click="goTouser" v-if="isManager">平台用户管理</el-button>
         </div>
 
 
@@ -69,10 +69,14 @@ export default {
   data() {
     return {
       name: JSON.parse(sessionStorage.getItem('user')).name,
-      role: JSON.parse(sessionStorage.getItem('user')).role
+      role: JSON.parse(sessionStorage.getItem('user')).role,
+      isManager: false,
     }
   },
   mounted() {
+    if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
+      this.isManager=true;
+    }
     // console.log("mounted")
     // this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
     // this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)

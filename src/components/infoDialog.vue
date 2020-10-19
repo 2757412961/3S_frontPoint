@@ -8,7 +8,7 @@
             <h2 style="text-align:center;">{{infoData.title}}</h2>
             <h3 style="text-align:center;">{{infoData.englishTitle}}</h3>
             <p style="text-align:center;font-size: 16px;margin-top: 5px;">{{infoData.author}}</p>
-            <p class="infoContent">
+            <p class="infoContent" v-if="infoData.abstract_">
                 <span style="font-weight: bold">摘要：</span>
                 <span class="abstractCut" id="ac">{{infoData.abstract_ | ellipsis}}</span>
                 <el-button v-if="infoData.abstract_.length > 300" @click="controlLength" type="text" id="cl">查看更多</el-button>

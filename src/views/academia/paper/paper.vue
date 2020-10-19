@@ -27,6 +27,10 @@
             </div>
             <!-- 右侧查询结果区域 -->
             <pages ref="pages" :tableData="tableData"></pages>
+            <!--分页-->
+            <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
+            </el-pagination>
         </el-main>
     </el-container>
 </template>
@@ -41,6 +45,8 @@
                 beforeInput: '',
                 input: '',
                 dataLength: 0,
+                currentPage:1,
+                pageSize:6,
                 checked: ['学士论文', '硕士论文', '博士论文'],
                 checkGroup: ['学士论文', '硕士论文', '博士论文'],
                 timeCategory: [],
@@ -168,36 +174,36 @@
                 this.input=''
                 this.tableData=this.selectAll(this)
             },
+            //换页
+            paginationCurrentChange(val){
+                this.currentPage=val
+                this.tableData=this.selectAll(this)
+                this.$refs.pages.currentPage=this.currentPage
+            },
             // 按照输入框内容进行搜索
             searchByName() {
                 let tag=this.beforeInput
                 let value=this.input
-                this.$refs.pages.currentPage=1
 
             },
             selectAll(that){
-                that.$refs.pages.currentPage=1
-                that.$axios.get(that.$URL.paperAllSelect).then(
+                that.$axios.get(that.$URL.paperAllSelect+'?pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
                     res=>{
-                        that.dataLength=res.body.totalCount
-                        that.$axios.get(that.$URL.paperAllSelect+'?pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if(res.code==200){
-                                    that.tableData=res.body.result
-                                    for(let i in that.tableData){
-                                        if(that.tableData[i].type=="bachelor"){
-                                            that.tableData[i].type="学士论文"
-                                        }
-                                        else if(that.tableData[i].type=="master"){
-                                            that.tableData[i].type="硕士论文"
-                                        }
-                                        else{
-                                            that.tableData[i].type="博士论文"
-                                        }
-                                    }
+                        if(res.code==200){
+                            that.dataLength=res.body.totalCount
+                            that.tableData=res.body.result
+                            for(let i in that.tableData){
+                                if(that.tableData[i].type=="bachelor"){
+                                    that.tableData[i].type="学士论文"
+                                }
+                                else if(that.tableData[i].type=="master"){
+                                    that.tableData[i].type="硕士论文"
+                                }
+                                else{
+                                    that.tableData[i].type="博士论文"
                                 }
                             }
-                        ).catch(err=>{})
+                        }
                     }
                 ).catch(err=>{})
             }

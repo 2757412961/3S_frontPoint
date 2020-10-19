@@ -27,6 +27,10 @@
             </div>
             <!-- 右侧查询结果区域 -->
             <journalList ref="journalList" :tableData="tableData"></journalList>
+            <!--分页-->
+            <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
+            </el-pagination>
         </el-main>
     </el-container>
 </template>
@@ -41,6 +45,8 @@
                 beforeInput: '',
                 input: '',
                 dataLength: 0,
+                pageSize:6,
+                currentPage:1,
                 checked: ['期刊论文', '会议论文'],
                 checkGroup: ['期刊论文', '会议论文'],
                 otableData:[{
@@ -114,33 +120,33 @@
                 this.input=''
                 this.tableData=this.selectAll(this)
             },
+            //换页
+            paginationCurrentChange(val){
+                this.currentPage=val
+                this.tableData=this.selectAll(this)
+                this.$refs.journalList.currentPage=this.currentPage
+            },
             // 按照输入框内容进行搜索
             searchByName() {
                 let tag=this.beforeInput
                 let value=this.input
-                this.$refs.journalList.currentPage=1
 
             },
             selectAll(that){
-                that.$refs.journalList.currentPage=1
-                that.$axios.get(that.$URL.journalAllSelect).then(
+                that.$axios.get(that.$URL.journalAllSelect+'?pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
                     res=>{
-                        that.dataLength=res.body.totalCount
-                        that.$axios.get(that.$URL.journalAllSelect+'?pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if(res.code==200){
-                                    that.tableData=res.body.result
-                                    for(let i in that.tableData){
-                                        if(that.tableData[i].type=="conference"){
-                                            that.tableData[i].type="会议论文"
-                                        }
-                                        else{
-                                            that.tableData[i].type="期刊论文"
-                                        }
-                                    }
+                        if(res.code==200){
+                            that.dataLength=res.body.totalCount
+                            that.tableData=res.body.result
+                            for(let i in that.tableData){
+                                if(that.tableData[i].type=="conference"){
+                                    that.tableData[i].type="会议论文"
+                                }
+                                else{
+                                    that.tableData[i].type="期刊论文"
                                 }
                             }
-                        ).catch(err=>{})
+                        }
                     }
                 ).catch(err=>{})
             }

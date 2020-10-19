@@ -1,13 +1,13 @@
 <template>
-    <div class="pageContent" v-if="tableData">
+    <div class="pageContent">
         <!--表格内容-->
-        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%"
-        :default-sort = "{prop: 'year', order: 'descending'}" @sort-change="tableSortChange">
+        <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column prop="index" type="index" width="40" align="center" :index="indexPageChange"></el-table-column>
-            <el-table-column prop="title" label="标题" :sortable="'custom'" header-align="center" align="left"></el-table-column>
+            <el-table-column prop="title" label="标题" header-align="center" align="left"></el-table-column>
             <el-table-column prop="author" label="作者" width="100" align="center"></el-table-column>
+            <el-table-column prop="tertiaryAuthor" label="指导老师" width="100" align="center"></el-table-column>
             <el-table-column prop="publisher" label="所在单位/学校" width="200" align="center"></el-table-column>
-            <el-table-column prop="year" label="发表年份" :sortable="'custom'" width="180" align="center"></el-table-column>
+            <el-table-column prop="year" label="发表年份" width="180" align="center"></el-table-column>
             <el-table-column prop="type" label="文章类型" width="100" align="center"></el-table-column>
             <el-table-column prop="info" label="操作" width="80" align="center">
                <template slot-scope="scope">
@@ -15,10 +15,6 @@
                </template>
             </el-table-column>
         </el-table>
-        <!--分页-->
-        <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
-            layout="total, prev, pager, next, jumper" :total="tableData.length" align="center">
-        </el-pagination>
         <infoDialog></infoDialog>
     </div>
 </template>
@@ -37,32 +33,6 @@ import infoDialog from './infoDialog'
             infoDialog
         },
         methods:{
-            //换页
-            paginationCurrentChange(val){
-                this.currentPage=val
-            },
-            //排序
-            tableSortChange(column){
-                console.log(column)
-                var fieldName=column.prop
-                var sortType=column.order
-                if(fieldName=="title"){
-                    if(sortType=="descending"){
-                        this.tableData=this.tableData.sort((a, b) => b[fieldName].localeCompare(a[fieldName]))
-                    }
-                    else{
-                        this.tableData=this.tableData.sort((a, b) => a[fieldName].localeCompare(b[fieldName]))
-                    }
-                }
-                else{
-                    if(sortType=="descending"){
-                        this.tableData=this.tableData.sort((a, b) => b[fieldName] - a[fieldName])
-                    }
-                    else{
-                        this.tableData=this.tableData.sort((a, b) => a[fieldName] - b[fieldName])
-                    }
-                }
-            },
             //分页序号再计算
             indexPageChange(index){
                 return index+1+(this.currentPage-1)*this.pageSize

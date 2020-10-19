@@ -26,6 +26,10 @@
             </div>
             <!-- 右侧查询结果区域 -->
             <lectureList ref="lectureList" :tableData="tableData"></lectureList>
+            <!--分页-->
+            <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
+                           layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
+            </el-pagination>
         </el-main>
     </el-container>
 </template>
@@ -40,6 +44,8 @@
                 beforeInput: '',
                 input: '',
                 dataLength: 0,
+                currentPage:1,
+                pageSize:6,
                 otableData: [{
                     name: '地科学术报告—兰州大学王鑫教授学术报告通知',
                     speaker: '王鑫 教授',
@@ -76,21 +82,21 @@
             searchByName() {
                 let tag=this.beforeInput
                 let value=this.input
-                this.$refs.lectureList.currentPage=1
 
             },
+            //换页
+            paginationCurrentChange(val){
+                this.currentPage=val
+                this.tableData=this.selectAll(this)
+                this.$refs.lectureList.currentPage=this.currentPage
+            },
             selectAll(that){
-                that.$refs.lectureList.currentPage=1
-                that.$axios.get(that.$URL.lectureAllSelect).then(
+                that.$axios.get(that.$URL.lectureAllSelect+'?pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
                     res=>{
-                        that.dataLength=res.body.totalCount
-                        that.$axios.get(that.$URL.lectureAllSelect+'?pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if(res.code==200){
-                                    that.tableData=res.body.result
-                                }
-                            }
-                        ).catch(err=>{})
+                        if(res.code==200){
+                            that.dataLength=res.body.totalCount
+                            that.tableData=res.body.result
+                        }
                     }
                 ).catch(err=>{})
             }

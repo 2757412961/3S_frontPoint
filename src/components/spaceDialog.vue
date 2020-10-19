@@ -7,7 +7,7 @@
             </div>
             <h2 style="text-align:center;">{{spaceData.oldName}}</h2>
             <h3 style="text-align:center;">{{spaceData.newName}}</h3>
-            <p class="spaceContent">
+            <p class="spaceContent" v-if="spaceData.abstractInfo">
                 <span style="font-weight: bold">摘要：</span>
                 <span class="abstractCut" id="ac">{{spaceData.abstractInfo | ellipsis}}</span>
                 <el-button v-if="spaceData.abstractInfo.length > 300" @click="controlLength" type="text" id="cl">查看更多</el-button>

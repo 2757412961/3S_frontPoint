@@ -4,7 +4,7 @@
             <el-aside width="260px">
                 <el-col>
                     <el-input placeholder="输入用户名查询上传的数据" prefix-icon="el-icon-search"
-                        @keyup.enter.native="searchByuserName"
+                        @keyup.enter.native="searchByUserName"
                         v-model="input">
                     </el-input>
                     <el-menu default-active="2" class="el-menu-vertical-demo" 
@@ -33,9 +33,13 @@
                         <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
                         <el-breadcrumb-item>空间数据</el-breadcrumb-item>
                     </el-breadcrumb>
-                    <el-button type="primary" style="margin-top: 10px">热门数据</el-button>
+                    <el-button type="primary" style="margin-top: 10px" @click="Popular">热门数据</el-button>
                 </div>
-                <spaceList ref="spaceList" :tableData="datalist"></spaceList>
+                <spaceList ref="spaceList" :tableData="tableData"></spaceList>
+                <!--分页-->
+                <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
+                               layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
+                </el-pagination>
             </el-main>
         </el-container>
     </div>
@@ -145,7 +149,9 @@
                     }
                 ],
                 dataLength: 0,
-                odatalist: [{
+                currentPage:1,
+                pageSize:6,
+                otableData: [{
                     title:'内蒙古植被NDVI变化趋势及影响因子数据集（2000-2015）',
                     uploader:'陈宽,潮洛濛',
                     time:'2020-08-01',
@@ -180,117 +186,156 @@
                     username:'zjh',
                     download_authority:'1'
                 }],
-                datalist:[],
+                tableData:[],
                 queryData:{
-                    "title": '',
-                    "type1": '',
-                    "type2": ''
+                    "type": 3,/*username-0 type2-1 type1-2 all-3 popular-4*/
+                    "value": ''
                 }
             }
         },
         methods: {
-            searchByuserName(){
-                let name=this.input
-                this.$refs.spaceList.currentPage=1
-                let that=this
-                that.$axios.get(that.$URL.userNameSelect+'?userName='+name).then(
-                    res=>{
-                        that.dataLength=res.body.totalCount
-                        that.$axios.get(that.$URL.userNameSelect+'?userName='+name+'&pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if (res.code == 200) {
-                                    that.datalist = res.body.result
-                                    for (let i in that.datalist) {
-                                        if (that.datalist[i].downloadAuthority) {
-                                            that.datalist[i].downloadAuthority = '可以下载'
-                                        } else {
-                                            that.datalist[i].downloadAuthority = '禁止下载'
-                                        }
-                                    }
-                                }
-                            }
-                        ).catch(err=>{})
-                    }
-                ).catch(err=>{})
-            },
-            filterByType2(type2,type1){
-                //console.log(type2,type1)
-                this.$refs.spaceList.currentPage=1
-                let that=this
-                that.$axios.get(that.$URL.bytype2Select+'?type='+type2).then(
-                    res=>{
-                        that.dataLength=res.body.totalCount
-                        debugger
-                        that.$axios.get(that.$URL.bytype2Select+'?type='+type2+'&pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if(res.code==200){
-                                    that.datalist=[]
-                                    for(let i in res.body.result) {
-                                        if (res.body.result[i].type1 == type1) {
-                                            that.datalist.push(res.body.result[i])
-                                        }
-                                    }
-                                    for(let i in that.datalist){
-                                        if(that.datalist[i].downloadAuthority){
-                                            that.datalist[i].downloadAuthority='可以下载'
-                                        }
-                                        else{
-                                            that.datalist[i].downloadAuthority='禁止下载'
-                                        }
-                                    }
-                                }
-                            }
-                        ).catch(err=>{})
-                    }
-                ).catch(err=>{})
-            },
-            filterByType1(type1){
-                this.$refs.spaceList.currentPage=1;
-                let that=this
-                if(type1=='全部资源'){
-                    this.$options.methods.selectAll(that)
+            //换页
+            paginationCurrentChange(val){
+                this.currentPage=val
+                this.$refs.spaceList.currentPage=this.currentPage
+                if(this.queryData.type==0){
+                    this.tableData=this.getSearchByUserName(this,this.queryData.value)
+                }
+                else if(this.queryData.type==1){
+                    let type2=this.queryData.value.split("|")[0]
+                    let type1=this.queryData.value.split("|")[1]
+                    this.tableData=this.getFilterByType2(this,type2,type1)
+                }
+                else if(this.queryData.type==2){
+                    this.tableData=this.getFilterByType1(this,this.queryData.value)
+                }
+                else if(this.queryData.type==3){
+                    this.tableData=this.selectAll(this)
                 }
                 else{
-                    that.$axios.get(that.$URL.bytype1Select+'?type='+type1).then(
-                        res=> {
-                            that.dataLength = res.body.totalCount
-                            that.$axios.get(that.$URL.bytype1Select + '?type=' + type1 + '&pageNo=1&pageSize=' + that.dataLength).then(
-                                res => {
-                                    if (res.code == 200) {
-                                        that.datalist = res.body.result
-                                        for (let i in that.datalist) {
-                                            if (that.datalist[i].downloadAuthority) {
-                                                that.datalist[i].downloadAuthority = '可以下载'
-                                            } else {
-                                                that.datalist[i].downloadAuthority = '禁止下载'
-                                            }
-                                        }
-                                    }
-                                }
-                            ).catch(err => {})
-                        }
-                    ).catch(err=>{})
+                    this.tableData=this.getPopular(this)
                 }
             },
-            selectAll(that){
-                that.$axios.get(that.$URL.geodataAllSelect).then(
+            searchByUserName() {
+                let name = this.input
+                this.currentPage = 1
+                this.$refs.spaceList.currentPage = 1
+                this.queryData.type=0
+                this.queryData.value=name
+                this.tableData=this.getSearchByUserName(this,name)
+            },
+            getSearchByUserName(that,name){
+                that.$axios.get(that.$URL.userNameSelect+'?userName='+name+'&pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
                     res=>{
-                        that.dataLength=res.body.totalCount
-                        that.$axios.get(that.$URL.geodataAllSelect+'?pageNo=1&pageSize='+that.dataLength).then(
-                            res=>{
-                                if(res.code==200){
-                                    that.datalist=res.body.result
-                                    for(let i in that.datalist){
-                                        if(that.datalist[i].downloadAuthority){
-                                            that.datalist[i].downloadAuthority='可以下载'
-                                        }
-                                        else{
-                                            that.datalist[i].downloadAuthority='禁止下载'
-                                        }
-                                    }
+                        if (res.code == 200) {
+                            that.dataLength=res.body.totalCount
+                            that.tableData = res.body.result
+                            for (let i in that.tableData) {
+                                if (that.tableData[i].downloadAuthority) {
+                                    that.tableData[i].downloadAuthority = '可以下载'
+                                } else {
+                                    that.tableData[i].downloadAuthority = '禁止下载'
                                 }
                             }
-                        ).catch(err=>{})
+                        }
+                    }
+                ).catch(err=>{})
+            },
+            filterByType2(type2,type1) {
+                this.currentPage = 1
+                this.$refs.spaceList.currentPage = 1
+                this.queryData.type=1
+                this.queryData.value=type2+"|"+type1
+                this.tableData=this.getFilterByType2(this,type2,type1)
+            },
+            getFilterByType2(that,type2,type1){
+                that.$axios.get(that.$URL.bytype2Select+'?type='+type2+'&pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
+                    res=>{
+                        if(res.code==200){
+                            that.dataLength=res.body.totalCount
+                            that.tableData=res.body.result
+                            for(let i in that.tableData){
+                                if(that.tableData[i].downloadAuthority){
+                                    that.tableData[i].downloadAuthority='可以下载'
+                                }
+                                else{
+                                    that.tableData[i].downloadAuthority='禁止下载'
+                                }
+                            }
+                        }
+                    }
+                ).catch(err=>{})
+            },
+            filterByType1(type1) {
+                this.currentPage = 1
+                this.$refs.spaceList.currentPage = 1;
+                if (type1 == '全部资源') {
+                    this.queryData.type=3
+                    this.queryData.value=''
+                    this.tableData=this.selectAll(this)
+                }
+                else{
+                    this.queryData.type=2
+                    this.queryData.value=type1
+                    this.tableData=this.getFilterByType1(this,type1)
+                }
+            },
+            getFilterByType1(that,type1){
+                that.$axios.get(that.$URL.bytype1Select+'?type='+type1+'&pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
+                    res => {
+                        if (res.code == 200) {
+                            that.dataLength = res.body.totalCount
+                            that.tableData = res.body.result
+                            for (let i in that.tableData) {
+                                if (that.tableData[i].downloadAuthority) {
+                                    that.tableData[i].downloadAuthority = '可以下载'
+                                } else {
+                                    that.tableData[i].downloadAuthority = '禁止下载'
+                                }
+                            }
+                        }
+                    }
+                ).catch(err => {})
+            },
+            selectAll(that){
+                that.$axios.get(that.$URL.geodataAllSelect+'?pageNo='+that.currentPage+'&pageSize='+that.pageSize).then(
+                    res=>{
+                        if(res.code==200){
+                            that.dataLength = res.body.totalCount
+                            that.tableData=res.body.result
+                            for(let i in that.tableData){
+                                if(that.tableData[i].downloadAuthority){
+                                    that.tableData[i].downloadAuthority='可以下载'
+                                }
+                                else{
+                                    that.tableData[i].downloadAuthority='禁止下载'
+                                }
+                            }
+                        }
+                    }
+                ).catch(err=>{})
+            },
+            Popular(){
+                this.currentPage = 1
+                this.$refs.spaceList.currentPage = 1
+                this.queryData.type=4
+                this.queryData.value=''
+                this.tableData=this.getPopular(this)
+            },
+            getPopular(that){
+                that.$axios.get(that.$URL.geoPopularSelect).then(
+                    res=>{
+                        if (res.code == 200) {
+                            that.tableData = res.body
+                            that.dataLength=that.tableData.length
+                            for (let i in that.tableData) {
+                                if (that.tableData[i].downloadAuthority) {
+                                    that.tableData[i].downloadAuthority = '可以下载'
+                                } else {
+                                    that.tableData[i].downloadAuthority = '禁止下载'
+                                }
+                            }
+                        }
                     }
                 ).catch(err=>{})
             }
@@ -299,7 +344,7 @@
             spaceList
         },
         mounted () {
-            this.datalist=this.selectAll(this)
+            this.tableData=this.selectAll(this)
         },
     }
 </script>

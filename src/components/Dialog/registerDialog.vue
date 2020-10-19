@@ -159,6 +159,7 @@
                                     that.$refs.ruleForm.resetFields();
                                     that.registering = false;
                                     that.registerDialogVisible = false;
+                                    sessionStorage.setItem('user', JSON.stringify(res.body));
                                 } else {
                                     debugger;
                                     that.$message({

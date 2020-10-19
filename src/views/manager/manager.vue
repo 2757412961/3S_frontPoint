@@ -74,7 +74,7 @@
             }
         },
       mounted() {
-          console.log("mounted")
+        console.log("mounted")
         document.getElementById("userid").innerText=this.$store.getters.username
         document.getElementById("userrole").innerText=this.$store.getters.role
         if(this.$store.getters.role=='manager'){
@@ -94,6 +94,7 @@
           },
           logout(){
             this.$store.commit('setRole','visitor')
+            sessionStorage.clear();
             this.$router.push('/index')
           },
           goTomanager(){

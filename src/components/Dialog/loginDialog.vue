@@ -79,7 +79,7 @@ export default {
                   that.logining = false;
                   that.loginDialogVisible = false;
                   sessionStorage.setItem('user', JSON.stringify(res.body));
-                  that.$router.push({path: '/index'});
+                  // this.$router.go({path: '/index'});
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
                   if(this.$store.getters.role=='visitor'){

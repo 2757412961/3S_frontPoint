@@ -72,7 +72,7 @@ export default {
               res => {
                 if (res.code == 200) {
                   that.$message({
-                    message: "用户登陆成功",
+                    message: "用户登录成功",
                     type: 'success'
                   });
                   that.$refs.ruleForm.resetFields();

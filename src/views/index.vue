@@ -19,6 +19,7 @@
                            style="margin-top: 16px; margin-left: 12px; float: right">登录
                 </el-button>
                 <loginDialog></loginDialog>
+                <verifyDialog></verifyDialog>
                 <!-- 注册按钮 -->
                 <el-button id="signin" size="mini" type="primary" plain @click="showRegisterDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">注册
@@ -49,6 +50,7 @@
     import menuBar2 from './menuBar2'
     import pageFooter from './pageFooter'
     import loginDialog from "../components/Dialog/loginDialog"
+    import verifyDialog from "../components/Dialog/verifyDialog";
     import registerDialog from "../components/Dialog/registerDialog"
 
     export default {
@@ -56,6 +58,7 @@
             menuBar2,
             pageFooter,
             loginDialog,
+            verifyDialog,
             registerDialog
         },
         data() {

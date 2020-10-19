@@ -1,14 +1,45 @@
 <template>
-
+<div>
     <iframe sandbox="allow-scripts allow-forms allow-same-origin"
-            src="http://10.79.231.81:8888/notebooks/classification_based_experience_2.ipynb"
-            height="640px" width="100%" align="center">
+            :src="filePath"
+            height="800px" width="100%" align="center">
     </iframe>
+    <el-button @click="Back">返回</el-button>
+</div>
+
 </template>
 
 <script>
     export default {
-        name: "jupyter"
+        name: "jupyter",
+        data(){
+            return {
+                visible:false,
+                filePath:"http://10.79.231.81:8888/notebooks/MetallogenicPred/Metallogenic%20Prediction.ipynb",
+                // http://10.79.231.81:8888/notebooks/MetallogenicPred/Metallogenic%20Prediction.ipynb
+                picPath:""
+            }
+        },
+        mounted() {
+           // console.log('jupyter');
+
+        },
+        methods:{
+            Back()
+            {
+                this.$emit('backto');
+            }
+        },
+        created() {
+            let that = this;
+            this.$Bus.$on('teachModelInfoJP',params=>{
+
+                that.filePath = params.filePath;
+                // that.picPath = params.picPath;
+
+
+            })
+        }
     }
 </script>
 

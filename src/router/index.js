@@ -16,11 +16,13 @@ import Journal from '../views/academia/journal/journal.vue'
 import Lecture from '../views/academia/lecture/lecture.vue'
 
 import onlineAnalysis from '../views/onlineAnalysis/onlineAnalysis.vue'
+import webTool from '../views/webTool.vue'
+import aboutUs from '../views/aboutUs.vue'
 
-
-import Markdown from "../views/education/markdown/markdown.vue";
+import Markdown from "../views/education/markdown/markdown.vue"
 import CodeOnline from '../views/education/codeonline/codeOnline.vue'
 import Jupyter from '../views/education/jupyter/jupyter.vue'
+import eduCases from "../views/education/eduCases.vue";
 
 export const userRouters = [
     {
@@ -92,7 +94,7 @@ export const userRouters = [
             title2:'WEB TOOL'
         },
         path: '/webTool',
-        component: Empty,
+        component: webTool,
         name: 'webTool',
         iconCls: 'el-icon-message',
     },
@@ -121,12 +123,22 @@ export const userRouters = [
             title: '教学案例',
             title2:'EDU CASE'
         },
-        path: '/eduCase',
-        redirect: '/eduCase/markdown',
-        name: 'eduCase',
-        component: secIndex,
+        path: '/eduCases',
+        redirect: '/eduCase/market',
+        name: 'eduCases',
+        component:secIndex,
         iconCls: 'el-icon-message',
         children: [
+            {
+                meta: {
+                    title: '案例仓库',
+                    title2: 'EDU MARKET'
+                },
+                path: '/eduCase/market',
+                component: eduCases,
+                name: 'eduCases',
+                iconCls: 'el-icon-message',
+            },
             {
                 meta: {
                     title: '标记语言',
@@ -175,7 +187,7 @@ export const userRouters = [
             title2:'TEAM INFO'
         },
         path: '/teamInfo',
-        component: Empty,
+        component: aboutUs,
         name: 'teamInfo',
         iconCls: 'el-icon-message',
     }

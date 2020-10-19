@@ -1,6 +1,6 @@
 <template>
     <el-dialog :visible.sync="registerDialogVisible" @close="closeDialog"
-               style="width:800px; margin: 20px auto;">
+               style="width:840px; margin: 20px auto;">
         <h2 class="title">注册</h2>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm"
                  style="width: 90%; margin: 0px auto;">
@@ -16,6 +16,51 @@
             <el-form-item prop="email" label="邮箱">
                 <el-input type="email" v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
+            <el-form-item prop="country" label="国家(地区)">
+                <el-select v-model="selectedCountry" placeholder="请选择国家(地区)">
+                  <el-option
+                      v-for="item in countryOptions"
+                      :key="item.short"
+                      :label="item.name"
+                      :value="item.name">
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.short }}</span>
+                  </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="instituteType" label="机构类型">
+              <el-select v-model="selectedType" placeholder="请选择机构类型">
+                <el-option
+                    v-for="item in instituteOptions"
+                    :key="item.index"
+                    :label="item.value"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="institute" label="机构">
+              <el-input type="text" v-model="ruleForm.institute" placeholder="请输入机构名称"></el-input>
+            </el-form-item>
+            <el-form-item prop="field" label="专业领域">
+              <el-select v-model="selectedField" placeholder="请选择专业领域">
+                <el-option
+                    v-for="item in fieldOptions"
+                    :key="item.index"
+                    :label="item.value"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="purpose" label="用途">
+              <el-select v-model="selectedPurpose" placeholder="请选择用途">
+                <el-option
+                    v-for="item in purposeOptions"
+                    :key="item.index"
+                    :label="item.value"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+          </el-form-item>
             <el-form-item>
                 <el-button style="width:47%; float: left" @click="cancel">重置</el-button>
                 <el-button type="primary" style="width:47%; float:right" @click.native.prevent="register"
@@ -27,18 +72,37 @@
 </template>
 
 <script>
-
+    import countryOps from '../../../static/json/country.json'
     export default {
         name: "registerDialog",
         data() {
             return {
                 registerDialogVisible: false,
                 registering: false,
+                countryOptions: [],
+                selectedCountry: '',
+                instituteOptions: [
+                  {index: '1', value: '大学'},
+                  {index: '2', value: '企业'},
+                  {index: '3', value: '服务'}
+                ],
+                selectedType: '',
+                fieldOptions: [
+                  {index: '1', value: '地理学类'},
+                  {index: '2', value: '信息学类'}
+                ],
+                selectedField: '',
+                purposeOptions: [
+                  {index: '1', value: '学习'},
+                  {index: '2', value: '商业用途'}
+                ],
+                selectedPurpose: '',
                 ruleForm: {
                     username: '',
                     password: '',
                     phone: '',
-                    email: ''
+                    email: '',
+                    institute: '',
                 },
                 rules: {
                     username: [
@@ -52,7 +116,7 @@
                     ],
                     email: [
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
-                    ]
+                    ],
                 },
             };
         },
@@ -77,6 +141,11 @@
                             password: that.ruleForm.password,
                             phone: that.ruleForm.phone,
                             email: that.ruleForm.email,
+                            country: that.selectedCountry,
+                            institutetype: that.selectedType,
+                            institute: that.ruleForm.institute,
+                            field: that.selectedField,
+                            purpose: that.selectedPurpose,
                             role: "user"
                         };
                         that.$axios.put(url, registerParams).then(
@@ -90,17 +159,17 @@
                                     that.$refs.ruleForm.resetFields();
                                     that.registering = false;
                                     that.registerDialogVisible = false;
+                                } else {
+                                    debugger;
+                                    that.$message({
+                                      message: "用户注册失败",
+                                      type: 'error'
+                                    });
+                                    that.$refs.ruleForm.resetFields();
+                                    that.registering = false;
                                 }
                             }
-                        ).catch(err => {
-                            debugger;
-                            that.$message({
-                                message: "用户注册失败",
-                                type: 'error'
-                            });
-                            that.$refs.ruleForm.resetFields();
-                            that.registering = false;
-                        });
+                        );
                     }
                 });
             }
@@ -109,6 +178,7 @@
             this.$Bus.$on('showRegister', () => {
                 this.registerDialogVisible = true;
             })
+            this.countryOptions = countryOps.country;
         }
     }
 </script>
@@ -149,6 +219,14 @@
     }
 
     .el-input {
+        position: relative;
+        font-size: 14px;
+        display: inline-block;
+        width: 240px;
+        float: right;
+    }
+
+    .el-select {
         position: relative;
         font-size: 14px;
         display: inline-block;

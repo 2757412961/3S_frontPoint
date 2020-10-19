@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="loginDialogVisible" @close="closeDialog"
-             style="width:800px; margin: 20px auto;">
+             style="width:840px; margin: 20px auto;">
     <h2 class="title">登录</h2>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm"
              style="width: 90%; margin: 0px auto;">
@@ -103,18 +103,16 @@ export default {
                   });
                   that.$refs.ruleForm.resetFields();
                   that.logining = false;
+                } else if (res.code == 1002) {
+                  that.$refs.ruleForm.resetFields();
+                  that.$message({
+                    message: "该用户不存在",
+                    type: 'error'
+                  });
+                  that.logining = false;
                 }
               }
-          ).catch(err => {
-            if (err.data.code == 1002) {
-              that.$refs.ruleForm.resetFields();
-              that.$message({
-                message: "该用户不存在",
-                type: 'error'
-              });
-              that.logining = false;
-            }
-          });
+          );
         }
       });
     },

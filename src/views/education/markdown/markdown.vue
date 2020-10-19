@@ -51,6 +51,7 @@
                 </div>
             </el-col>
         </el-row>
+        <el-button @click="Back2">返回</el-button>
     </div>
 
 
@@ -84,11 +85,14 @@
                 docsFirstLevels: [],
                 docsSecondLevels: [],
                 childrenActiveIndex: 0,
+                visible: false,
+                filePath:"",
+                picPath:""
             };
         },
         mounted() {
 
-            this.getArticleDetail();
+
         },
         methods: {
             async getArticleDetail() {
@@ -96,8 +100,13 @@
                     // if (this.id) {
                     //     const res = await this.$http.get(`/article?id=${this.id}`);
                     // axois.get('./static/3S第三组教学案例后端开发文档.md').then((res) => {
-                    const res = await this.$http.get('./static/第三组前后端开发文档.md');
 
+
+
+                    let url = 'http://10.79.231.81' + this.filePath;
+                    const res = await this.$http.get(url);
+
+                    // global.console.log(res);
                     this.article = res.data;
                     this.html = this.article;
 
@@ -177,22 +186,7 @@
             pageJump(id) {
 
                 this.titleClickScroll = true;
-                // global.console.log(this.$el.querySelector(`#data-0`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-0`));
-                // global.console.log(this.$el.querySelector(`#data-1`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-1`));
-                // global.console.log(this.$el.querySelector(`#data-2`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-2`));
-                // global.console.log(this.$el.querySelector(`#data-3`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-3`));
-                // global.console.log(this.$el.querySelector(`#data-4`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-4`));
-                // global.console.log(this.$el.querySelector(`#data-5`).offsetTop);
-                // global.console.log(this.$el.querySelector(`#data-5`));
-                //
-                // global.console.log(this.$el.querySelector(`#data-${id+1}`).offsetTop);
 
-                this.titleClickScroll = true;
                 this.$refs.mdbody.scrollTop = this.$el.querySelector(`#data-${id+1}`).offsetTop - 20;
                 setTimeout(() => this.titleClickScroll = false, 100);
 
@@ -228,7 +222,7 @@
             // 将一级二级标题数据处理成树结构
             handleNavTree() {
                 let navs = this.getTitle(this.content);
-                let navLevel = [3, 4];
+                let navLevel = [2, 3];
                 let retNavs = [];
                 let toAppendNavList;
 
@@ -287,10 +281,10 @@
                 });
                 return ret;
             },
-
-            // fitSize(){
-            //     document.getElementsByClassName('body').height = document.documentElement.clientHeight;
-            // }
+            Back2()
+            {
+                this.$emit('backto2');
+            }
         },
         computed: {
             content() {
@@ -310,11 +304,37 @@
                 };
                 let look = marked(this.content);
                 look = look.replace(/<table>/g,"<table border=\"1\" cellspacing=\"0\">");
-
+                let imgFilePath = this.picPath.substring(0,this.picPath.lastIndexOf('/'));
+                let imgSrc = "img src=\"http://10.79.231.81" + imgFilePath + "/pic";
+                look = look.replace(/img src="pic/g, imgSrc);
+                global.console.log(look);
                 return look;
             },
         },
-    };
+        created() {
+            let that = this;
+
+            this.$Bus.$on('teachModelInfoMD',params=>{
+
+
+
+                that.filePath = params.filePath;
+                that.picPath = params.picPath;
+                // setTimeout(function(){}, 2000);
+
+                this.getArticleDetail();
+
+            });
+            if(this.filePath==""){
+                this.filePath = "/images/3S/educase/caseDemo/case2.md";
+                this.picPath = "/images/3S/educase/caseDemo/pic2.png";
+                global.console.log(that.filePath);
+                this.getArticleDetail();
+            }
+
+
+        }
+    }
 </script>
 
 <style scoped>

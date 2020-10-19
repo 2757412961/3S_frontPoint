@@ -20,9 +20,10 @@
     <el-menu-item class="menuItemCla" index="6" @click="goToOnlineAnalysis">在线分析</el-menu-item>
     <el-submenu class="menuItemCla" index="7" style="color: white">
       <template slot="title">教学案例</template>
-      <el-menu-item class="menuItemCla" index="7-1" @click="goToMarkdown">标记语言</el-menu-item>
-      <el-menu-item class="menuItemCla" index="7-2" @click="goToCodeOnline">在线编译</el-menu-item>
-      <el-menu-item class="menuItemCla" index="7-3" @click="goToJupyter">交互式笔记本</el-menu-item>
+      <el-menu-item class="menuItemCla" index="7-1" @click="goToMarket">案例仓库</el-menu-item>
+      <el-menu-item class="menuItemCla" index="7-2" @click="goToMarkdown">标记语言</el-menu-item>
+      <el-menu-item class="menuItemCla" index="7-3" @click="goToCodeOnline">在线编译</el-menu-item>
+      <el-menu-item class="menuItemCla" index="7-4" @click="goToJupyter">交互式笔记本</el-menu-item>
     </el-submenu>
     <el-menu-item class="menuItemCla" index="8" @click="goToPlatform">分析平台</el-menu-item>
     <el-menu-item class="menuItemCla" index="9" @click="goToTeamInfo">关于</el-menu-item>
@@ -65,6 +66,9 @@ name: "menuBar2",
     },
     goToOnlineAnalysis(){
       this.$router.push('/onlineAnalysis')
+    },
+    goToMarket() {
+      this.$router.push('/eduCase/market')
     },
     goToMarkdown(){
       this.$router.push('/eduCase/markdown')

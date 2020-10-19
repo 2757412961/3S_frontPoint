@@ -13,6 +13,28 @@ const URL = {
     batchUpdateUserInfo:"/user/batchupdate",
     userLogin: "/user/login",
     userLoginStatus: "/user/loginstatus",
-    userLogout:"/user/logout"
+    userLogout:"/user/logout",
+    // 空间数据专业期刊讲座信息学位论文常用工具地图集市查询全部
+    searchAllGeoData:"/geodata/allselect",
+    searchAllStudentPaper:"/studentpaper/allselect",
+    searchAllAcademicPaper:"/academicpaper/allselect",
+    searchAllLecture:"/lecture/allselect",
+    searchAllOnlineTools:"/onlinetools/allselect",
+    searchAllMapService:"/mapservice/allselect",
+    // 空间数据专业期刊讲座信息学位论文常用工具地图集市按id查询
+    searchGeoDataById:"/geodata/select/",
+    searchStudentPaperById:"/studentpaper/select/",
+    searchAcademicPaperById:"/academicpaper/select/",
+    searchLectureById:"/lecture/select/",
+    searchOnlineToolsById:"/onlinetools/select/",
+    searchMapServiceById:"/mapservice/select/",
+    // 空间数据专业期刊讲座信息学位论文常用工具地图集市按id删除
+    deleteGeoDataById:"/geodata/delete/",
+    deleteStudentPaperById:"/studentpaper/delete/",
+    deleteAcademicPaperById:"/academicpaper/delete/",
+    deleteLectureById:"/lecture/delete/",
+    deleteOnlineToolsById:"/onlinetools/delete/",
+    deleteMapServiceById:"/mapservice/delete/",
+
 };
 export default URL;

@@ -56,196 +56,196 @@
         <p style="color: #ffffff;margin-bottom: 0;display: inline-block">版权所有Copyright © 浙江大学地球科学学院</p>
       </div>
     </el-footer>
-<!--    用户信息详情弹窗-->
+    <!--    用户信息详情弹窗-->
 
-      <el-dialog
-              title="用户详情"
-              :visible.sync="dialogUserInfoVisible"
-              width="60%">
-        <div style="text-align:center;">
-          <table border="0" class="dialog-font" cellspacing="30" :data="userTableData">
-            <tr>
-              <td>姓名:</td>
-              <td id="name"></td>
-              <td>电话:</td>
-              <td id="phone"></td>
-            </tr>
-            <tr>
-              <td>邮箱:</td>
-              <td id="email"></td>
-              <td>国家:</td>
-              <td id="COUNTRY"></td>
-            </tr>
-            <tr>
-              <td>所属组织:</td>
-              <td id="NSTITUTE" ></td>
-              <td>组织类型:</td>
-              <td id="INSTITUTETYPE"></td>
-            </tr>
-            <tr>
-              <td>领域:</td>
-              <td id="FIELD"></td>
-              <td>用途</td>
-              <td id="PURPOSE"></td>
-            </tr>
-          </table>
-        </div>
-      </el-dialog>
+    <el-dialog
+            title="用户详情"
+            :visible.sync="dialogUserInfoVisible"
+            width="60%">
+      <div style="text-align:center;">
+        <table border="0" class="dialog-font" cellspacing="30" :data="userTableData">
+          <tr>
+            <td>姓名:</td>
+            <td id="name"></td>
+            <td>电话:</td>
+            <td id="phone"></td>
+          </tr>
+          <tr>
+            <td>邮箱:</td>
+            <td id="email"></td>
+            <td>国家:</td>
+            <td id="COUNTRY"></td>
+          </tr>
+          <tr>
+            <td>所属组织:</td>
+            <td id="NSTITUTE" ></td>
+            <td>组织类型:</td>
+            <td id="INSTITUTETYPE"></td>
+          </tr>
+          <tr>
+            <td>领域:</td>
+            <td id="FIELD"></td>
+            <td>用途</td>
+            <td id="PURPOSE"></td>
+          </tr>
+        </table>
+      </div>
+    </el-dialog>
 
 
-    </el-container>
+  </el-container>
 
 </template>
 
 <script>
 
 
-    export default {
-      name: "manager",
-      components: {
+  export default {
+    name: "manager",
+    components: {
 
-        },
-        data() {
-            return {
-              avatarURL:"",
-              dialogUserInfoVisible:false,
-              userTableData:{}
-            }
-        },
-      mounted() {
-        console.log("mounted")
-        this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
-        this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
-        this.avatarURL=JSON.parse(sessionStorage.user).icon
-        document.getElementById("userAvatar").src=this.avatarURL
-        document.getElementById("userid").innerText=this.$store.getters.username
-        document.getElementById("userrole").innerText=this.$store.getters.role
-        if(this.$store.getters.role=='manager'){
-          document.getElementById("logbutton").style.display='block'
-          document.getElementById("userbutton").style.display='block'
-        }
-        else if(this.$store.getters.role=='visitor'){
-          this.$router.push('/index')
-        }
-        else {
-          document.getElementById("logbutton").style.display='none'
-          document.getElementById("userbutton").style.display='none'
-        }
+    },
+    data() {
+      return {
+        avatarURL:"",
+        dialogUserInfoVisible:false,
+        userTableData:{}
+      }
+    },
+    mounted() {
+      console.log("mounted")
+      this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
+      this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
+      this.avatarURL=JSON.parse(sessionStorage.user).icon
+      document.getElementById("userAvatar").src=this.avatarURL
+      document.getElementById("userid").innerText=this.$store.getters.username
+      document.getElementById("userrole").innerText=this.$store.getters.role
+      if(this.$store.getters.role=='manager'){
+        document.getElementById("logbutton").style.display='block'
+        document.getElementById("userbutton").style.display='block'
+      }
+      else if(this.$store.getters.role=='visitor'){
+        this.$router.push('/index')
+      }
+      else {
+        document.getElementById("logbutton").style.display='none'
+        document.getElementById("userbutton").style.display='none'
+      }
 
-        //内存中的模板已经挂载到页面中，页面渲染完成。
+      //内存中的模板已经挂载到页面中，页面渲染完成。
+    },
+    methods:{
+      goBackIndex(){
+        this.$router.push('/index')
       },
-        methods:{
-          goBackIndex(){
-            this.$router.push('/index')
-          },
-          logout(){
-            this.$store.commit('setRole','visitor')
-            this.$router.push('/index')
-          },
-          goTomanager(){
-            this.$router.push('/manager/data')
-          },
-          goTolog(){
-            this.$router.push('/manager/log')
-          },
-          goTouser(){
-            this.$router.push('/manager/user')
-          },
-          testfuc(){
-            document.getElementById("logbutton").style.display='none'
-            document.getElementById("userbutton").style.display='none'
-          },
-          getUsersInfo()
-          {
-            let that=this;
-            that.dialogUserInfoVisible = true
-            let userName=this.$store.getters.username
-            let userSearchURL=that.$URL.searchUsersByName+userName
-            that.$axios.get(userSearchURL,"").then(
-                      res => {
-                        if (res.code == 1002){
-                          that.$message({
-                            message: "查询失败",
-                            type: 'warning'
-                          });
-                        }
-                        else if(res.code == 200){
-                          that.$message({
-                            message: "查询成功",
-                            type: 'success'
-                          });
-                          let userInfo={
-                            id: res.body.id,
-                            name: res.body.name,
-                            phone: res.body.phone,
-                            email:res.body.email,
-                            userPrivileges:res.body.role,
-                          }
-                          document.getElementById("name").innerText=res.body.name
-                          try{
-                            document.getElementById("phone").innerText=res.body.phone;
-                          }catch(err){
-                            document.getElementById("phone").innerText='';
-                          }
-                          try{
-                            document.getElementById("email").innerText=res.body.email;
-                          }catch(err){
-                            document.getElementById("email").innerText='';
-                          }
-                          try{
-                            document.getElementById("COUNTRY").innerText=res.body.country;
-                          }catch(err){
-                            document.getElementById("COUNTRY").innerText='';
-                          }
-                          try{
-                            document.getElementById("NSTITUTE").innerText=res.body.institute;
-                          }catch(err){
-                            document.getElementById("NSTITUTE").innerText='';
-                          }
-                          try{
-                            document.getElementById("INSTITUTETYPE").innerText=res.body.institutetype;
-                          }catch(err){
-                            document.getElementById("INSTITUTETYPE").innerText='';
-                          }
-                          try{
-                            document.getElementById("FIELD").innerText=res.body.field;
-                          }catch(err){
-                            document.getElementById("FIELD").innerText='';
-                          }
-                          try{
-                            document.getElementById("PURPOSE").innerText=res.body.purpose;
-                          }catch(err){
-                            document.getElementById("PURPOSE").innerText='';
-                          }
-                        }
-                      }
-              )
-          },
-        }
+      logout(){
+        this.$store.commit('setRole','visitor')
+        this.$router.push('/index')
+      },
+      goTomanager(){
+        this.$router.push('/manager/data')
+      },
+      goTolog(){
+        this.$router.push('/manager/log')
+      },
+      goTouser(){
+        this.$router.push('/manager/user')
+      },
+      testfuc(){
+        document.getElementById("logbutton").style.display='none'
+        document.getElementById("userbutton").style.display='none'
+      },
+      getUsersInfo()
+      {
+        let that=this;
+        that.dialogUserInfoVisible = true
+        let userName=this.$store.getters.username
+        let userSearchURL=that.$URL.searchUsersByName+userName
+        that.$axios.get(userSearchURL,"").then(
+                res => {
+                  if (res.code == 1002){
+                    that.$message({
+                      message: "查询失败",
+                      type: 'warning'
+                    });
+                  }
+                  else if(res.code == 200){
+                    that.$message({
+                      message: "查询成功",
+                      type: 'success'
+                    });
+                    let userInfo={
+                      id: res.body.id,
+                      name: res.body.name,
+                      phone: res.body.phone,
+                      email:res.body.email,
+                      userPrivileges:res.body.role,
+                    }
+                    document.getElementById("name").innerText=res.body.name
+                    try{
+                      document.getElementById("phone").innerText=res.body.phone;
+                    }catch(err){
+                      document.getElementById("phone").innerText='';
+                    }
+                    try{
+                      document.getElementById("email").innerText=res.body.email;
+                    }catch(err){
+                      document.getElementById("email").innerText='';
+                    }
+                    try{
+                      document.getElementById("COUNTRY").innerText=res.body.country;
+                    }catch(err){
+                      document.getElementById("COUNTRY").innerText='';
+                    }
+                    try{
+                      document.getElementById("NSTITUTE").innerText=res.body.institute;
+                    }catch(err){
+                      document.getElementById("NSTITUTE").innerText='';
+                    }
+                    try{
+                      document.getElementById("INSTITUTETYPE").innerText=res.body.institutetype;
+                    }catch(err){
+                      document.getElementById("INSTITUTETYPE").innerText='';
+                    }
+                    try{
+                      document.getElementById("FIELD").innerText=res.body.field;
+                    }catch(err){
+                      document.getElementById("FIELD").innerText='';
+                    }
+                    try{
+                      document.getElementById("PURPOSE").innerText=res.body.purpose;
+                    }catch(err){
+                      document.getElementById("PURPOSE").innerText='';
+                    }
+                  }
+                }
+        )
+      },
     }
+  }
 </script>
 
 <style>
-.asideButton{
-  text-align:left;
-  width: 70%;
-  padding-left: 15%;
-  padding-top: 10%;
-}
-.asideButton-manager{
-  text-align:left;
-  width: 70%;
-  padding-left: 15%;
-  padding-top: 10%;
-}
-.manager-font{
-  color: white;
-  font-size: 20px;
-}
-.dialog-font{
-  color: #000000;
-  font-size: 20px;
-}
+  .asideButton{
+    text-align:left;
+    width: 70%;
+    padding-left: 15%;
+    padding-top: 10%;
+  }
+  .asideButton-manager{
+    text-align:left;
+    width: 70%;
+    padding-left: 15%;
+    padding-top: 10%;
+  }
+  .manager-font{
+    color: white;
+    font-size: 20px;
+  }
+  .dialog-font{
+    color: #000000;
+    font-size: 20px;
+  }
   td{
     width:400px
   }

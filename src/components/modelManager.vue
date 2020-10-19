@@ -16,8 +16,8 @@
                     <el-col :style="{width:'12%',height:'40%',margin:'10px'}" :span="8" v-for="model in mymodelList" :key="model.id">
                         <el-card :body-style="{ padding: '0px' }">
                             <!--后续将图片的url也构成数组中的某个元素-->
-                            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                                 :style="{position:'relative',left:'15px',top:'5px',width:'77%',height:'90%'}"
+                            <img :src="model.picpath"
+                                 :style="{position:'relative',left:'15px',top:'5px',width:'100px',height:'100px'}"
                                  class="image">
                             <div style="padding-left: 15px;padding-bottom: 25px">
                                 <div><span>{{model.name}}</span></div>
@@ -231,7 +231,8 @@
                         {
                             let pub='私有';
                             if(mlist[i].isPublic) pub='公有';
-                            this.mymodelList.push({'id':i,'name':mlist[i].artifactId,'usage':mlist[i].usages,'isPublic':pub});
+                            debugger;
+                            this.mymodelList.push({'id':i,'name':mlist[i].artifactId,'usage':mlist[i].usages,'isPublic':pub,'picpath':mlist[i].picPath});
                         }
                         this.$forceUpdate();
                     }).catch(err=>{})
@@ -252,7 +253,7 @@
                         {
                             let pub='私有';
                             if(mlist[i].isPublic) pub='公有';
-                            this.mymodelList.push({'id':i,'name':mlist[i].artifactId,'isPublic':pub});
+                            this.mymodelList.push({'id':i,'name':mlist[i].artifactId,'isPublic':pub,'picpath':mlist[i].picPath});
                         }
                         this.$forceUpdate();
                     }).catch(err=>{

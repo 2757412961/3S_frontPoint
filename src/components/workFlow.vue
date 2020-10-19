@@ -386,7 +386,7 @@
                                      'nodesInfo':this.NodesInfo
                                  })
                              }).then(res=>{
-
+                                 debugger;
                              }).catch(err=>{})
                          }
                          else

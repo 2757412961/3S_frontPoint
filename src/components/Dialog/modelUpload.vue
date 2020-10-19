@@ -49,6 +49,14 @@
           submitUpload()
           {
               let that=this;
+              if(this.form.isPublic==='公有')
+              {
+                  this.formData.append('isPublic','true');
+              }
+              else
+              {
+                  this.formData.append('isPublic','false');
+              }
               this.$refs.upload.submit();
 
                   axios.post(this.$platfromUrl.registerModelUrl,this.formData,{

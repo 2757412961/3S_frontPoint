@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import axios from "../../util/axios"
+    import axios from "axios"
     export default {
         name: "modelInfo",
         data(){
@@ -39,15 +39,12 @@
               this.loading=true;
               if(modelname)
               {
-                  const instant = axios.create({
-                      withCredentials: true,
-                      timeout: 600000,
-                  });
-                  instant.post(this.$platfromUrl.downloadModelUrl+modelname,
-                      {
+                  axios.post(this.$platfromUrl.downloadModelUrl+modelname,
+                      {},{
                           //二进制流
                           responseType: 'blob'
                       }).then(res=>{
+                          debugger;
                           if(res.data.body==='ERROR')
                           {
                               this.$message.warning(res.data.message);
@@ -61,14 +58,14 @@
                               type: 'application/vnd.ms-excel'
                           })
                           window.navigator.msSaveOrOpenBlob(blob,
-                              modelname + '.zip')
+                              new Date().getTime() + '.zip')
                       } else {
 
                           let blob = new Blob([res.data]);
                           let downloadElement = document.createElement('a');
                           let href = window.URL.createObjectURL(blob);
                           downloadElement.href = href;
-                          downloadElement.download = modelname + '.zip';
+                          downloadElement.download = new Date().getTime() + '.zip';
                           document.body.appendChild(downloadElement);
                           downloadElement.click();
                           document.body.removeChild(downloadElement);

@@ -140,6 +140,7 @@
                     that.totalCount=res.body.totalCount
                     console.log(that.totalCount)
                     let getlist=res.body.result
+                    console.log(getlist)
                     that.tableData.length=0
                     for (let i = 0; i < getlist.length; i++) {
                       let userInfoJson=getlist[i]

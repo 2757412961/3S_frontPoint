@@ -43,7 +43,7 @@ const URL = {
 
     getmapService:"mapservice/allselect",
     getwebTool:"/onlinetools/allselect",
-    baseUrl:'http://10.79.231.81',
+    baseUrl:'http://10.79.231.81:90',
     getEduCasesUrl: "/teachModel/allselect",
     getGeoPopular:"/geodata/populardata",
     getPaperNew:"/studentpaper/selectnew",

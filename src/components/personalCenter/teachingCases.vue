@@ -32,15 +32,14 @@
         <el-form-item label="" prop="type">
             <el-upload
                     class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
+                    ref="upload"
+                    action=""
                     multiple
-                    :limit="1"
-                    :on-exceed="handleExceed"
-                    :file-list="fileList">
-                <el-button size="small" type="primary">选择本地文件</el-button>
+                    limit="1"
+                    :http-request="appendFile"
+                    :file-list="fileList"
+                    :auto-upload="false">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传doc文件</div>
             </el-upload>
         </el-form-item>
@@ -54,11 +53,14 @@
 </template>
 
 <script>
+    import axios from "../../util/axios";
+
     export default {
         name: "teachingCases",
         data() {
             return {
                 fileList: [],
+                formData:new FormData(),
                 ruleForm: {
                     name: '',
                     region: '',
@@ -96,10 +98,33 @@
             };
         },
         methods: {
+            appendFile(file)
+            {
+                console.log(this.formData.get('file'));
+                this.formData.append('file',file.file);
+            },
             submitForm(formName) {
+                let that=this;
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        //alert('submit!');
+                        this.formData.append('name',this.ruleForm.name);
+                        this.$refs.upload.submit();
+                        axios.post(this.$URL.uploadEduCaseUrl,this.formData,{
+                            'Content-Type':'multipart/form-data'
+                        }).then(res=>{
+                        debugger;
+                            console.log(res);
+
+                            //请求一次后清空之前的表单
+                            this.formData.delete('file');
+                        }).catch(err=>{
+                        debugger;
+
+                            console.log(err);
+                            //请求一次后清空之前的表单
+                            this.formData.delete('file');
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

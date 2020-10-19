@@ -36,14 +36,17 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div style="height: 10px"></div>
+        <div style="height:12%;width: 100%;text-align:center;">
         <el-pagination v-model="pager"
                        :page-size="20"
                        :pager-count="5"
                        layout="prev, pager, next"
                        :total="mytotal"
-                       style="margin-top: 10px;margin-left: 50%"
+                       background
                        @current-change="ChangePage">
         </el-pagination>
+        </div>
     </el-dialog>
 </template>
 

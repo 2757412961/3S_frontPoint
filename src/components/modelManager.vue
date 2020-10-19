@@ -177,11 +177,11 @@
                     {
                         //通过refresh函数刷新页面
                         that.refresh(that.currentPage,that.activeName);
-                        this.$message.success('模型删除成功')
+                        that.$message.success('模型删除成功');
                     }
                     else
                     {
-                        this.$message.error(res.message)
+                        that.$message.error(res.message);
                     }
                     console.log(res);
                 }).catch(err=>{

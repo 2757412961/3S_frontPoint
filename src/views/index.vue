@@ -15,16 +15,20 @@
                 <el-button id="personalcenter" v-if="isLogin" @click="toUserCenter" style="height: 40px; width: 40px; margin-top: 10px; float: right" type="primary" icon="el-icon-user" circle></el-button>
 <!--                <el-button v-if="" style="height: 40px; width: 40px; margin-top: 10px;" type="primary" icon="el-icon-user" circle></el-button>-->
                 <!-- 登录按钮 -->
-                <el-button id="login" size="mini" type="primary" plain @click="showLoginDialog"
+                <el-button id="login" v-if="!isLogin" size="mini" type="primary" plain @click="showLoginDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">登录
                 </el-button>
                 <loginDialog></loginDialog>
                 <verifyDialog></verifyDialog>
                 <!-- 注册按钮 -->
-                <el-button id="signin" size="mini" type="primary" plain @click="showRegisterDialog"
+                <el-button id="signin" v-if="!isLogin" size="mini" type="primary" plain @click="showRegisterDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">注册
                 </el-button>
                 <registerDialog></registerDialog>
+                <!-- 登出按钮 -->
+                <el-button v-if="isLogin" size="mini" type="primary" plain @click="logout"
+                           style="margin-top: 16px; margin-left: 12px; margin-right: 12px; float: right">登出
+                </el-button>
                 <!-- 切换语言按钮 -->
                 <el-button v-if="!ifInEnglish" size="mini" type="text" @click="handleSetLanguage"
                            style="margin-top: 16px; margin-left: 12px;">EN
@@ -65,7 +69,8 @@
             return {
                 ifInEnglish: false,
                 searchParam: '',
-                value: ''
+                value: '',
+                isLogin: false,
             }
         },
         methods: {
@@ -83,13 +88,35 @@
                 return false;
             },
             toUserCenter() {
-                this.$router.push('/manager/manager');
+              this.$router.push('/manager/manager');
             },
             showLoginDialog() {
                 this.$Bus.$emit('showLogin');
             },
             showRegisterDialog() {
                 this.$Bus.$emit('showRegister');
+            },
+            logout() {
+                let that=this;
+                that.$axios.post(that.$URL.userLogout).then(
+                    res => {
+                      if (res.code == 200) {
+                        that.$message({
+                          message: "用户登出成功",
+                          type: 'success'
+                        });
+                        this.$store.commit('setRole','visitor');
+                        console.log(this.$store.getters.role)
+                        sessionStorage.clear();
+                        this.$router.go('/index');
+                      }
+                    }
+                ).catch(err => {
+                  that.$message({
+                    message: "用户登出失败",
+                    type: 'error'
+                  });
+                });
             },
             handleSetLanguage() {
                 if (this.ifInEnglish) {//中文
@@ -107,18 +134,26 @@
         computed: {
         },
         mounted() {
-            this.$store.dispatch('initial', {})
-          if(this.$store.getters.role=='visitor'){
-            console.log(this.$store.getters.role)
-            document.getElementById("personalcenter").style.display='none'
-            document.getElementById("login").style.display='block'
-            document.getElementById("signin").style.display='block'
-          }
-          else {
-            console.log(this.$store.getters.role)
-            document.getElementById("personalcenter").style.display='block'
-            document.getElementById("login").style.display='none'
-            document.getElementById("signin").style.display='none'
+          debugger;
+          this.$store.dispatch('initial', {})
+          // if(this.$store.getters.role=='visitor'){
+          //   console.log(this.$store.getters.role)
+          //   document.getElementById("personalcenter").style.display='none'
+          //   document.getElementById("login").style.display='block'
+          //   document.getElementById("signin").style.display='block'
+          // }
+          // else {
+          //   console.log(this.$store.getters.role)
+          //   document.getElementById("personalcenter").style.display='block'
+          //   document.getElementById("login").style.display='none'
+          //   document.getElementById("signin").style.display='none'
+          // }
+          if (sessionStorage.getItem('user') == null) {
+            debugger;
+            this.isLogin = false;
+          } else {
+            debugger;
+            this.isLogin = true;
           }
         }
     }

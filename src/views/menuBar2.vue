@@ -4,7 +4,7 @@
       mode="horizontal"
       background-color="#2d2f33"
       text-color="#ccc"
-      :default-active="activeIndex2"
+      :default-active="$route.path"
       @select="handleSelect"
       active-text-color="#409EFF">
     <el-menu-item class="menuItemCla" index="1" @click="goToIndex">首页</el-menu-item>
@@ -35,7 +35,7 @@ export default {
 name: "menuBar2",
   data() {
     return {
-      activeIndex2: '1'
+      // activeIndex2: '1'
     };
   },
   methods:{

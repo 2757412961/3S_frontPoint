@@ -6,7 +6,7 @@
           <el-card :body-style="{ padding: '0px' }" slot="reference">
             <!--后续将图片的url也构成数组中的某个元素-->
             <img :src="tool.PICTURE"
-                 :style="{position:'relative',left:'15px',top:'5px', width:'220px',height:'200px'}"
+                 :style="{position:'relative',left:'15px',top:'5px', width:'90%',height:'200px'}"
                  class="image">
             <div style="padding-left: 15px;padding-bottom: 25px">
               <div>{{tool.NAME}}</div>

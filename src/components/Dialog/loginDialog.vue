@@ -72,29 +72,30 @@ export default {
               res => {
                 if (res.code == 200) {
                   that.$message({
-                    message: "用户登陆成功",
+                    message: "用户登录成功",
                     type: 'success'
                   });
                   that.$refs.ruleForm.resetFields();
                   that.logining = false;
                   that.loginDialogVisible = false;
                   sessionStorage.setItem('user', JSON.stringify(res.body));
-                  that.$router.push({path: '/index'});
+                  //刷新页面，重新判断几个按钮的显示隐藏
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
-                  if(this.$store.getters.role=='visitor'){
-                    console.log(this.$store.getters.role)
-                    document.getElementById("personalcenter").style.display='none'
-                    document.getElementById("login").style.display='block'
-                    document.getElementById("signin").style.display='block'
-                  }
-                  else {
-                    console.log(this.$store.getters.role)
-                    document.getElementById("personalcenter").style.display='block'
-                    document.getElementById("login").style.display='none'
-                    document.getElementById("signin").style.display='none'
-                  }
-
+                  console.log(this.$store.getters.role)
+                  this.$router.go({path: '/index'});
+                  // if(this.$store.getters.role=='visitor'){
+                  //   console.log(this.$store.getters.role)
+                  //   document.getElementById("personalcenter").style.display='none'
+                  //   document.getElementById("login").style.display='block'
+                  //   document.getElementById("signin").style.display='block'
+                  // }
+                  // else {
+                  //   console.log(this.$store.getters.role)
+                  //   document.getElementById("personalcenter").style.display='block'
+                  //   document.getElementById("login").style.display='none'
+                  //   document.getElementById("signin").style.display='none'
+                  // }
                 } else if (res.code == 1001) {
                   // that.$forceUpdate();
                   that.$message({

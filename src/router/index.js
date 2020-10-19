@@ -15,6 +15,7 @@ import Paper from '../views/academia/paper/paper.vue'
 import Journal from '../views/academia/journal/journal.vue'
 import Lecture from '../views/academia/lecture/lecture.vue'
 
+import spaceData from '../views/spacedata.vue'
 import onlineAnalysis from '../views/onlineAnalysis/onlineAnalysis.vue'
 import webTool from '../views/webTool.vue'
 import aboutUs from '../views/aboutUs.vue'
@@ -84,7 +85,7 @@ export const userRouters = [
             title2:'SPACE DATA'
         },
         path: '/spaceData',
-        component: Empty,
+        component: spaceData,
         name: 'spaceData',
         iconCls: 'el-icon-message',
     },

@@ -102,5 +102,13 @@ const URL = {
     getPaperNew:"/studentpaper/selectnew",
     getJournalNew:"/academicpaper/selectnew",
     getLectureNew:"/lecture/selectnew",
+    geodataAllSelect:"/geodata/allselect",
+    bytype1Select:"/geodata/bytype1/",
+    bytype2Select:"/geodata/bytype2/",
+    userNameSelect:"/geodata/byuserName/",
+    geoPopularSelect:"/geodata/populardata/",
+    paperAllSelect:"/studentpaper/allselect",
+    journalAllSelect:"/academicpaper/allselect",
+    lectureAllSelect:"/lecture/allselect",
 };
 export default URL;

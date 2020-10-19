@@ -16,7 +16,8 @@ import Journal from '../views/academia/journal/journal.vue'
 import Lecture from '../views/academia/lecture/lecture.vue'
 
 import onlineAnalysis from '../views/onlineAnalysis/onlineAnalysis.vue'
-
+import webTool from '../views/webTool.vue'
+import aboutUs from '../views/aboutUs.vue'
 
 import Markdown from "../views/education/markdown/markdown.vue"
 import CodeOnline from '../views/education/codeonline/codeOnline.vue'
@@ -93,7 +94,7 @@ export const userRouters = [
             title2:'WEB TOOL'
         },
         path: '/webTool',
-        component: Empty,
+        component: webTool,
         name: 'webTool',
         iconCls: 'el-icon-message',
     },
@@ -186,7 +187,7 @@ export const userRouters = [
             title2:'TEAM INFO'
         },
         path: '/teamInfo',
-        component: Empty,
+        component: aboutUs,
         name: 'teamInfo',
         iconCls: 'el-icon-message',
     }

@@ -79,6 +79,7 @@ const URL = {
     getBands: "/tile/gttileservice/getbands/",
 
     getmapService:"mapservice/allselect",
+    getwebTool:"/onlinetools/allselect",
     baseUrl:'http://10.79.231.81',
     getEduCasesUrl: "/teachModel/allselect",
 

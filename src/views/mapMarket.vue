@@ -2,21 +2,23 @@
     <div>
         <el-row :style="{'min-height': ($window.height-116)+'px',clear:'right'}">
             <el-col :span="8" v-for="map in mymapList" :key="map.id" style="width:16%;height: 70%;margin: 2%">
-                <el-card :body-style="{ padding: '0px' }">
-                    <!--后续将图片的url也构成数组中的某个元素-->
-                    <img :src="map.PICTURE"
-                         :style="{position:'relative',left:'15px',top:'5px',width:'220px',height:'200px'}"
-                         class="image">
-                    <div style="padding-left: 15px;padding-bottom: 25px">
-                        <div><span>{{map.NAME}}</span></div>
-                        <div style="float:left">
-                            <el-tag size="mini">{{map.COMPANY}}</el-tag>
-                        </div>
-                        <div style="float:right">
-                            <span @click="switchUrl(map.URL)"><i class="el-icon-info"></i></span>
-                        </div>
+              <el-popover placement="top" title="简介" width="236" trigger="hover" :content="map.DESCRIPTION">
+                <el-card :body-style="{ padding: '0px' }" slot="reference">
+                  <!--后续将图片的url也构成数组中的某个元素-->
+                  <img :src="map.PICTURE"
+                       :style="{position:'relative',left:'15px',top:'5px',width:'220px',height:'200px'}"
+                       class="image">
+                  <div style="padding-left: 15px;padding-bottom: 25px">
+                    <div><span>{{map.NAME}}</span></div>
+                    <div style="float:left">
+                      <el-tag size="mini">{{map.COMPANY}}</el-tag>
                     </div>
+                    <div style="float:right">
+                      <span @click="switchUrl(map.URL)"><i class="el-icon-info"></i></span>
+                    </div>
+                  </div>
                 </el-card>
+              </el-popover>
             </el-col>
         </el-row>
         <div style="height: 12px"></div>

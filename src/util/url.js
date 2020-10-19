@@ -35,6 +35,8 @@ const URL = {
     deleteLectureById:"/lecture/delete/",
     deleteOnlineToolsById:"/onlinetools/delete/",
     deleteMapServiceById:"/mapservice/delete/",
+    // 上传教学案例
+    uploadTeachingCase:"/teachModel/uploadTeachModel"
 
 };
 export default URL;

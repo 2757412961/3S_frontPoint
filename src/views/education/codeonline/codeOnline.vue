@@ -69,11 +69,12 @@
                 let data = editor.innerText;
                 global.console.log(document.querySelector("#language-type").value.toUpperCase());
 
-                fetch("http://127.0.0.1:8080/run", {
+                url = $URL.baseUrl + '/run';
+                fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json; charset=UTF-8",
-                        'Access-Control-Allow-Origin':'*'
+                        // 'Access-Control-Allow-Origin':'*'
                     },
                     body: JSON.stringify({
                         code: data,

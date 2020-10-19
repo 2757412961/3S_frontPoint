@@ -1,5 +1,4 @@
 const URL = {
-
     datasetPreviewUrl: '/query/attQuery/view/',
     showFeatureUrl: '/query/attQuery/locate/',
     termQueryUrl:'/query/attQuery/viewByValue/',
@@ -63,12 +62,8 @@ const URL = {
     externalDataPreviewUrl: '/server/external2/tablePreview/',
     externalDataDeleteUrl: '/server/external2/tableDelete/',
     externalDataInfoUrl: '/server/external2/tableInfo/',
-    // userLogin: "/server/user/login",
-    userLogin: "/user/login",
-    userLoginStatus: "/user/loginstatus",
     selectSalt: "/server/user/selectSalt?name=",
     userRegister: "/server/user/register",
-    userLogout: "/server/user/logout",
     departInit: "/server/user/init",
     dagSaveUrl:"/server/workflow/dags/save",
     jobInfoUrl:'/server/workflow/jobs/',
@@ -84,7 +79,28 @@ const URL = {
     getBands: "/tile/gttileservice/getbands/",
 
     getmapService:"mapservice/allselect",
+    getwebTool:"/onlinetools/allselect",
     baseUrl:'http://10.79.231.81',
-    getEduCasesUrl: "/teachModel/allselect"
+    getEduCasesUrl: "/teachModel/allselect",
+
+    addUser:"/user/insert",
+    batchAddUsers:"/user/batchinsert",
+    checkByName:"/user/checkbyname",
+    deleteUserById:"/user/delete/{id}",
+    deleteUserByName:"/user/deletebyname/{name}",
+    batchDeleteUserById:"/user//batchdelete/{ids}",
+    searchUsersById:"/user/select/{id}",
+    searchUsersByName:"/user/select/{name}",
+    batchsearchUsersById:"/user/batchseletct/{ids}",
+    searchAllUsers:"/user/allselect",
+    updateUserInfo:"/user/update",
+    batchUpdateUserInfo:"/user/batchupdate",
+    userLogin: "/user/login",
+    userLoginStatus: "/user/loginstatus",
+    userLogout:"/user/logout",
+    getGeoPopular:"/geodata/populardata",
+    getPaperNew:"/studentpaper/selectnew",
+    getJournalNew:"/academicpaper/selectnew",
+    getLectureNew:"/lecture/selectnew",
 };
 export default URL;

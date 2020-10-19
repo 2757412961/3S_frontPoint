@@ -13,7 +13,7 @@
                         <div style="padding-left: 15px;padding-bottom: 25px">
                             <div><span>{{eduCase.name}}</span></div>
                             <div style="float:left">
-                                <el-tag size="mini">dddd</el-tag>
+                                <el-tag size="mini">{{eduCase.keywords}}</el-tag>
                             </div>
                             <div style="float:right">
                                 <span @click="switchUrl(index)"><i class="el-icon-info"></i></span>

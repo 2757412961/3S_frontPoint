@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="loginDialogVisible" @close="closeDialog"
-             style="width:800px; margin: 20px auto;">
+             style="width:840px; margin: 20px auto;">
     <h2 class="title">登录</h2>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm"
              style="width: 90%; margin: 0px auto;">

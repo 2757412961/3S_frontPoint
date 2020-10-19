@@ -6,7 +6,7 @@
       </div>
       <div style="float: right; padding-top: 20px;padding-right: 5px">
         <el-button  style="right: 0px" type="primary" icon="el-icon-s-home" @click="goBackIndex">回到首页</el-button>
-        <el-button  style="right: 0px" type="primary" icon="el-icon-switch-button" @click="logout">退出登录</el-button>
+<!--        <el-button  style="right: 0px" type="primary" icon="el-icon-switch-button" @click="logout">退出登录</el-button>-->
         <el-button type="primary" icon="el-icon-s-custom" @click="testfuc">测试按钮</el-button>
       </div>
     </el-header>
@@ -90,11 +90,6 @@
       },
         methods:{
           goBackIndex(){
-            this.$router.push('/index')
-          },
-          logout(){
-            this.$store.commit('setRole','visitor')
-            sessionStorage.clear();
             this.$router.push('/index')
           },
           goTomanager(){

@@ -25,6 +25,10 @@
                            style="margin-top: 16px; margin-left: 12px; float: right">注册
                 </el-button>
                 <registerDialog></registerDialog>
+                <!-- 登出按钮 -->
+                <el-button v-if="isLogin" size="mini" type="primary" plain @click="logout"
+                           style="margin-top: 16px; margin-left: 12px; margin-right: 12px; float: right">登出
+                </el-button>
                 <!-- 切换语言按钮 -->
                 <el-button v-if="!ifInEnglish" size="mini" type="text" @click="handleSetLanguage"
                            style="margin-top: 16px; margin-left: 12px;">EN
@@ -92,6 +96,27 @@
             showRegisterDialog() {
                 this.$Bus.$emit('showRegister');
             },
+            logout() {
+                let that=this;
+                that.$axios.post(that.$URL.userLogout).then(
+                    res => {
+                      if (res.code == 200) {
+                        that.$message({
+                          message: "用户登出成功",
+                          type: 'success'
+                        });
+                        this.$store.commit('setRole','visitor');
+                        sessionStorage.clear();
+                        this.$router.go('/index');
+                      }
+                    }
+                ).catch(err => {
+                  that.$message({
+                    message: "用户登出失败",
+                    type: 'error'
+                  });
+                });
+            },
             handleSetLanguage() {
                 if (this.ifInEnglish) {//中文
                     localStorage.setItem('locale', 'zh');
@@ -109,26 +134,26 @@
         },
         mounted() {
           debugger;
-          this.$store.dispatch('initial', {})
-          if(this.$store.getters.role=='visitor'){
-            console.log(this.$store.getters.role)
-            document.getElementById("personalcenter").style.display='none'
-            document.getElementById("login").style.display='block'
-            document.getElementById("signin").style.display='block'
-          }
-          else {
-            console.log(this.$store.getters.role)
-            document.getElementById("personalcenter").style.display='block'
-            document.getElementById("login").style.display='none'
-            document.getElementById("signin").style.display='none'
-          }
-          // if (sessionStorage.getItem('user') == null) {
-          //   debugger;
-          //   this.isLogin = false;
-          // } else {
-          //   debugger;
-          //   this.isLogin = true;
+          // this.$store.dispatch('initial', {})
+          // if(this.$store.getters.role=='visitor'){
+          //   console.log(this.$store.getters.role)
+          //   document.getElementById("personalcenter").style.display='none'
+          //   document.getElementById("login").style.display='block'
+          //   document.getElementById("signin").style.display='block'
           // }
+          // else {
+          //   console.log(this.$store.getters.role)
+          //   document.getElementById("personalcenter").style.display='block'
+          //   document.getElementById("login").style.display='none'
+          //   document.getElementById("signin").style.display='none'
+          // }
+          if (sessionStorage.getItem('user') == null) {
+            debugger;
+            this.isLogin = false;
+          } else {
+            debugger;
+            this.isLogin = true;
+          }
         }
     }
 </script>

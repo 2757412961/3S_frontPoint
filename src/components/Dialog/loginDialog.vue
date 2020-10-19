@@ -79,22 +79,22 @@ export default {
                   that.logining = false;
                   that.loginDialogVisible = false;
                   sessionStorage.setItem('user', JSON.stringify(res.body));
-                  // this.$router.go({path: '/index'});
+                  //刷新页面，重新判断几个按钮的显示隐藏
+                  this.$router.go({path: '/index'});
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
-                  if(this.$store.getters.role=='visitor'){
-                    console.log(this.$store.getters.role)
-                    document.getElementById("personalcenter").style.display='none'
-                    document.getElementById("login").style.display='block'
-                    document.getElementById("signin").style.display='block'
-                  }
-                  else {
-                    console.log(this.$store.getters.role)
-                    document.getElementById("personalcenter").style.display='block'
-                    document.getElementById("login").style.display='none'
-                    document.getElementById("signin").style.display='none'
-                  }
-
+                  // if(this.$store.getters.role=='visitor'){
+                  //   console.log(this.$store.getters.role)
+                  //   document.getElementById("personalcenter").style.display='none'
+                  //   document.getElementById("login").style.display='block'
+                  //   document.getElementById("signin").style.display='block'
+                  // }
+                  // else {
+                  //   console.log(this.$store.getters.role)
+                  //   document.getElementById("personalcenter").style.display='block'
+                  //   document.getElementById("login").style.display='none'
+                  //   document.getElementById("signin").style.display='none'
+                  // }
                 } else if (res.code == 1001) {
                   // that.$forceUpdate();
                   that.$message({

@@ -88,7 +88,7 @@
                 return false;
             },
             toUserCenter() {
-                this.$router.push('/manager/manager');
+              this.$router.push('/manager/manager');
             },
             showLoginDialog() {
                 this.$Bus.$emit('showLogin');
@@ -106,6 +106,7 @@
                           type: 'success'
                         });
                         this.$store.commit('setRole','visitor');
+                        console.log(this.$store.getters.role)
                         sessionStorage.clear();
                         this.$router.go('/index');
                       }
@@ -134,7 +135,7 @@
         },
         mounted() {
           debugger;
-          // this.$store.dispatch('initial', {})
+          this.$store.dispatch('initial', {})
           // if(this.$store.getters.role=='visitor'){
           //   console.log(this.$store.getters.role)
           //   document.getElementById("personalcenter").style.display='none'

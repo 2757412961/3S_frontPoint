@@ -80,9 +80,10 @@ export default {
                   that.loginDialogVisible = false;
                   sessionStorage.setItem('user', JSON.stringify(res.body));
                   //刷新页面，重新判断几个按钮的显示隐藏
-                  this.$router.go({path: '/index'});
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
+                  console.log(this.$store.getters.role)
+                  this.$router.go({path: '/index'});
                   // if(this.$store.getters.role=='visitor'){
                   //   console.log(this.$store.getters.role)
                   //   document.getElementById("personalcenter").style.display='none'

@@ -40,7 +40,7 @@
             </el-col>
         </el-row>
         <el-row style="height: 10%; margin-bottom: 0;text-align: center">
-            <p style="color: #313133; margin-bottom: 0;display: inline-block">版权所有Copyright © 浙江大学地球科学学院</p>
+            <p style="color: #313133; margin-bottom: 0;display: inline-block">版权所有Copyright © 浙江大学地球科学学院  平台数据未经所属用户允许不得使用和转载</p>
         </el-row>
     </div>
 </template>

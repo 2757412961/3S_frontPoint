@@ -32,7 +32,7 @@
         <el-form-item label="" prop="type">
             <el-upload
                     class="upload-demo"
-                    action="/teachModel/uploadTeachModel"
+                    action="https://jsonplaceholder.typicode.com/posts/"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :before-remove="beforeRemove"
@@ -54,8 +54,6 @@
 </template>
 
 <script>
-    import axios from "../../util/axios";
-
     export default {
         name: "teachingCases",
         data() {
@@ -98,40 +96,6 @@
             };
         },
         methods: {
-            submitUpload()
-            {
-                let that=this;
-                this.$refs.upload.submit();
-
-                axios.post(this.$platfromUrl.registerModelUrl,this.formData,{
-                    'Content-Type':'multipart/form-data'
-                }).then(res=>{
-                    debugger;
-                    console.log(res);
-                    if(res.data.code===200)
-                    {
-                        this.$message.success('模型注册成功')
-                    }
-                    else if(res.data.code===9002)
-                    {
-                        this.$message.error('该模型已注册，请勿重复注册');
-                    }
-                    else
-                    {
-                        this.$message.error('模型注册失败，您的输入与上传文件要求不符');
-                    }
-                    //请求一次后清空之前的表单
-                    this.formData.delete('file');
-                }).catch(err=>{
-                    debugger;
-
-                    console.log(err);
-                    //请求一次后清空之前的表单
-                    this.formData.delete('file');
-                })
-
-
-            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {

@@ -36,7 +36,9 @@ const URL = {
     deleteOnlineToolsById:"/onlinetools/delete/",
     deleteMapServiceById:"/mapservice/delete/",
     // 上传教学案例
-    uploadTeachingCase:"/teachModel/uploadTeachModel"
-
+    uploadTeachingCase:"/teachModel/uploadTeachModel",
+    //日志
+    searchAllLog:"/log/allselect",
+    addLog:"/log/insert"
 };
 export default URL;

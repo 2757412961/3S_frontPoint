@@ -15,7 +15,7 @@
         data(){
             return {
                 visible:false,
-                filePath:"",
+                filePath:"http://10.79.231.81:8888/notebooks/MetallogenicPred/Metallogenic%20Prediction.ipynb",
                 // http://10.79.231.81:8888/notebooks/MetallogenicPred/Metallogenic%20Prediction.ipynb
                 picPath:""
             }

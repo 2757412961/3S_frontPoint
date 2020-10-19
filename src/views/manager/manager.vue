@@ -25,8 +25,8 @@
 
 
         <div style="padding-top: 80%">
-          <div style="text-align:center;padding-bottom: 20px">
-            <img src="../../assets/timg.jpg" height="100" width="100"/>
+          <div style="text-align:center;padding-bottom: 20px" >
+            <img id="userAvatar" src="../../assets/timg.jpg" height="100" width="100" />
           </div>
           <div style="left: 15%;padding-left: 10%;">
              <table border="0" class="manager-font" cellspacing="20">
@@ -38,6 +38,7 @@
                    <td>权限:</td>
                    <td id="userrole">{{role}}</td>
                 </tr>
+               <el-button type="success" icon="el-icon-info" @click="getUsersInfo">个人资料</el-button>
              </table>
           </div>
         </div>
@@ -55,108 +56,115 @@
         <p style="color: #ffffff;margin-bottom: 0;display: inline-block">版权所有Copyright © 浙江大学地球科学学院</p>
       </div>
     </el-footer>
+    <!--    用户信息详情弹窗-->
 
-  </el-container>
+    <el-dialog
+            title="用户详情"
+            :visible.sync="dialogUserInfoVisible"
+            width="60%">
+      <div style="text-align:center;">
+        <table border="0" class="dialog-font" cellspacing="30" :data="userTableData">
+          <tr>
+            <td>姓名:</td>
+            <td id="name"></td>
+            <td>电话:</td>
+            <td id="phone"></td>
+          </tr>
+          <tr>
+            <td>邮箱:</td>
+            <td id="email"></td>
+            <td>国家:</td>
+            <td id="COUNTRY"></td>
+          </tr>
+          <tr>
+            <td>所属组织:</td>
+            <td id="NSTITUTE" ></td>
+            <td>组织类型:</td>
+            <td id="INSTITUTETYPE"></td>
+          </tr>
+          <tr>
+            <td>领域:</td>
+            <td id="FIELD"></td>
+            <td>用途</td>
+            <td id="PURPOSE"></td>
+          </tr>
+        </table>
+      </div>
+    </el-dialog>
+
+
+    </el-container>
 
 </template>
 
 <script>
 
 
-export default {
-  name: "manager",
-  components: {},
-  data() {
-    return {
-      name: JSON.parse(sessionStorage.getItem('user')).name,
-      role: JSON.parse(sessionStorage.getItem('user')).role,
-      isManager: false,
-    }
-  },
-  mounted() {
-    if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
-      this.isManager=true;
-    }
-    // console.log("mounted")
-    // this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
-    // this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
-    // this.avatarURL=JSON.parse(sessionStorage.user).icon
-    // document.getElementById("userAvatar").src=this.avatarURL
-    // document.getElementById("userid").innerText=this.$store.getters.username
-    // document.getElementById("userrole").innerText=this.$store.getters.role
-    // if(this.$store.getters.role=='manager'){
-    //   document.getElementById("logbutton").style.display='block'
-    //   document.getElementById("userbutton").style.display='block'
-    // }
-    // else if(this.$store.getters.role=='visitor'){
-    //   this.$router.push('/index')
-    // }
-    // else {
-    //   document.getElementById("logbutton").style.display='none'
-    //   document.getElementById("userbutton").style.display='none'
-    // }
+    export default {
+        name: "manager",
+        components: {
 
-    //内存中的模板已经挂载到页面中，页面渲染完成。
-  },
-  methods: {
-    goBackIndex() {
-      this.$router.push('/index')
-    },
-    goTomanager() {
-      this.$router.push('/manager/data')
-    },
-    goTolog() {
-      this.$router.push('/manager/log')
-    },
-    goTouser() {
-      this.$router.push('/manager/user')
-    },
-    testfuc() {
-      document.getElementById("logbutton").style.display = 'none'
-      document.getElementById("userbutton").style.display = 'none'
+        },
+        data() {
+            return {
+
+            }
+        },
+      mounted() {
+        this.avatarURL=JSON.parse(sessionStorage.user).icon;
+        if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
+          this.isManager=true;
+        }
+        //内存中的模板已经挂载到页面中，页面渲染完成。
+      },
+        methods:{
+          goBackIndex(){
+            this.$router.push('/index')
+          },
+          logout(){
+            this.$store.commit('setRole','visitor')
+            this.$router.push('/index')
+          },
+          goTomanager(){
+            this.$router.push('/manager/data')
+          },
+          goTolog(){
+            this.$router.push('/manager/log')
+          },
+          goTouser(){
+            this.$router.push('/manager/user')
+          },
+          testfuc(){
+            document.getElementById("logbutton").style.display='none'
+            document.getElementById("userbutton").style.display='none'
+          }
+        }
     }
-  },
-  created() {
-    // let that = this;
-    // this.$Bus.$on('sendNameRole', params => {
-    //   debugger;
-    //   that.llname = params.name;
-    //   that.role = params.role;
-    //   document.getElementById("p1").innerText = params.name;
-    //   // that.$set(that.llname,params.name)
-    //   alert(document.getElementById("p1").innerText);
-    //   alert("11111"+that.llname);
-    //   that.$forceUpdate();
-    //   alert(that.llname);
-    // })
-    // let that = this;
-    // this.$Bus.$on('sendNameRole', params => {
-    //   debugger;
-    //   that.name=params.name;
-    //   that.role=params.role;
-    // });
-  }
-}
 </script>
 
 <style>
-.asideButton {
-  text-align: left;
-  width: 70%;
-  padding-left: 15%;
-  padding-top: 10%;
-}
-
-.asideButton-manager {
-  text-align: left;
-  width: 70%;
-  padding-left: 15%;
-  padding-top: 10%;
-}
-
-.manager-font {
-  color: white;
-  font-size: 20px;
-}
+  .asideButton{
+    text-align:left;
+    width: 70%;
+    padding-left: 15%;
+    padding-top: 10%;
+  }
+  .asideButton-manager{
+    text-align:left;
+    width: 70%;
+    padding-left: 15%;
+    padding-top: 10%;
+  }
+  .manager-font{
+    color: white;
+    font-size: 20px;
+  }
+  .dialog-font{
+    color: #000000;
+    font-size: 20px;
+  }
+  td{
+    width:400px
+  }
 
 </style>

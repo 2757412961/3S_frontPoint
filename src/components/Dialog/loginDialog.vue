@@ -70,6 +70,7 @@ export default {
           let loginParams = {name: that.ruleForm.username, password: that.ruleForm.password};
           that.$axios.post(that.$URL.userLogin, loginParams).then(
               res => {
+                debugger;
                 if (res.code == 200) {
                   that.$message({
                     message: "用户登录成功",

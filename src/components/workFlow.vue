@@ -374,7 +374,7 @@
                          console.log(res);
                          if(res.code===200)
                          {
-                             this.$message.success('为您更新当前工作流');
+
                              this.$axios.post(this.$platfromUrl.runDag,{
                                  name:this.dagName,
                                  description:this.dagDescription,
@@ -386,6 +386,7 @@
                                      'nodesInfo':this.NodesInfo
                                  })
                              }).then(res=>{
+                                 this.$message.success('为您运行当前工作流');
                                  debugger;
                              }).catch(err=>{})
                          }
@@ -549,8 +550,7 @@
                     {
                         if(id==='我的模型')
                         {
-                            this.modelList=[{'id':0,'name':'Clip'}];
-                            this.modelSet.add('Clip');
+
                             //查询当前用户对应的模型列表
                             axios.get(this.$platfromUrl.getModelbyUserUrl).then(res=>{
                                 let mlist=res.data.body.result;

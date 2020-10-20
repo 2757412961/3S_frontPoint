@@ -1,5 +1,8 @@
 <template>
     <div class="monitorMain">
+        <div class="search">
+            <el-button icon="el-icon-refresh" circle @click="refresh"></el-button>
+        </div>
         <el-table :data="taskList" style="height: 100%;overflow: auto;" id="taskListTable"
                   :row-key='getTableRowKeys'
                   :expand-row-keys="expands"
@@ -324,6 +327,11 @@
             formatTime(row, column, cellValue) {
                 return this.$date.time2FormatStr(cellValue);
             },
+            refresh()
+            {
+                this.getWorkflowTable();
+                this.$forceUpdate();
+            }
         },
         created() {
             this.getWorkflowTable();
@@ -340,6 +348,13 @@
 </script>
 
 <style scoped>
+    .search
+    {
+        position: absolute;
+        right: 0%;
+        top:0%;
+        z-index: 2;
+    }
 .monitorMain
 {
     width: 90%;

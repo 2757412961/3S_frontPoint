@@ -103,7 +103,7 @@
 
 
 
-                    let url = 'http://10.79.231.81' + this.filePath;
+                    let url = this.$URL.baseUrl + this.filePath;
                     const res = await this.$http.get(url);
 
                     // global.console.log(res);
@@ -305,7 +305,8 @@
                 let look = marked(this.content);
                 look = look.replace(/<table>/g,"<table border=\"1\" cellspacing=\"0\">");
                 let imgFilePath = this.picPath.substring(0,this.picPath.lastIndexOf('/'));
-                let imgSrc = "img src=\"http://10.79.231.81" + imgFilePath + "/pic";
+                let imgSrc = "img src=\"" + this.$URL.baseUrl + imgFilePath + "/pic";
+
                 look = look.replace(/img src="pic/g, imgSrc);
                 global.console.log(look);
                 return look;
@@ -326,7 +327,7 @@
 
             });
             if(this.filePath==""){
-                this.filePath = "/images/3S/educase/caseDemo/case2.md";
+                this.filePath = "/images/3S/educase/caseDemo/case2.txt";
                 this.picPath = "/images/3S/educase/caseDemo/pic2.png";
                 global.console.log(that.filePath);
                 this.getArticleDetail();

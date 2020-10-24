@@ -51,7 +51,7 @@
             		if (valid) {
             			let that = this;
                         debugger;
-            			that.$axios.get(that.$URL.checkByName+that.ruleForm.username).then( 
+            			that.$axios.get(that.$URL.checkByName+'/'+that.ruleForm.username).then(
             				function(res) {
                                 debugger;
             					if (res.code == 200) {

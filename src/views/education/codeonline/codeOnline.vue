@@ -60,16 +60,9 @@
                 value: 'Python',
                 textarea1: '',
                 textarea2: '',
-                codeLS: "\"\"\"一元线性拟合\n" +
-                    "采用的拟合数据为xi=1,2,3,4,5,6,7\n" +
-                    "对应的相应函数值yi=0.5,2.5,2,4,3.5,6,5.5\n" +
-                    "\"\"\"\n" +
-                    " \n" +
+                codeLS: "\"\"\"一元函数线性拟合样例\"\"\"\n" +
                     "x = [1, 2, 3, 4, 5, 6, 7];\n" +
                     "y = [0.5, 2.5, 2, 4, 3.5, 6, 5.5]\n" +
-                    " \n" +
-                    " \n" +
-                    "\"\"\"完成拟合曲线参数计算\"\"\"\n" +
                     "def liner_fitting(data_x,data_y):\n" +
                     "      size = len(data_x);\n" +
                     "      i=0\n" +
@@ -90,20 +83,8 @@
                     "      return_k=(size*sum_xy-sum_x*sum_y)/(size*sum_sqare_x-sum_x*sum_x)\n" +
                     "      return_b=average_y-average_x*return_k\n" +
                     "      return [return_k,return_b]\n" +
-                    " \n" +
-                    " \n" +
-                    "\"\"\"完成完后曲线上相应的函数值的计算\"\"\"\n" +
-                    "def calculate(data_x,k,b):\n" +
-                    "    datay=[]\n" +
-                    "    for x in data_x:\n" +
-                    "        datay.append(k*x+b)\n" +
-                    "    return datay\n" +
-                    " \n" +
-                    " \n" +
                     "parameter = liner_fitting(x,y)\n" +
-                    "draw_data = calculate(x,parameter[0],parameter[1])\n" +
-                    "print('y = ', parameter[0], '* x',' + ',parameter[1]);\n" +
-                    "# print('拟合值：',draw_data);"
+                    "print('y = ', parameter[0], '* x',' + ',parameter[1]);"
             }
         },
         methods: {

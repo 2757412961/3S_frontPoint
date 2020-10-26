@@ -111,6 +111,7 @@
                 debugger;
                     this.mytotal=res.body.totalCount;
                     this.myEduList=res.body.result;
+                    this.$forceUpdate();
                 }).catch(err=>{})
             },
             download(){

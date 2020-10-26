@@ -18,7 +18,7 @@
                             </el-button>
                         </el-form-item>
 
-                        <el-form-item v-for="layerInfo in layerInfos" :id="layerInfo.layerID">
+                        <el-form-item v-for="layerInfo in layerInfos" :id="layerInfo.layerID" :key="layerInfo.layerID">
                             <el-button type="plain">
                                 <el-switch v-model="layerInfo.isShow"
                                            @change="showAndHiddenLayer(layerInfo.layerID, layerInfo.isShow)"></el-switch>
@@ -31,7 +31,7 @@
             </el-tabs>
         </div>
         <div style="float:right; width: 78%; height: 100%;" class="borderStyle">
-            <div id="map" style="position: relative; width: 100%; height: 100%;"></div>
+            <div id="mapByZjh" style="position: relative; width: 100%; height: 100%;"></div>
         </div>
     </div>
 </template>
@@ -193,7 +193,7 @@
                     isShow: true, // 是否显示
                 }],
                 elTabsActive: 'elTabsActive',
-                // globalMap: this.$globalConstant.map,
+                // globalMap: this.$globalMap.map,
 
             }
         },
@@ -202,16 +202,16 @@
         mounted() {
             this.initMap();
             // this.$Bus.$on('resizeMap', () => {
-            //     this.$globalConstant.map.resize();
+            //     this.$globalMap.map.resize();
             // });
 
         },
         methods: {
             initMap() {
                 mapboxgl.accessToken = 'pk.eyJ1IjoibGl5dWV5aSIsImEiOiJjanpkZmh1aGswMW91M3Bsa2ZxZmFpNGtjIn0.3O_iLJM7u3UyEyGBVKt1ug';
-                this.$globalConstant.map = {};
-                this.$globalConstant.map = new mapboxgl.Map({
-                    container: "map",
+                this.$globalMap.map = {};
+                this.$globalMap.map = new mapboxgl.Map({
+                    container: "mapByZjh",
                     style: 'mapbox://styles/mapbox/streets-v9',
                     center: [121.64, 29.70],
                     zoom: 1
@@ -219,27 +219,27 @@
 
                 // 设置语言
                 let language = new MapboxLanguage({defaultLanguage: "zh"});
-                this.$globalConstant.map.addControl(language);
+                this.$globalMap.map.addControl(language);
                 // 地图导航
                 let nav = new mapboxgl.NavigationControl();
-                this.$globalConstant.map.addControl(nav, "top-right");
+                this.$globalMap.map.addControl(nav, "top-right");
                 // 比例尺
                 let scale = new mapboxgl.ScaleControl({
                     maxWidth: 80,
                     unit: "imperial"
                 });
-                this.$globalConstant.map.addControl(scale);
+                this.$globalMap.map.addControl(scale);
                 scale.setUnit("metric");
                 // 全屏
-                this.$globalConstant.map.addControl(new mapboxgl.FullscreenControl());
+                this.$globalMap.map.addControl(new mapboxgl.FullscreenControl());
                 //设置鼠标样式
-                this.$globalConstant.map.getCanvas().style.cursor = 'default';
-                this.$globalConstant.map.on('load', () => {
-                    this.$globalConstant.map.resize();
+                this.$globalMap.map.getCanvas().style.cursor = 'default';
+                this.$globalMap.map.on('load', () => {
+                    this.$globalMap.map.resize();
                 });
             },
             addFeatureCollection(LayerID, Type, Source, Layout, Paint) {
-                this.$globalConstant.map.addLayer({
+                this.$globalMap.map.addLayer({
                     'id': LayerID,
                     // [fill, line, symbol, circle, heatmap, fill-extrusion, raster, hillshade, background]
                     'type': Type,
@@ -249,18 +249,18 @@
                 });
             },
             showAndHiddenLayer(layerID, layerShow) {
-                if (this.$globalConstant.map.getLayer(layerID) != undefined) {
+                if (this.$globalMap.map.getLayer(layerID) != undefined) {
                     if (layerShow) {
-                        this.$globalConstant.map.setLayoutProperty(layerID, 'visibility', 'visible');
+                        this.$globalMap.map.setLayoutProperty(layerID, 'visibility', 'visible');
                     } else {
-                        this.$globalConstant.map.setLayoutProperty(layerID, 'visibility', 'none');
+                        this.$globalMap.map.setLayoutProperty(layerID, 'visibility', 'none');
                     }
                 }
             },
             removeLayer(layerID) {
-                if (this.$globalConstant.map.getLayer(layerID) != undefined) {
-                    this.$globalConstant.map.removeLayer(layerID);
-                    this.$globalConstant.map.removeSource(layerID);
+                if (this.$globalMap.map.getLayer(layerID) != undefined) {
+                    this.$globalMap.map.removeLayer(layerID);
+                    this.$globalMap.map.removeSource(layerID);
                 }
             },
             removeButton(layerID) {
@@ -289,7 +289,7 @@
                 return PaintType;
             },
             addLayerButton(layerInfo, layerSource) {
-                if (this.$globalConstant.map.getLayer(layerInfo.layerID) == undefined) {
+                if (this.$globalMap.map.getLayer(layerInfo.layerID) == undefined) {
                     this.layerInfos.push(layerInfo);
 
                     // 添加到地图

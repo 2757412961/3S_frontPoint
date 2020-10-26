@@ -64,11 +64,12 @@
 </template>
 
 <script>
-import * as turf from "@turf/turf";
+// import * as turf from "turf/turf";
+import * as turf from '../../../static/js/turf.min'
 import polygonRender from "./polygonRender";
 import pointRender from "./pointRender";
 import lineRenderer from "./lineRenderer";
-import axios from "../util/axios";
+import axios from "../../util/axios";
 let white = "#fff";
 let grey = "#909399";
 let blue = "#409eff";

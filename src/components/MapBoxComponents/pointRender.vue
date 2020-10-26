@@ -71,7 +71,7 @@
 
 
 <script>
-import axios from "../util/axios";
+import axios from "../../util/axios";
 export default {
   name: "pointRender",
   data() {

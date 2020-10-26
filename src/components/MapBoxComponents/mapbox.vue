@@ -1,38 +1,51 @@
 <template>
-    <div class="row" style="width: 95%; margin: 0 auto 0 auto; overflow-y: hidden">
-        <div style="height: 600px; width: 418px; margin: 0 -350px 0 auto; overflow-y: hidden; position: relative; display:inline-block; zoom:1;">
-        </div>
-        <div style="height: 600px; width: 80%; margin: 0 auto 0 0">
+<!--    <div class="row" style="width: 95%; margin: 0 auto 0 auto; overflow-y: hidden">-->
+<!--        <div style="height: 600px; width: 418px; margin: 0 -350px 0 auto; overflow-y: hidden; position: relative; display:inline-block; zoom:1;">-->
+<!--        </div>-->
+<!--        <div style="height: 600px; width: 80%; margin: 0 auto 0 0">-->
+<!--            <div ref="basicMapbox" style="height: 100%;width: 100%"-->
+<!--                 id="map">-->
+<!--                <controlAll-->
+<!--                        @drawLayer="drawLayer"-->
+<!--                        @showSavepro="showSavepro"-->
+<!--                        @addjsonData="addjsonData"-->
+<!--                        @uploadData="uploadData"></controlAll>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <dataList></dataList>-->
+<!--            <uploadData></uploadData>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <div style="width: 100%; height: 100%;">
+        <div style="float:right; width: 100%; height: 100%;">
             <div ref="basicMapbox" style="height: 100%;width: 100%"
                  id="map">
                 <controlAll
                         @drawLayer="drawLayer"
                         @showSavepro="showSavepro"
                         @addjsonData="addjsonData"
-                        @uploadData="uploadData"
-                ></controlAll>
+                        @uploadData="uploadData"></controlAll>
             </div>
-        </div>
-        <div>
-            <dataList></dataList>
-            <uploadData></uploadData>
         </div>
     </div>
 </template>
 <script>
-    import mapboxDraw from '../../static/js/mapbox-gl-draw.js';
+    import mapboxDraw from '../../../static/js/mapbox-gl-draw.js';
     import mapboxgl from "mapbox-gl"
     import mapboxLanguage from '@mapbox/mapbox-gl-language'
     import 'mapbox-gl/dist/mapbox-gl.css'
-    import layerContent from "../components/layerContent";
-    import controlAll from "../components/controlAll";
-    import mapUrl from "../util/mapurl";
-    import * as turf from '@turf/turf';
-    import axios from "../util/axios";
-    import SavePro from "../components/savePro";
-    import openPro from "../components/openPro";
-    import dataList from "../components/dataList";
-    import uploadData from "../components/uploadData";
+    import layerContent from "./layerContent";
+    import controlAll from "./controlAll";
+    import mapUrl from "../../util/mapurl";
+    // import * as turf from '@turf/turf';
+    import * as turf from '../../../static/js/turf.min'
+    import axios from "../../util/axios";
+    import SavePro from "./savePro";
+    import openPro from "./openPro";
+    import dataList from "./dataList";
+    import uploadData from "./uploadData";
 
     let layerids=[];
     let draw;
@@ -459,8 +472,8 @@
 
 
 <style>
-    @import url("../../static/css/mapbox-gl.css");
-    @import url("../../static/css/mapbox-gl-draw.css");
+    @import url("../../../static/css/mapbox-gl.css");
+    @import url("../../../static/css/mapbox-gl-draw.css");
 
     #menu {
         background: #fff;

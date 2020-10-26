@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import globalConstant from "./util/global";
+import globalMap from "./util/globalMap";
 import axios from 'axios'
 import i18n from './i18n/i18n'
 import windowpage from './util/window'
@@ -46,6 +47,7 @@ Vue.use(echarts);
 Vue.use(vueGridLayout);
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$globalConstant = globalConstant;
+Vue.prototype.$globalMap = globalMap;
 Vue.prototype.Mapbox = mapBoxGl;
 Vue.prototype.$Bus = Bus;
 Vue.prototype.$URL = URL;
@@ -102,8 +104,10 @@ router.beforeEach((to, from, next) => {
     }
     if (to.fullPath == '/platform') {
         globalConstant.page = 'platform'
+        globalMap.page = 'platform'
     } else {
        globalConstant.page = '';
+        globalMap.page = '';
     }
     util.title(currentPageTitle, currentPageTitle2)//设置网页标题
 });

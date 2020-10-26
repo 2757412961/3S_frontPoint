@@ -51,7 +51,11 @@
                 </div>
             </el-col>
         </el-row>
-        <el-button @click="Back2">返回</el-button>
+        <div style="height: 10px"></div>
+        <el-row  type="flex" justify="end" >
+            <el-button @click="Back2"  style="margin-right: 22px;" >返回</el-button>
+        </el-row>
+        <div style="height: 10px"></div>
     </div>
 
 

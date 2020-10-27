@@ -1,5 +1,8 @@
 <!--主控制面板sidebar-->
 <template>
+
+
+
     <div id="control">
         <div class="sidebar-default">
             <div class="sidebar-menu">
@@ -280,8 +283,8 @@
 
 <style>
     #control {
-        height: 450px;
-        min-width: 418px;
+        height: 800px;
+        /*min-width: 418px;*/
         position: absolute;
         z-index: 10;
         margin-right: -350px;

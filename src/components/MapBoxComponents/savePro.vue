@@ -58,7 +58,7 @@
                             }
                             if(layers)
                             {
-                            axios.post('http://127.0.0.1:13000/summer/file/temp/projectSubmit', {
+                            axios.post(this.$platfromUrl.projectSubmit, {
                                     'layers': JSON.stringify(layers),
                                     'style': JSON.stringify(this.myMap.getStyle())
                                 },

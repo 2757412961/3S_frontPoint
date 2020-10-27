@@ -21,13 +21,22 @@
 <script>
 	import resetDialog from "./resetDialog"
 
+
+
     export default {
         name: "verifyDialog",
         components: {
         	resetDialog,
         },
         data() {
-            return {
+
+
+
+
+          return {
+
+             totalTime: 60,
+             canClick: true, //添加canClick
             	verifyDialogVisible: false,
                 ruleForm: {
                     username: '',
@@ -46,6 +55,7 @@
                 this.verifyDialogVisible = false;
                 this.$refs.ruleForm.resetFields();
             },
+
             sendVeriCode() {
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
@@ -59,8 +69,51 @@
             						that.$message({
             							message: "已向该账户绑定的邮箱发送验证邮件，请查收",
             							type: 'success'
-            						});
+            						},);
+
+
+                        this.content = this.totalTime + 's后重新发送' //这里解决60秒不见了的问题
+                        let clock = window.setInterval(() => {
+                          this.totalTime--
+                          this.content = this.totalTime + 's后重新发送'
+                          if (this.totalTime < 0) {     //当倒计时小于0时清除定时器
+                            window.clearInterval(clock)
+                            this.content = '重新发送验证码'
+                            this.totalTime = 60
+                          }
+                        },1000)
+
             						that.correctCode = res.body.code;
+
+                        // countDown (time) {
+                        //   if (time === 0) {
+                        //     this.disabledCodeBtn = true
+                        //     this.codeText = "获取"
+                        //     return
+                        //   } else {
+                        //     this.disabledCodeBtn = false;
+                        //     this.codeText = '重新发送(' + time + ')'
+                        //     time--
+                        //   }
+                        //   setTimeout(()=> {
+                        //     this.countDown(time)
+                        //   }, 1000)
+                        // },//验证码倒计时
+
+                        // let num = 60;
+                        // const timer = setInterval(function () {
+                        //   num--
+                        //   element.innerHTML = num + '秒后重新获取'
+                        //   element.style.color = ' #ccc'
+                        //   element.disabled = ' disabled'
+                        //   if (num === 0) {
+                        //     element.disabled = ''
+                        //     element.style.color = ' #ffa600'
+                        //     element.innerHTML = '获取验证码'
+                        //     clearInterval(timer)
+                        //   }
+                        // }, 1000);
+
             					} else {
             						that.$message({
             							message: "该账户未注册，请重新确认",

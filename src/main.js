@@ -15,6 +15,8 @@ import platformUrl from "./util/platformUrl";
 import 'echarts/dist/echarts.min.js'
 import 'font-awesome/css/font-awesome.min.css'
 
+
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Vuetify from 'vuetify'
@@ -36,6 +38,11 @@ import {time2FormatStr, formatStr2Time} from './util/date'
 import mapBoxGl from 'mapbox-gl'
 
 
+import md5 from 'js-md5'
+
+
+
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(ElementUI);
@@ -44,6 +51,7 @@ Vue.prototype.$vuetify = Vuetify;
 Vue.use(Vuelidate);
 Vue.use(echarts);
 Vue.use(vueGridLayout);
+Vue.prototype.$md5 = md5;//加密
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$globalConstant = globalConstant;
 Vue.prototype.Mapbox = mapBoxGl;

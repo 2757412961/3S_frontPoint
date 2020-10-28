@@ -54,8 +54,8 @@
                 // 返回的对象是JsonElement
                 // 网页打开对应url直接读取可以读取到
                 // 但axios会跳转到error
-                
-                axios.get('http://127.0.0.1:13000/summer/file/temp/'+row.data,{
+
+                axios.get(this.$platfromUrl.readProjectFile+row.data,{
                     params:{
                         type:2
                     }
@@ -96,7 +96,7 @@
                         'type':'circle',
                         'source': {
                             'type': 'geojson',
-                            'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+row.data
+                            'data': this.$platfromUrl.readDataFile+row.data
                         },
                         'paint':{
                             'circle-color':'#4682B4'
@@ -109,7 +109,7 @@
                             'type':'line',
                             'source': {
                                 'type': 'geojson',
-                                'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+row.data
+                                'data': this.$platfromUrl.readDataFile+row.data
                             },
                             'paint':{
                                 'line-color':'#4682B4'
@@ -122,7 +122,7 @@
                             'type':'fill',
                             'source': {
                                 'type': 'geojson',
-                                'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+row.data
+                                'data': this.$platfromUrl.readDataFile+row.data
                             },
                             'paint': {
                                 'fill-color': '#4682B4',

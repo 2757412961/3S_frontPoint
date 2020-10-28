@@ -119,7 +119,7 @@ export default {
       let filename = url.substr(url.lastIndexOf("/") + 1, url.length);
       if (filename) {
         axios
-          .get("http://127.0.0.1:13000/summer/file/temp/" + filename, {
+          .get(this.$platfromUrl.readProjectFile + filename, {
             params: {
               type: 2
             }

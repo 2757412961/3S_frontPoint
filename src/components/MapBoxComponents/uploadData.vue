@@ -3,10 +3,10 @@
     <el-dialog
             :title="title"
             :visible.sync="dialogVisible"
-            width="35%">
+            width="60%">
         <el-upload
                 class="upload-demo"
-                action="http://127.0.0.1:13000/summer/file/temp/datafileSubmit/"
+                action="http://127.0.0.1:13001/summer/file/datafileSubmit"
                 :before-upload="beforeUpload"
                 :before-remove="beforeRemove"
                 multiple
@@ -49,7 +49,7 @@
                 共选择了 ${files.length + fileList.length} 个文件`);
             },
             beforeRemove(file) {
-                axios.get('http://127.0.0.1:13000/summer/file/temp/dataDelete/'+file.name).
+                axios.get(this.$platfromUrl.deleteData+file.name).
                 then().catch();
             }
         },

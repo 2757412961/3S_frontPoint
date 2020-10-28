@@ -48,7 +48,7 @@
         methods:{
             //获取工程列表
             getProjectlist(){
-                axios.get('http://127.0.0.1:13000/summer/file/temp/list',{
+                axios.get(this.$platfromUrl.getTempFileList,{
                     params:{
                         type: 1
                     }
@@ -62,7 +62,7 @@
             //打开对应工程
             openProject() {
                 if(this.value){
-                    axios.get('http://127.0.0.1:13000/summer/file/temp/'+this.value,{
+                    axios.get(this.$platfromUrl.readProjectFile+this.value,{
                         params:{
                             type:1
                         }

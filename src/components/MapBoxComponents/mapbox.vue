@@ -30,10 +30,10 @@
                 </controlAll>
             </div>
         </div>
-              <div>
-                  <dataList></dataList>
-                  <uploadData></uploadData>
-              </div>
+        <div>
+            <dataList></dataList>
+            <uploadData></uploadData>
+        </div>
     </div>
 </template>
 <script>

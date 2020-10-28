@@ -73,9 +73,9 @@
                                     }
                                 }
                             ).then(
-                            res=>{
-                              console.log(res)
-                            }
+                                res=>{
+                                  console.log(res)
+                                }
                             )
                             .catch(function () { // 请求失败处理
                                     that.$message.error(this.form.proName+"工程保存失败")

@@ -1,0 +1,7 @@
+export function checkName(rule,value,callback){//这个变量名不能够随便定义 必须是check加上data中定义的属性
+    if (value===''){
+        callback(new Error('必填字段,不可为空'));
+    }else{
+        callback();
+    }
+};

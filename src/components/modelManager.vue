@@ -274,9 +274,8 @@
 .modelMain
 {
     position:relative;
-    width: 90%;
+    width: 100%;
     height: 100%;
-    margin-left: 10px;
 }
 .search
 {

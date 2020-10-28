@@ -1,6 +1,5 @@
 <template>
-    <div
-         style="width:90%; height:230px; background-color: #F2F6FC; border-top: 1px solid #DCDFE6;">
+    <div style="width:100%; height:230px; background-color: #F2F6FC; border-top: 1px solid #DCDFE6;">
         <el-row style="height: 85%; margin-bottom: 0;">
             <el-col :span="11" :offset="1">
                 <div style="width: 100%; height: 100%; padding: 1px;">

@@ -33,7 +33,10 @@
                                @current-change="ChangePage">
                 </el-pagination>
             </div>
-            <div style="height: 12px"></div>
+            <el-row  type="flex" justify="end" >
+                <el-button style="margin-right: 22px;" v-on:click="download()" >案例下载</el-button>
+            </el-row>
+            <div style="height: 10px"></div>
         </div>
     </div>
 
@@ -108,7 +111,14 @@
                 debugger;
                     this.mytotal=res.body.totalCount;
                     this.myEduList=res.body.result;
+                    this.$forceUpdate();
                 }).catch(err=>{})
+            },
+            download(){
+            //    src="http://10.79.231.81:90/images/"
+                let url = "http://10.79.231.81:90/images/";
+                window.open(url);
+
             }
         }
     }

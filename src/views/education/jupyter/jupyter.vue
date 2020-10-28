@@ -4,7 +4,11 @@
             :src="filePath"
             height="800px" width="100%" align="center">
     </iframe>
-    <el-button @click="Back">返回</el-button>
+    <div style="height: 10px"></div>
+    <el-row  type="flex" justify="end" >
+        <el-button @click="Back" style="margin-right: 22px;">返回</el-button>
+    </el-row>
+    <div style="height: 10px"></div>
 </div>
 
 </template>

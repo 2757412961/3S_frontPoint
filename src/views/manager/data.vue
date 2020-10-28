@@ -130,11 +130,21 @@
                 <el-tab-pane label="空间数据">
                     <addGeoData></addGeoData>
                 </el-tab-pane>
-                <el-tab-pane label="学位论文">学位论文</el-tab-pane>
-                <el-tab-pane label="专业期刊">专业期刊</el-tab-pane>
-                <el-tab-pane label="讲座信息">讲座信息</el-tab-pane>
-                <el-tab-pane label="常用工具">常用工具</el-tab-pane>
-                <el-tab-pane label="地图底图">地图底图</el-tab-pane>
+                <el-tab-pane label="学位论文">
+                  <addStudentPaper></addStudentPaper>
+                </el-tab-pane>
+                <el-tab-pane label="专业期刊">
+                  <addAdacademicPaper></addAdacademicPaper>
+                </el-tab-pane>
+                <el-tab-pane label="讲座信息">
+                  <addLecture></addLecture>
+                </el-tab-pane>
+                <el-tab-pane label="常用工具">
+                  <addOnlinetools></addOnlinetools>
+                </el-tab-pane>
+                <el-tab-pane label="地图底图">
+                  <addMapservice></addMapservice>
+                </el-tab-pane>
                 <el-tab-pane label="教学案例">
                     <teachingCases></teachingCases>
                 </el-tab-pane>
@@ -146,13 +156,21 @@
 <script>
     import addGeoData from "../../components/personalCenter/addGeoData";
     import teachingCases from "../../components/personalCenter/teachingCases";
-
+    import addStudentPaper from "../../components/personalCenter/addStudentPaper";
+    import addAdacademicPaper from "../../components/personalCenter/addAdacademicPaper"
+    import addLecture from "../../components/personalCenter/addLecture"
+    import addOnlinetools from "../../components/personalCenter/addOnlinetools"
+    import addMapservice from "../../components/personalCenter/addMapservice";
 
     export default {
         components: {
             addGeoData,
-            teachingCases
-
+            teachingCases,
+            addStudentPaper,
+            addAdacademicPaper,
+            addLecture,
+            addOnlinetools,
+            addMapservice
         },
 
         name: "Data",

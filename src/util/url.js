@@ -57,5 +57,11 @@ const URL = {
     paperAllSelect:"/studentpaper/allselect",
     journalAllSelect:"/academicpaper/allselect",
     lectureAllSelect:"/lecture/allselect",
+    // 后台上传数据的接口
+    uploadStudentpaper:"/studentpaper/insert",
+    uplodAdacademicPaper:"/academicpaper/insert",
+    uploadLecture:"/lecture/insert",
+    uploadOnlinetools:"/onlinetools/insert",
+    uploadMapservice:"/mapservice/insert",
 };
 export default URL;

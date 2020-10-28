@@ -61,7 +61,7 @@
                     }
                 })
                 .then(res=>{
-
+                    console.log(this.$platfromUrl.readDataFile+row.data)
                     //确定当前数据为FeatureCollection或Feature否则不符合规范，根据geojson的数据规范，获取到数据类型
                     //Point, LineString, Polygon, MultiPoint, MultiLineString, and MultiPolygon
                     let jsonData=res.data.body;
@@ -96,7 +96,7 @@
                         'type':'circle',
                         'source': {
                             'type': 'geojson',
-                            'data': this.$platfromUrl.readDataFile+row.data
+                            'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
                         },
                         'paint':{
                             'circle-color':'#4682B4'
@@ -109,28 +109,31 @@
                             'type':'line',
                             'source': {
                                 'type': 'geojson',
-                                'data': this.$platfromUrl.readDataFile+row.data
+                                'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
                             },
                             'paint':{
                                 'line-color':'#4682B4'
                             }
                         });
 
-                    else if(type=="Polygon"||type=='MultiPolygon')
-                        that.$parent.myMap.addLayer({
-                            'id': layername,
-                            'type':'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': this.$platfromUrl.readDataFile+row.data
-                            },
-                            'paint': {
-                                'fill-color': '#4682B4',
-                                'fill-opacity': 0.5,
-                                'fill-outline-color':'#0e2944'
-                            }
+                    else if(type=="Polygon"||type=='MultiPolygon'){
+                      console.log(this.$platfromUrl.readDataFile)
+                      that.$parent.myMap.addLayer({
+                        'id': layername,
+                        'type':'fill',
+                        'source': {
+                          'type': 'geojson',
+                          'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
+                        },
+                        'paint': {
+                          'fill-color': '#4682B4',
+                          'fill-opacity': 0.5,
+                          'fill-outline-color':'#0e2944'
+                        }
 
-                        });
+                      });
+                    }
+
                     else {
                         this.$message({
                             message: '数据不符合要求',

@@ -72,9 +72,11 @@
                                         'Content-Type': 'application/json'
                                     }
                                 }
-                            ).then((
-                                this.$message.success(this.form.proName+"工程保存成功")
-                            ))
+                            ).then(
+                            res=>{
+                              console.log(res)
+                            }
+                            )
                             .catch(function () { // 请求失败处理
                                     that.$message.error(this.form.proName+"工程保存失败")
                                 });

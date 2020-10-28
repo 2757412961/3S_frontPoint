@@ -74,6 +74,7 @@
                                 }
                             ).then(
                                 res=>{
+                                    that.$message.error(this.form.proName+"工程保存成功")
                                   console.log(res)
                                 }
                             )

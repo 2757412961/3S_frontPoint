@@ -24,7 +24,7 @@
                     结果可视化
                 </el-menu-item>
                 <el-menu-item index="5"
-                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,mapBoxdis=true">
+                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,mapBoxdis=true,resizeMap()">
                     可视化平台
                 </el-menu-item>
 
@@ -93,6 +93,9 @@
                 // this.$Bus.$emit('resizeMap', 'something');
                 setTimeout(() => {
                     this.$globalMap.map.resize();
+                }, 100);
+                setTimeout(() => {
+                    this.$globalConstant.map.resize();
                 }, 100);
             }
         }

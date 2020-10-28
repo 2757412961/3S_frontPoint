@@ -20,14 +20,18 @@
 
     <div style="width: 100%; height: 100%;">
         <div style="float:right; width: 100%; height: 100%;">
-            <div ref="basicMapbox" style="height: 100%;width: 100%"
+            <controlAll
+                    @drawLayer="drawLayer"
+                    @showSavepro="showSavepro"
+                    @addjsonData="addjsonData"
+                    @uploadData="uploadData"></controlAll>
+            <div ref="basicMapbox" style="width: 94%; height: 100%; float: right"
                  id="map">
-                <controlAll
-                        @drawLayer="drawLayer"
-                        @showSavepro="showSavepro"
-                        @addjsonData="addjsonData"
-                        @uploadData="uploadData"></controlAll>
             </div>
+        </div>
+        <div>
+            <dataList></dataList>
+            <uploadData></uploadData>
         </div>
     </div>
 </template>

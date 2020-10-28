@@ -280,7 +280,7 @@
 
 <style>
     #control {
-        height: 450px;
+        height: 600px;
         min-width: 418px;
         position: absolute;
         z-index: 10;

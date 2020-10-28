@@ -20,18 +20,15 @@
 
     <div style="width: 100%; height: 100%;">
         <div style="float:right; width: 100%; height: 100%;">
-            <controlAll
-                    @drawLayer="drawLayer"
-                    @showSavepro="showSavepro"
-                    @addjsonData="addjsonData"
-                    @uploadData="uploadData"></controlAll>
-            <div ref="basicMapbox" style="width: 94%; height: 100%; float: right"
+            <div ref="basicMapbox" style="height: 100%;width: 100%"
                  id="map">
+                <controlAll
+                        @drawLayer="drawLayer"
+                        @showSavepro="showSavepro"
+                        @addjsonData="addjsonData"
+                        @uploadData="uploadData">
+                </controlAll>
             </div>
-        </div>
-        <div>
-            <dataList></dataList>
-            <uploadData></uploadData>
         </div>
     </div>
 </template>
@@ -46,7 +43,7 @@
     // import * as turf from '@turf/turf';
     import * as turf from '../../../static/js/turf.min'
     import axios from "../../util/axios";
-    import SavePro from "./savePro";
+    import savePro from "./savePro";
     import openPro from "./openPro";
     import dataList from "./dataList";
     import uploadData from "./uploadData";
@@ -64,7 +61,7 @@
             }
         },
         components: {
-            SavePro,
+            savePro,
             openPro,
             controlAll,
             layerContent,
@@ -105,10 +102,8 @@
                     }
                 }
                 mapboxgl.accessToken = mapUrl.MapaccessToken ;
+              //若已有缓存样式，则加载地图样式为缓存样式
                 if(styleJson){
-
-
-                    //若已有缓存样式，则加载地图样式为缓存样式
                     this.$globalConstant.map = new mapboxgl.Map({
                         container: "map",
                         style: JSON.parse(styleJson),
@@ -298,7 +293,7 @@
                     }
                 }
                 if(feas.length===0) {this.$message.warning('当前未选中任何图形对象');return;}
-                //将点线面分别归置到对应的featurecollection当中
+                //将点线面分别归置到对应的featureCollection当中
                 for(let i=0;i<feas.length;i++)
                 {
                     let type=feas[i].geometry.type;
@@ -321,7 +316,8 @@
                 if(polygonfeatures.features.length>0)
                 {
                     //上传绘制数据到服务器，通过url的方式加载数据
-                    axios.post('http://127.0.0.1:13000/summer/file/temp/datajsonSubmit',{
+                    //axios.post('http://127.0.0.1:13000/summer/file/temp/datajsonSubmit',{
+                  axios.post(this.$platfromUrl.dataJsonSubmit,{
                         polygonfeatures
                     },{
                         params:{
@@ -333,7 +329,8 @@
                             'type':'fill',
                             'source': {
                                 'type': 'geojson',
-                                'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+'polygon_'+layername+'.json'
+                                //'data0': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+'polygon_'+layername+'.json',
+                                'data':this.$platfromUrl.readDataFile+'polygon_'+layername+'.json'
                             },
                             'paint': {
                                 'fill-color': '#4682B4',
@@ -349,7 +346,7 @@
                 }
                 if(linefeatures.features.length>0)
                 {
-                    axios.post('http://127.0.0.1:13000/summer/file/temp/datajsonSubmit',{
+                    axios.post(this.$platfromUrl.dataJsonSubmit,{
                         linefeatures
                     },{
                         params:{
@@ -361,7 +358,7 @@
                             'type':'line',
                             'source': {
                                 'type': 'geojson',
-                                'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+'line_'+layername+'.json'
+                                'data': this.$platfromUrl.readDataFile+'line_'+layername+'.json'
                             },
                             'paint':{
                                 'line-color':'#4682B4'
@@ -374,7 +371,7 @@
                 }
                 if(pointfeatures.features.length>0)
                 {
-                    axios.post('http://127.0.0.1:13000/summer/file/temp/datajsonSubmit',{
+                    axios.post(this.$platfromUrl.dataJsonSubmit,{
                         pointfeatures
                     },{
                         params:{
@@ -386,7 +383,7 @@
                             'type':'circle',
                             'source': {
                                 'type': 'geojson',
-                                'data': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+'point_'+layername+'.json'
+                                'data': this.$platfromUrl.readDataFile+'point_'+layername+'.json'
                             },
                             'paint':{
                                 'circle-color':'#4682B4'
@@ -414,7 +411,7 @@
             addjsonData()
             {
                 //获取样例数据列表
-                axios.get('http://127.0.0.1:13000/summer/file/temp/list',{
+                axios.get(this.$platfromUrl.getTempFileList,{
                     params:{
                         type:2
                     }

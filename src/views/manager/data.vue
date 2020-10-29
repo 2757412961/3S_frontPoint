@@ -4,7 +4,7 @@
         <div>
             <div class="managerSearchMenu">
                 <el-date-picker
-                        style="width: 500px"
+                        style="width: 400px"
                         v-model="datevalue"
                         type="datetimerange"
                         start-placeholder="开始日期"
@@ -14,7 +14,7 @@
             </div>
 
             <div class="managerSearchMenu">
-                <el-input v-model="inputvalue" placeholder="请输入数据名称" style="width: 500px"></el-input>
+                <el-input v-model="inputvalue" placeholder="请输入数据名称" style="width: 300px"></el-input>
             </div>
 
             <div class="managerSearchMenu">
@@ -55,30 +55,27 @@
                 <el-table-column
                         prop="name"
                         label="资源名称"
-                        width="420"
-                        align="center">
+                        align="center"
+                        :show-overflow-tooltip='true'>
                 </el-table-column>
                 <el-table-column
                         prop="time"
                         label="资源上传日期"
                         width="200"
-                        align="center">
-                </el-table-column>
-                <el-table-column
-                        prop="downloadAuthority"
-                        label="开放下载"
-                        width="140"
-                        align="center">
+                        align="center"
+                        :show-overflow-tooltip='true'>
                 </el-table-column>
                 <el-table-column
                         prop="uploader"
                         label="上传用户/作者"
                         width="140"
-                        align="center">
+                        align="center"
+                        :show-overflow-tooltip='true'>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作"
+                        width="200"
                         align="center">
                     <el-button type="success" size="mini" @click="getDetails">查看</el-button>
                     <el-button type="danger" size="mini" @click="deleteData">删除</el-button>

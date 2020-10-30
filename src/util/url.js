@@ -1,7 +1,7 @@
 const URL = {
     addUser:"/user/insert",
     batchAddUsers:"/user/batchinsert",
-    checkByName:"/user/checkbyname",
+    checkByName:"/user/checkbyname/",
     deleteUserById:"/user/delete/",
     deleteUserByName:"/user/deletebyname/",
     batchDeleteUserById:"/user//batchdelete/",

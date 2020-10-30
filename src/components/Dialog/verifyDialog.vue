@@ -9,7 +9,7 @@
             </el-form-item>
             <el-form-item prop="vericode" label="点击获取验证码，邮件将发送至绑定邮箱">
                 <el-input type="text" v-model="ruleForm.vericode" placeholder="请在此处输入验证码" style="width: 55%;"></el-input>
-                <el-button type="primary" plain style="width: 40%; margin-left: 5%; float: right" @click="sendVeriCode">获取验证码</el-button>
+                <el-button type="primary" plain style="width: 40%; margin-left: 5%; float: right" @click="sendVeriCode">{{content}}</el-button>
             </el-form-item>
             <el-form-item>
             	<el-button type="text" @click="verifyCode">下一步</el-button>
@@ -34,20 +34,20 @@
 
 
           return {
-
-             totalTime: 60,
-             canClick: true, //添加canClick
-            	verifyDialogVisible: false,
-                ruleForm: {
-                    username: '',
-                    vericode: ''
-                },
-                rules: {
-                    username: [
-                        {required: true, message: '用户名不能为空', trigger: 'blur'},
-                    ],
-                },
-                correctCode: '',
+              content: '获取验证码',
+              totalTime: 60,
+              canClick: true, //添加canClick
+              verifyDialogVisible: false,
+              ruleForm: {
+                  username: '',
+                  vericode: ''
+              },
+              rules: {
+                  username: [
+                      {required: true, message: '用户名不能为空', trigger: 'blur'},
+                  ],
+              },
+              correctCode: '',
             }
         },
         methods: {
@@ -63,56 +63,53 @@
                         debugger;
             			that.$axios.get(that.$URL.checkByName+that.ruleForm.username).then( 
             				function(res) {
-                                debugger;
-            					if (res.code == 200) {
-                                    debugger;
+            					if (res.code === 200) {
             						that.$message({
             							message: "已向该账户绑定的邮箱发送验证邮件，请查收",
             							type: 'success'
             						},);
 
-
-                        this.content = this.totalTime + 's后重新发送' //这里解决60秒不见了的问题
-                        let clock = window.setInterval(() => {
-                          this.totalTime--
-                          this.content = this.totalTime + 's后重新发送'
-                          if (this.totalTime < 0) {     //当倒计时小于0时清除定时器
-                            window.clearInterval(clock)
-                            this.content = '重新发送验证码'
-                            this.totalTime = 60
-                          }
-                        },1000)
+            						that.content = that.totalTime + 's后重新发送' //这里解决60秒不见了的问题
+                                    let clock = window.setInterval(() => {
+                                        that.totalTime--
+                                        that.content = that.totalTime + 's后重新发送'
+                                        if (that.totalTime < 0) {     //当倒计时小于0时清除定时器
+                                            window.clearInterval(clock)
+                                            that.content = '重新发送验证码'
+                                            that.totalTime = 60
+                                        }
+                                    },1000)
 
             						that.correctCode = res.body.code;
 
-                        // countDown (time) {
-                        //   if (time === 0) {
-                        //     this.disabledCodeBtn = true
-                        //     this.codeText = "获取"
-                        //     return
-                        //   } else {
-                        //     this.disabledCodeBtn = false;
-                        //     this.codeText = '重新发送(' + time + ')'
-                        //     time--
-                        //   }
-                        //   setTimeout(()=> {
-                        //     this.countDown(time)
-                        //   }, 1000)
-                        // },//验证码倒计时
+                                    // countDown (time) {
+                                    //   if (time === 0) {
+                                    //     this.disabledCodeBtn = true
+                                    //     this.codeText = "获取"
+                                    //     return
+                                    //   } else {
+                                    //     this.disabledCodeBtn = false;
+                                    //     this.codeText = '重新发送(' + time + ')'
+                                    //     time--
+                                    //   }
+                                    //   setTimeout(()=> {
+                                    //     this.countDown(time)
+                                    //   }, 1000)
+                                    // },//验证码倒计时
 
-                        // let num = 60;
-                        // const timer = setInterval(function () {
-                        //   num--
-                        //   element.innerHTML = num + '秒后重新获取'
-                        //   element.style.color = ' #ccc'
-                        //   element.disabled = ' disabled'
-                        //   if (num === 0) {
-                        //     element.disabled = ''
-                        //     element.style.color = ' #ffa600'
-                        //     element.innerHTML = '获取验证码'
-                        //     clearInterval(timer)
-                        //   }
-                        // }, 1000);
+                                    // let num = 60;
+                                    // const timer = setInterval(function () {
+                                    //   num--
+                                    //   element.innerHTML = num + '秒后重新获取'
+                                    //   element.style.color = ' #ccc'
+                                    //   element.disabled = ' disabled'
+                                    //   if (num === 0) {
+                                    //     element.disabled = ''
+                                    //     element.style.color = ' #ffa600'
+                                    //     element.innerHTML = '获取验证码'
+                                    //     clearInterval(timer)
+                                    //   }
+                                    // }, 1000);
 
             					} else {
             						that.$message({
@@ -127,7 +124,7 @@
             	})
             },
             verifyCode() {
-            	if (this.$refs.ruleForm.vericode == this.correctCode) {
+            	if (this.$refs.ruleForm.vericode === this.correctCode) {
             		this.$Bus.$emit('showResetPW');
             	} else {
             		this.$message({

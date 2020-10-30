@@ -43,6 +43,7 @@
                 this.$refs.ruleForm.resetFields();
             },
             resetPW() {
+              this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043 密码加密
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
             			let that = this;

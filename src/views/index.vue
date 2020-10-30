@@ -39,7 +39,7 @@
             </el-col>
         </el-header>
 
-        <el-main style="width: 100%; height: 100%; padding: 0px">
+        <el-main style="background-image:url('/static/img/sm1.jpeg'); font-family: 微软雅黑;width: 100%; height: 100%; padding: 0px">
             <!-- 页面主要内容部分 -->
             <div id="mainContent" style="width: 100%;">
                 <router-view></router-view>

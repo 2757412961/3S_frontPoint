@@ -52,6 +52,7 @@ export default {
     };
   },
   methods: {
+
     cancel() {
       this.$refs.ruleForm.resetFields();
     },
@@ -63,6 +64,7 @@ export default {
       this.$refs.ruleForm.resetFields();
     },
     login() {
+      this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043 密码加密
       this.logining = true;
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -70,7 +72,6 @@ export default {
           let loginParams = {name: that.ruleForm.username, password: that.ruleForm.password};
           that.$axios.post(that.$URL.userLogin, loginParams).then(
               res => {
-                debugger;
                 if (res.code == 200) {
                   that.$message({
                     message: "用户登录成功",
@@ -131,12 +132,18 @@ export default {
       return newObj;//返回排好序的
     }
   },
+
+
   created() {
     this.$Bus.$on('showLogin', () => {
       this.loginDialogVisible = true;
     })
-  }
+  },
+
 }
+//md5 str
+
+
 </script>
 
 <style scoped>

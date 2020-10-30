@@ -17,7 +17,7 @@
     <el-menu-item class="menuItemCla" index="3" @click="goToSpaceData">空间数据</el-menu-item>
     <el-menu-item class="menuItemCla" index="4" @click="goToWebTool">常用工具</el-menu-item>
     <el-menu-item class="menuItemCla" index="5" @click="goToMapMarket">地图集市</el-menu-item>
-    <el-menu-item class="menuItemCla" index="6" @click="goToOnlineAnalysis">在线分析</el-menu-item>
+    <el-menu-item class="menuItemCla" index="6" @click="goToOnlineAnalysis">虚拟仿真</el-menu-item>
     <el-submenu class="menuItemCla" index="7" style="color: white">
       <template slot="title">教学案例</template>
       <el-menu-item class="menuItemCla" index="7-1" @click="goToMarket">案例仓库</el-menu-item>
@@ -26,7 +26,11 @@
       <el-menu-item class="menuItemCla" index="7-4" @click="goToJupyter">交互式笔记本</el-menu-item>
     </el-submenu>
     <el-menu-item class="menuItemCla" index="8" @click="goToPlatform">分析平台</el-menu-item>
-    <el-menu-item class="menuItemCla" index="9" @click="goToTeamInfo">关于</el-menu-item>
+    <el-submenu class="menuItemCla" index="9" style="color: white">
+      <template slot="title">关于</template>
+      <el-menu-item class="menuItemCla" index="9-1" @click="goToTeamInfo">团队介绍</el-menu-item>
+      <el-menu-item class="menuItemCla" index="9-2" @click="goToDataInfo">数据声明</el-menu-item>
+    </el-submenu>
   </el-menu>
 </template>
 
@@ -83,7 +87,10 @@ name: "menuBar2",
       this.$router.push('/platform')
     },
     goToTeamInfo(){
-      this.$router.push('/teamInfo')
+      this.$router.push('/about/teamInfo')
+    },
+    goToDataInfo(){
+       this.$router.push('/about/dataInfo')
     },
 
 

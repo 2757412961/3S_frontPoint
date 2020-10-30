@@ -15,6 +15,7 @@ axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 axios.interceptors.request.use(
     config => {
 
+
         // config.headers = {
         //     'Content-Type': 'application/json' //x-www-form-urlencoded保持参数以key-value的形式传到后台，json是以json字符串的形式传到后台
         // };

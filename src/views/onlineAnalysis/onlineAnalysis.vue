@@ -1,4 +1,4 @@
-<template>
+<!--<template>
     <div style="background-color: #1da1f2">
         <el-container style="margin: auto;width: 70%;background-color: white">
             <el-header style="height: 200px">
@@ -82,6 +82,70 @@
 
         </el-container>
     </div>
+</template>-->
+<template>
+    <div style="background-color: #1da1f2">
+        <el-container style="margin: auto;width: 81%;background-color: white">
+            <el-main>
+                <br>
+                <img src="../../assets/平台介绍.png" height="30" width="30" style="float: left;vertical-align: middle"/>
+                <h1 style="float: left;padding-left: 10px;color: #66b1ff">平台概述</h1><br>
+                <el-divider style="float: left"></el-divider>
+
+                <div>
+                    <el-col :span="16">
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;海洋遥感在线分析平台，简称SatCO2平台，面向公众免费分发，目的是突破海洋卫星遥感数据便捷、高效使用的瓶颈，拓展海洋遥感数据应用。</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SatCO2平台可用于海量多源遥感、实测及模式数据的快速在线获取、高效计算和三维球体可视化分析；用户也可使用SatCO2对本地多源遥感和实测数据进行综合交互分析。</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SatCO2将不断推出更新版本。该平台不仅可以服务广大科研群体、海洋工作者、高校学生和社会公众，而且希望联合多学科科研人员和广大用户，逐步建立一个包括使用者、意见反馈者、需求提供者、产品验证者、算法贡献者、数据集贡献者、应用模块开发者等在内的生态圈；SatCO2通过署名、引用和致谢的方式，增加贡献者引用率；不断拓展海洋遥感数据和科研成果的应用能力和价值。</p>
+                    </el-col>
+                    <el-col :span="8">
+                        <div style="text-align: center;background: whitesmoke">
+                            <h1>海洋遥感在线分析平台</h1>
+                            <h1>(SatCO2-Pro)</h1>
+                            <img src="../../assets/地球 (1).png" height="100" width="100"/>
+                            <h1>Version 1.02 (2019/10)</h1>
+                            <el-button type="primary" icon="el-icon-download" @click="goToDownLoad()">下载</el-button>
+                        </div>
+                    </el-col>
+                </div>
+                <div>
+                    <img src="../../assets/SatCO2.png" style="margin-top: 30px;margin-bottom: 40px;margin-left: fill;margin-right: fill">
+                </div>
+                <div>
+                    <el-col :span="12">
+                        <img src="../../assets/视频教学.png" height="30" width="30" style="float: left;vertical-align: middle"/>
+                        <h1 style="float: left;padding-left: 10px;color: #66b1ff">教学视频</h1><br>
+                        <el-divider style="float: left"></el-divider>
+
+                        <div style="float: left">
+                            <ul style="font-size:20px;line-height: 30px">
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=52">1.数据加载</el-link><br>
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=140">3.统计分析</el-link><br>
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=137">5.对比分析</el-link>
+                            </ul>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
+                        <br>
+                        <el-divider style="float: left"></el-divider>
+                        <div style="float: left">
+                            <ul style="font-size:20px;line-height: 30px">
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=58">2.图像显示</el-link><br>
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=141">4.自定义计算</el-link><br>
+                                <img src="../../assets/箭头.png">
+                                <el-link href="http://www.satco2.com/index.php?m=content&c=index&a=show&catid=16&id=138">6.专题应用</el-link>
+                            </ul>
+                        </div>
+                    </el-col>
+                </div>
+            </el-main>
+        </el-container>
+    </div>
 </template>
 
 <script>
@@ -100,8 +164,8 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
-            goToBaidu(){
-                window.open("http://www.baidu.com")
+            goToDownLoad(){
+                window.open("http://www.satco2.com/index.php?m=content&c=index&a=lists&catid=59")
             }
         }
     }

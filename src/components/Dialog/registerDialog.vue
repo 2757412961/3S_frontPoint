@@ -1,4 +1,8 @@
 <template>
+  <div>
+    <show-more style="margin-top: 20px" :showHeight="showHeight" :content="contentTxt"></show-more>
+  </div>
+  <div >
     <el-dialog :visible.sync="registerDialogVisible" @close="closeDialog"
                style="width:840px; margin: 20px auto;">
         <h2 class="title">注册</h2>
@@ -16,7 +20,23 @@
             <el-form-item prop="email" label="邮箱">
                 <el-input type="email" v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
-            <el-form-item prop="country" label="国家(地区)">
+          <el-form-item prop="code" label="验证码">
+            <el-input type="text" v-model="ruleForm.code" style="width: 50%;float:left;margin-left:10%" placeholder="请输入验证码"></el-input>
+            <el-button type="primary" plain style="width: 20%;  float: right"
+                       @click="sendVeriCode">发送</el-button>
+          </el-form-item>
+<!--          <el-collapse-transition>-->
+<!--            <div v-show="show3">-->
+<!--                <div-->
+<!--                    v-for="item in classed"-->
+<!--                    :key="item.id"-->
+<!--                    class='institute'-->
+<!--                >{{ item.text }}</div>-->
+<!--              </div>-->
+<!--          </el-collapse-transition>-->
+<!--          <el-button class="show_more" type="text" @click="show3=!show3">{{word}}</el-button>-->
+
+          <el-form-item prop="country" label="国家(地区)">
                 <el-select v-model="selectedCountry" placeholder="请选择国家(地区)">
                   <el-option
                       v-for="item in countryOptions"
@@ -62,11 +82,7 @@
               </el-select>
           </el-form-item>
 
-          <el-form-item prop="code" label="验证码">
-            <el-input type="text" v-model="ruleForm.code" style="width: 50%;float:left;margin-left:30px" placeholder="请输入验证码"></el-input>
-            <el-button type="primary" plain style="width: 20%;  float: right"
-                       @click="sendVeriCode">发送</el-button>
-          </el-form-item>
+
 
             <el-form-item>
                 <el-button style="width:47%; float: left" @click="cancel">重置</el-button>
@@ -77,6 +93,7 @@
             </el-form-item>
         </el-form>
     </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -90,19 +107,22 @@
                 countryOptions: [],
                 selectedCountry: '',
                 instituteOptions: [
-                  {index: '1', value: '大学'},
-                  {index: '2', value: '企业'},
-                  {index: '3', value: '服务'}
+                  {index: '1', value: '政府'},
+                  {index: '2', value: '大学'},
+                  {index: '3', value: '企业'},
+                  {index: '4', value: '个人'}
                 ],
                 selectedType: '',
                 fieldOptions: [
                   {index: '1', value: '地理学类'},
-                  {index: '2', value: '信息学类'}
+                  {index: '2', value: '信息学类'},
+                  {index: '3', value: '其他学科'}
                 ],
                 selectedField: '',
                 purposeOptions: [
                   {index: '1', value: '学习'},
-                  {index: '2', value: '商业用途'}
+                  {index: '2', value: '商业用途'},
+                  {index: '3', value: '其他'}
                 ],
                 selectedPurpose: '',
                 ruleForm: {
@@ -125,6 +145,19 @@
                     ],
                     email: [
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
+                        {validator:function(rule,value,callback){
+                          if (value === '') {
+                            callback(new Error('请正确填写邮箱'));
+                          } else {
+                            if (value !== '') {
+                              var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                              if(!reg.test(value)){
+                                callback(new Error('请输入有效的邮箱'));
+                              }
+                            }else{
+                              callback();
+                            }}
+                          },trigger: 'blur'}
                     ],
                    code: [
                     {required: true, message: '请输入验证码', trigger: 'blur'},
@@ -149,10 +182,26 @@
                 let that = this;
                 debugger;
                 debugger;
+                if(typeof this.ruleForm.email==='undefined'){
+                  that.$message({
+                    message: "请正确填写邮箱",
+                    type: 'error'
+                })}
+                  else{
                 that.$message({
                   message: "已向该账户绑定的邮箱发送验证邮件，请查收",
                   type: 'success'
-                });
+                });}
+                  that.content = that.totalTime + 's后重新发送' //这里解决60秒不见了的问题
+                let clock = window.setInterval(() => {
+                  that.totalTime--
+                  that.content = that.totalTime + 's后重新发送'
+                  if (that.totalTime < 0) {     //当倒计时小于0时清除定时器
+                    window.clearInterval(clock)
+                    that.content = '重新发送验证码'
+                    that.totalTime = 60
+                  }
+                },1000)
                 that.correctCode = res.body.code;
 
                 // let num = 60;
@@ -172,14 +221,15 @@
             })
           },
           verifyCode() {
-            if (this.$refs.ruleForm.code == this.correctCode) {
-              this.$Bus.$emit('showregister');
+            if (this.ruleForm.code == this.correctCode) {
+                return true
             } else {
               this.$message({
                 message: "验证码错误，请重新确认",
                 type: 'error'
               });
-              this.$refs.ruleForm.code = '';
+              this.ruleForm.code = '';
+              return false
             }
           },
 
@@ -208,7 +258,7 @@
 
                         that.$axios.put(url, registerParams).then(
                             res => {
-                                if (res.code == 200) {
+                                if (res.code == 200|| this.$options.methods.verifyCode()) {
                                     debugger;
                                     that.$message({
                                         message: "用户注册成功",
@@ -234,7 +284,19 @@
             }
         },
 
-
+//       components:{
+//           beforeheader,
+//   CollapseTransition
+// },
+//       computed: {
+//         word: function() {
+//           if (this.show3 == false) {//对文字进行处理
+//             return '展开';
+//           } else {
+//             return '收起';
+//           }
+//         }
+//       },
 
 
         created() {

@@ -1,5 +1,5 @@
 <template>
-    <div class="pageContent">
+    <div class="pageContent" style="background-image: url('static/img/sm2.jpeg');background-attachment:fixed;">
         <!--表格内容-->
         <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column prop="index" type="index" width="80" align="center" :index="indexPageChange"></el-table-column>

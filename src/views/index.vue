@@ -39,7 +39,7 @@
             </el-col>
         </el-header>
 
-        <el-main style="width: 100%; height: 100%; padding: 0px">
+        <el-main style="font-family: 微软雅黑;width: 100%; height: 100%; padding: 0px">
             <!-- 页面主要内容部分 -->
             <div id="mainContent" style="width: 100%;">
                 <router-view></router-view>
@@ -78,11 +78,7 @@
                 this.$axios.get(this.$URL.userLoginStatus).then(
                     function(res) {
                         //如果当前是登录状态，则显示用户/管理员中心
-                        if (res.code == 200) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return res.code == 200 ? true : false;
                     }
                 );
                 return false;

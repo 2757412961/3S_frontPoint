@@ -12,8 +12,8 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
-      <div>
-        <div style="margin: 20px">
+      <div style="background-image:url('/static/img/sm1.jpeg');">
+        <div style="padding: 20px">
           <el-row :gutter="20">
             <el-col :span="6">
               <el-card style="height: 470px">
@@ -63,7 +63,6 @@
         </div>
       </div>
     </div>
-
 </template>
 <script>
 

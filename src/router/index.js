@@ -18,7 +18,8 @@ import Lecture from '../views/academia/lecture/lecture.vue'
 import spaceData from '../views/spacedata.vue'
 import onlineAnalysis from '../views/onlineAnalysis/onlineAnalysis.vue'
 import webTool from '../views/webTool.vue'
-import aboutUs from '../views/aboutUs.vue'
+import teaminfo from '../views/about/teamInfo.vue'
+import datainfo from '../views/about/dataInfo.vue'
 
 import Markdown from "../views/education/markdown/markdown.vue"
 import CodeOnline from '../views/education/codeonline/codeOnline.vue'
@@ -185,12 +186,35 @@ export const userRouters = [
     {
         meta: {
             title: '关于',
-            title2:'TEAM INFO'
+            title2:'ABOUT'
         },
-        path: '/teamInfo',
-        component: aboutUs,
-        name: 'teamInfo',
+        path: '/about',
+        redirect:'/about/teamInfo',
+        component: secIndex,
+        name: 'about',
         iconCls: 'el-icon-message',
+        children: [
+            {
+                meta: {
+                    title: '团队介绍',
+                    title2:'TEAM INFO'
+                },
+                path: '/about/teamInfo',
+                component: teaminfo,
+                name: 'teamInfo',
+                iconCls: 'el-icon-message',
+            },
+            {
+                meta: {
+                    title: '数据声明',
+                    title2:'Data INFO'
+                },
+                path: '/about/dataInfo',
+                component: datainfo,
+                name: 'dataInfo',
+                iconCls: 'el-icon-message',
+            }
+        ]
     }
 ];
 

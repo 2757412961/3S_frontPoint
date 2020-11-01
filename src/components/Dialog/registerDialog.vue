@@ -61,11 +61,19 @@
                 </el-option>
               </el-select>
           </el-form-item>
+
+          <el-form-item prop="code" label="验证码">
+            <el-input type="text" v-model="ruleForm.code" style="width: 50%;float:left;margin-left:30px" placeholder="请输入验证码"></el-input>
+            <el-button type="primary" plain style="width: 20%;  float: right"
+                       @click="sendVeriCode">发送</el-button>
+          </el-form-item>
+
             <el-form-item>
                 <el-button style="width:47%; float: left" @click="cancel">重置</el-button>
                 <el-button type="primary" style="width:47%; float:right" @click.native.prevent="register"
                            :loading="registering">确定
                 </el-button>
+
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -103,6 +111,7 @@
                     phone: '',
                     email: '',
                     institute: '',
+                    code:'',
                 },
                 rules: {
                     username: [
@@ -117,7 +126,11 @@
                     email: [
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
                     ],
+                   code: [
+                    {required: true, message: '请输入验证码', trigger: 'blur'},
+                  ],
                 },
+              correctCode: '',
             };
         },
         methods: {
@@ -128,8 +141,52 @@
                 this.registerDialogVisible = false;
                 this.$refs.ruleForm.resetFields();
             },
+
+
+          sendVeriCode() {
+            this.$refs.ruleForm.validate((valid) => {
+              if (valid) {
+                let that = this;
+                debugger;
+                debugger;
+                that.$message({
+                  message: "已向该账户绑定的邮箱发送验证邮件，请查收",
+                  type: 'success'
+                });
+                that.correctCode = res.body.code;
+
+                // let num = 60;
+                // const timer = setInterval(function () {
+                //   num--
+                //   element.innerHTML = num + '秒后重新获取'
+                //   element.style.color = ' #ccc'
+                //   element.disabled = ' disabled'
+                //   if (num === 0) {
+                //     element.disabled = ''
+                //     element.style.color = ' #ffa600'
+                //     element.innerHTML = '获取验证码'
+                //     clearInterval(timer)
+                //   }
+                // }, 1000);
+              }
+            })
+          },
+          verifyCode() {
+            if (this.$refs.ruleForm.code == this.correctCode) {
+              this.$Bus.$emit('showregister');
+            } else {
+              this.$message({
+                message: "验证码错误，请重新确认",
+                type: 'error'
+              });
+              this.$refs.ruleForm.code = '';
+            }
+          },
+
+
             register() {
                 debugger;
+              this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043  密码加密
                 this.registering = true;
                 this.$refs.ruleForm.validate((valid) => {
                     if (valid) {
@@ -148,6 +205,7 @@
                             purpose: that.selectedPurpose,
                             role: "user"
                         };
+
                         that.$axios.put(url, registerParams).then(
                             res => {
                                 if (res.code == 200) {
@@ -175,12 +233,17 @@
                 });
             }
         },
+
+
+
+
         created() {
             this.$Bus.$on('showRegister', () => {
                 this.registerDialogVisible = true;
             })
             this.countryOptions = countryOps.country;
-        }
+        },
+
     }
 </script>
 

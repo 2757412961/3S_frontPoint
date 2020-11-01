@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import globalConstant from "./util/global";
-import globalMap from "./util/globalMap";
 import axios from 'axios'
 import i18n from './i18n/i18n'
 import windowpage from './util/window'
@@ -15,6 +14,8 @@ import URL from './util/url'
 import platformUrl from "./util/platformUrl";
 import 'echarts/dist/echarts.min.js'
 import 'font-awesome/css/font-awesome.min.css'
+
+
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -37,6 +38,11 @@ import {time2FormatStr, formatStr2Time} from './util/date'
 import mapBoxGl from 'mapbox-gl'
 
 
+import md5 from 'js-md5'
+
+
+
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(ElementUI);
@@ -45,9 +51,9 @@ Vue.prototype.$vuetify = Vuetify;
 Vue.use(Vuelidate);
 Vue.use(echarts);
 Vue.use(vueGridLayout);
+Vue.prototype.$md5 = md5;//加密
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$globalConstant = globalConstant;
-Vue.prototype.$globalMap = globalMap;
 Vue.prototype.Mapbox = mapBoxGl;
 Vue.prototype.$Bus = Bus;
 Vue.prototype.$URL = URL;
@@ -104,10 +110,8 @@ router.beforeEach((to, from, next) => {
     }
     if (to.fullPath == '/platform') {
         globalConstant.page = 'platform'
-        globalMap.page = 'platform'
     } else {
        globalConstant.page = '';
-        globalMap.page = '';
     }
     util.title(currentPageTitle, currentPageTitle2)//设置网页标题
 });

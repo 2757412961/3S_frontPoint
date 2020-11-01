@@ -1,7 +1,7 @@
 const URL = {
     addUser:"/user/insert",
     batchAddUsers:"/user/batchinsert",
-    checkByName:"/user/checkbyname",
+    checkByName:"/user/checkbyname/",
     deleteUserById:"/user/delete/",
     deleteUserByName:"/user/deletebyname/",
     batchDeleteUserById:"/user//batchdelete/",
@@ -43,6 +43,8 @@ const URL = {
 
     getmapService:"mapservice/allselect",
     getwebTool:"/onlinetools/allselect",
+    getteamInfo:"/member/selectteachers",
+    getstudentInfo:"/member/selectbyversion",
     baseUrl:'http://10.79.231.81:90',
     getEduCasesUrl: "/teachModel/allselect",
     getGeoPopular:"/geodata/populardata",

@@ -113,6 +113,8 @@
         },
       mounted() {
         this.avatarURL=JSON.parse(sessionStorage.user).icon;
+        this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
+        this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
         if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
           this.isManager=true;
         }

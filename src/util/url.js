@@ -58,6 +58,7 @@ const URL = {
     journalAllSelect:"/academicpaper/allselect",
     lectureAllSelect:"/lecture/allselect",
     // 后台上传数据的接口
+    uploadGeodata:"/geodata/insert",
     uploadStudentpaper:"/studentpaper/insert",
     uplodAdacademicPaper:"/academicpaper/insert",
     uploadLecture:"/lecture/insert",

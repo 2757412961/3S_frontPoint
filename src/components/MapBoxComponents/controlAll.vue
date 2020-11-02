@@ -10,10 +10,10 @@
                     <i class="el-icon-coin"></i>
                     <p>数据</p>
                 </button>
-                <button id="showBasemapbt" class="sidebar-menu-item" @click="showBasemapitem()">
-                    <i class="el-icon-reading"></i>
-                    <p>底图</p>
-                </button>
+<!--                <button id="showBasemapbt" class="sidebar-menu-item" @click="showBasemapitem()">-->
+<!--                    <i class="el-icon-reading"></i>-->
+<!--                    <p>底图</p>-->
+<!--                </button>-->
                 <button id="showSaveprobt" class="sidebar-menu-item" @click="showSaveproitem()">
                     <i class="el-icon-folder-add"></i>
                     <p>保存</p>

@@ -1,8 +1,8 @@
 <!--自定义工程名，通过post方法，保存当前工程至服务器指定路径-->
 <template>
-    <el-form label-position="top" style="{display:displayForm}">
+    <el-form label-position="top" :style="{display:displayForm}">
         <el-form-item label="请选择工程" prop="proName"><!--prop必须有，和data中一致-->
-            <el-select v-model="value" placeholder="请选择" style="width:100%">
+            <el-select v-model="value" placeholder="请选择" style="width:100%" @visible-change="getProjectlist">
                 <el-option
                         v-for="i in projects.length"
                         :key=i
@@ -53,6 +53,7 @@
                         type: 1
                     }
                 }).then((res) => {
+                    debugger;
                     this.projects = res.data.body;
                 }).catch(function(error) {
                     console.log(error);
@@ -62,12 +63,14 @@
             //打开对应工程
             openProject() {
                 if(this.value){
+                    debugger;
                     axios.get(this.$platfromUrl.readProjectFile+this.value,{
                         params:{
                             type:1
                         }
                     })
                     .then(res=>{
+                        debugger;
                         let jsonData=res.data.body[0];
                         //读取工程数据内容:地图样式以及图层列表
                         let styleJson=jsonData.style;

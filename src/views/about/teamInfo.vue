@@ -207,7 +207,6 @@
                     that.detailtTableData.length=0
                     for (let num in getlist)
                     {
-                        console.log('result-111')
                         let templateInfo=[]
                         for(let key in getlist[num]){
                             dataInfo={

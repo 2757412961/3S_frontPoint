@@ -15,7 +15,7 @@
       <div style="background-image:url('/static/img/sm1.jpeg');">
         <div style="padding: 20px">
           <el-row :gutter="20">
-            <el-col :span="6">
+            <el-col :span="5">
               <el-card style="height: 470px">
                 <div slot="header" class="clearfix">
                   <span>最新论文</span>
@@ -26,7 +26,7 @@
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <el-card style="height: 470px">
                 <div slot="header" class="clearfix">
                   <span>最新期刊</span>
@@ -37,7 +37,7 @@
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <el-card style="height: 470px">
                 <div slot="header" class="clearfix">
                   <span>最新讲座</span>
@@ -48,7 +48,7 @@
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <el-card style="height: 470px">
                 <div slot="header" class="clearfix">
                   <span>热点数据</span>
@@ -59,15 +59,25 @@
                 </div>
               </el-card>
             </el-col>
+            <el-col :span="4">
+              <el-card style="height: 470px">
+                <div slot="header" class="clearfix">
+                  <span>统计数据</span>
+                </div>
+                <statisticalData></statisticalData>
+              </el-card>
+            </el-col>
           </el-row>
         </div>
       </div>
     </div>
 </template>
 <script>
+  import statisticalData from "../components/statisticalData";
 
     export default {
         components:{
+          statisticalData
         },
         data() {
             //TODO 初始化Nginx指定图片服务路径下的资源

@@ -1,25 +1,6 @@
 <template>
-<!--    <div class="row" style="width: 95%; margin: 0 auto 0 auto; overflow-y: hidden">-->
-<!--        <div style="height: 600px; width: 418px; margin: 0 -350px 0 auto; overflow-y: hidden; position: relative; display:inline-block; zoom:1;">-->
-<!--        </div>-->
-<!--        <div style="height: 600px; width: 80%; margin: 0 auto 0 0">-->
-<!--            <div ref="basicMapbox" style="height: 100%;width: 100%"-->
-<!--                 id="map">-->
-<!--                <controlAll-->
-<!--                        @drawLayer="drawLayer"-->
-<!--                        @showSavepro="showSavepro"-->
-<!--                        @addjsonData="addjsonData"-->
-<!--                        @uploadData="uploadData"></controlAll>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <dataList></dataList>-->
-<!--            <uploadData></uploadData>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div style="width: 100%; height: 100%;">
-        <div style="float:right; width: 100%; height: 100%;">
+
             <div ref="basicMapbox" style="height: 100%;width: 100%"
                  id="map">
                 <controlAll
@@ -29,7 +10,7 @@
                         @uploadData="uploadData">
                 </controlAll>
             </div>
-        </div>
+
         <div>
             <dataList></dataList>
             <uploadData></uploadData>
@@ -235,26 +216,26 @@
                         trash: true
                     }
                 });
-                setTimeout(function () {
-                    //二次加载后，缓存库中存在大量gl-draw工具的图层，
-                    // 待map加载完毕后，需删除这些图层，再加载drawcontrol，否则会出现冲突
-                    if(!styleJson)
-                    {
-                        that.$globalConstant.map.addControl(draw);
-                        return;
-                    }
-                    if(styleJson)
-                    {
-                        for(let i=0;i<JSON.parse(styleJson).layers.length;i++)
-                        {
-                            if(JSON.parse(styleJson).layers[i].id.substr(0,7)==='gl-draw')
-                                that.$globalConstant.map.removeLayer(JSON.parse(styleJson).layers[i].id);
-                        }
-                        that.$globalConstant.map.removeSource('mapbox-gl-draw-cold');
-                        that.$globalConstant.map.removeSource('mapbox-gl-draw-hot');
-                    }
-                    that.$globalConstant.map.addControl(draw);
-                },1000)
+                // setTimeout(function () {
+                //     //二次加载后，缓存库中存在大量gl-draw工具的图层，
+                //     // 待map加载完毕后，需删除这些图层，再加载drawcontrol，否则会出现冲突
+                //     if(!styleJson)
+                //     {
+                //         that.$globalConstant.map.addControl(draw);
+                //         return;
+                //     }
+                //     if(styleJson)
+                //     {
+                //         for(let i=0;i<JSON.parse(styleJson).layers.length;i++)
+                //         {
+                //             if(JSON.parse(styleJson).layers[i].id.substr(0,7)==='gl-draw')
+                //                 that.$globalConstant.map.removeLayer(JSON.parse(styleJson).layers[i].id);
+                //         }
+                //         that.$globalConstant.map.removeSource('mapbox-gl-draw-cold');
+                //         that.$globalConstant.map.removeSource('mapbox-gl-draw-hot');
+                //     }
+                //     that.$globalConstant.map.addControl(draw);
+                // },1000)
 
 
                 // 设置语言

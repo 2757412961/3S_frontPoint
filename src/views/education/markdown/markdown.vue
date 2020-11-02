@@ -191,7 +191,7 @@
 
                 this.titleClickScroll = true;
 
-                this.$refs.mdbody.scrollTop = this.$el.querySelector(`#data-${id+1}`).offsetTop - 20;
+                this.$refs.mdbody.scrollTop = this.$el.querySelector(`#data-${id}`).offsetTop - 20;
                 setTimeout(() => this.titleClickScroll = false, 100);
 
             },
@@ -310,9 +310,15 @@
                 look = look.replace(/<table>/g,"<table border=\"1\" cellspacing=\"0\">");
                 let imgFilePath = this.picPath.substring(0,this.picPath.lastIndexOf('/'));
                 let imgSrc = "img src=\"" + this.$URL.baseUrl + imgFilePath + "/pic";
-
                 look = look.replace(/img src="pic/g, imgSrc);
-                global.console.log(look);
+
+                // look = look.replace(/alt="image"/g,"alt=\"image\" class=\"img\"");
+                // let width = this.content.getElementsByClassName("img")[0].width;
+                // global.console.log(width);
+
+                let picSizeCont = "alt=\"image\" style=\"width: 50%;height:50%\"";
+                look = look.replace(/alt="image"/g,picSizeCont);
+                // global.console.log(look);
                 return look;
             },
         },
@@ -333,7 +339,7 @@
             if(this.filePath==""){
                 this.filePath = "/images/3S/educase/caseDemo/case2.txt";
                 this.picPath = "/images/3S/educase/caseDemo/pic2.png";
-                global.console.log(that.filePath);
+                // global.console.log(that.filePath);
                 this.getArticleDetail();
             }
 

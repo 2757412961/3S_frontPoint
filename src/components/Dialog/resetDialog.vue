@@ -21,6 +21,13 @@
     export default {
         name: "resetDialog",
         data() {
+            let validatePW = (rule, value, callback) => {
+                if (value !== this.ruleForm.newPW) {
+                    callback(new Error('两次输入密码不一致'));
+                } else {
+                    callback();
+                }
+            };
             return {
             	resetDialogVisible: false,
                 ruleForm: {
@@ -28,12 +35,14 @@
                     repeatNewPW: ''
                 },
                 username: '',
+                id:'',
                 rules: {
                     newPW: [
                         {required: true, message: '重置密码不能为空', trigger: 'blur'},
                     ],
                     repeatNewPW: [
-                        {required: true, message: '用户名不能为空', trigger: 'blur'}
+                        {required: true, message: '重置密码不能为空', trigger: 'blur'},
+                        {required: true, validator: validatePW, trigger: 'blur'}
                     ]
                 }
             }
@@ -47,25 +56,34 @@
               this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043 密码加密
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
-            			let that = this;
-                        let resetParams = {name: that.username, password: that.ruleForm.newPW};
-            			that.$axios.post(that.$URL.updateUserInfo, resetParams).then(
-            				function(res) {
-                                console.log(res)
-            					if (res.code === 200) {
-            						that.$message({
-            							message: "重置密码成功",
-            							type: 'success'
-            						});
-            					} else {
-            						that.$message({
-            							message: "重置密码失败",
-            							type: 'error'
-            						});
-            						that.$refs.ruleForm.resetFields();
-            					}
-            				}
-            			);
+            		    let that = this;
+                        that.$axios.get(that.$URL.searchUsersByName+that.username).then(
+                            function(res){
+                                if (res.code === 200) {
+                                    debugger;
+                                    that.id=res.body.id;
+                                    let resetParams = {id: that.id, password: that.ruleForm.newPW};
+                                    that.$axios.post(that.$URL.updateUserInfo, resetParams).then(
+                                        function(res) {
+                                            if (res.code === 200) {
+                                                that.$message({
+                                                    message: "重置密码成功",
+                                                    type: 'success'
+                                                });
+                                                that.resetDialogVisible = false;
+                                                that.$Bus.$emit('closeVerify');
+                                            } else {
+                                                that.$message({
+                                                    message: "重置密码失败",
+                                                    type: 'error'
+                                                });
+                                                that.$refs.ruleForm.resetFields();
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        );
             		}
             	})
             }

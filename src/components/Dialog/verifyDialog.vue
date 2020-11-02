@@ -141,6 +141,9 @@
             this.$Bus.$on('showVerify', () => {
                 this.verifyDialogVisible = true;
             })
+            this.$Bus.$on('closeVerify', () => {
+                this.verifyDialogVisible = false;
+            })
         }
     }
 </script>

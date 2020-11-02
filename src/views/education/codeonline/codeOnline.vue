@@ -47,16 +47,18 @@
                 options: [{
                     value: '选项1',
                     label: 'Python'
-                }, {
-                    value: '选项2',
-                    label: 'Java'
-                }, {
-                    value: '选项3',
-                    label: 'C'
-                }, {
-                    value: '选项4',
-                    label: 'Cpp'
-                }],
+                }
+                // , {
+                //     value: '选项2',
+                //     label: 'Java'
+                // }, {
+                //     value: '选项3',
+                //     label: 'C'
+                // }, {
+                //     value: '选项4',
+                //     label: 'Cpp'
+                // }
+                ],
                 value: 'Python',
                 textarea1: '',
                 textarea2: '',

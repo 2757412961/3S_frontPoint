@@ -19,10 +19,10 @@
                               @click="modelManagedis=false,workFlowdis=false,jobMonitordis=true,mapVisualdis=false,mapBoxdis=false">
                     任务监控
                 </el-menu-item>
-                <el-menu-item index="4"
-                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=true,mapBoxdis=false,resizeMap()">
-                    结果可视化
-                </el-menu-item>
+<!--                <el-menu-item index="4"-->
+<!--                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=true,mapBoxdis=false,resizeMap()">-->
+<!--                    结果可视化-->
+<!--                </el-menu-item>-->
                 <el-menu-item index="5"
                               @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,mapBoxdis=true,resizeMap()">
                     可视化平台

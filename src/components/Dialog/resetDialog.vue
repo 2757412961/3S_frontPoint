@@ -27,6 +27,7 @@
                     newPW: '',
                     repeatNewPW: ''
                 },
+                username: '',
                 rules: {
                     newPW: [
                         {required: true, message: '重置密码不能为空', trigger: 'blur'},
@@ -47,18 +48,19 @@
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
             			let that = this;
-                        let resetParams = {name: '', password: that.ruleForm.newPW};
-            			that.$axios.post(that.$URL.updateUserInfo, resetParams).then( 
+                        let resetParams = {name: that.username, password: that.ruleForm.newPW};
+            			that.$axios.post(that.$URL.updateUserInfo, resetParams).then(
             				function(res) {
-            					if (res.code == 200) {
+                                console.log(res)
+            					if (res.code === 200) {
             						that.$message({
             							message: "重置密码成功",
-            							type: success
+            							type: 'success'
             						});
             					} else {
             						that.$message({
-            							message: "",
-            							type: warning
+            							message: "重置密码失败",
+            							type: 'error'
             						});
             						that.$refs.ruleForm.resetFields();
             					}
@@ -69,7 +71,8 @@
             }
         },
         created() {
-            this.$Bus.$on('showResetPW', () => {
+            this.$Bus.$on('showResetPW', params => {
+                this.username = params.username;
                 this.resetDialogVisible = true;
             })
         }

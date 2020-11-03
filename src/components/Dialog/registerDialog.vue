@@ -6,7 +6,7 @@
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm"
                style="width: 60%; margin: 10px auto;">
         <el-form-item prop="username" label="用户名">
-          <el-input type="text" v-model="ruleForm.username" style="width: 60%" placeholder="请输入用户名"></el-input>
+          <el-input type="text" id="userName" v-model="ruleForm.username" style="width: 60%" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item prop="password" label="密码">
           <el-input type="password" v-model="ruleForm.password" style="width: 60%" placeholder="请输入密码"></el-input>
@@ -17,11 +17,11 @@
         <el-form-item prop="email" label="邮箱">
           <el-input type="email" v-model="ruleForm.email" style="width: 60%" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item prop="code" label="验证码">
-          <el-input type="text" v-model="ruleForm.code" style="width: 44%;float:left;margin-left:21.5%"
+        <el-form-item prop="vericode" label="验证码">
+          <el-input type="text" v-model="ruleForm.vericode" style="width: 44%;float:left;margin-left:21.5%"
                     placeholder="请输入验证码"></el-input>
           <el-button type="text" plain :disabled="isAble" style="width: 15%;  float: right"
-                     @click="sendVeriCode">发送
+                     @click="sendVeriCode">{{content}}
           </el-button>
         </el-form-item>
         <el-collapse v-model="activeNames" @change="handleChange">
@@ -93,6 +93,8 @@ export default {
   name: "registerDialog",
   data() {
     return {
+      content: '发送',
+      totalTime: 60,
       registerDialogVisible: false,
       registering: false,
       isAble: false,
@@ -113,7 +115,7 @@ export default {
       selectedField: '',
       purposeOptions: [
         {index: '1', value: '学习'},
-        {index: '2', value: '商业用途'},
+        {index: '2', value: '商业'},
         {index: '3', value: '其他'}
       ],
       selectedPurpose: '',
@@ -123,6 +125,9 @@ export default {
         phone: '',
         email: '',
         institute: '',
+        instituteType:'',
+        country:'',
+        vericode: '',
       },
       rules: {
         username: [
@@ -136,23 +141,25 @@ export default {
         ],
         email: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
-          {
-            validator: function (rule, value, callback) {
-              if (value === '') {
-                callback(new Error('请正确填写邮箱'));
-              } else {
-                if (value !== '') {
-                  var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-                  if (!reg.test(value)) {
-                    callback(new Error('请输入有效的邮箱'));
-                  }
-                } else {
-                  callback();
-                }
-              }
-            }, trigger: 'blur'
-          }
+          // {
+          //   validator: function (rule, value, callback) {
+          //     if (value === '') {
+          //       callback(new Error('请正确填写邮箱'));
+          //     } else {
+          //       if (value !== '') {
+          //         var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          //         if (!reg.test(value)) {
+          //           callback(new Error('请输入有效的邮箱'));
+          //         }
+          //       } else {
+          //         callback();
+          //       }
+          //     }
+          //   }, trigger: 'blur'
+          // }
         ],
+        vericode: [],
+        country:[],
 
       },
       correctCode: '',
@@ -161,10 +168,13 @@ export default {
   methods: {
     cancel() {
       this.$refs.ruleForm.resetFields();
+
     },
     closeDialog() {
       this.registerDialogVisible = false;
       this.$refs.ruleForm.resetFields();
+      this.ruleForm.vericode='';
+      this.selectedField='请选择专业领域';
     },
 
 
@@ -172,15 +182,14 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let that = this;
-          debugger;
+          let userName=document.getElementById('userName').value
           let userSearchURL = that.$URL.searchUsersByName + userName
           that.$axios.get(userSearchURL, "").then(
               res => {
-                console.log(res)
                 if (res.code === 200) {
                   that.$message({
                     message: "该用户名已存在",
-                    type: 'warning'//类型是接口规定好的么？如果是应该改成succes
+                    type: 'success'//类型是接口规定好的么？如果是应该改成succes
                   });
                 }//判断用户名是否重复
                 else {
@@ -193,19 +202,21 @@ export default {
                             type: 'success'
                           });
 
-                          that.content = that.totalTime + 's后重新发送' //这里解决60秒不见了的问题
+                          that.content = that.totalTime + 's' //这里解决60秒不见了的问题
                           let clock = window.setInterval(() => {
                             that.totalTime--
-                            that.content = that.totalTime + 's后重新发送'
+                            that.content = that.totalTime + 's'
                             that.isAble = true;
                             if (that.totalTime < 0) {     //当倒计时小于0时清除定时器
                               window.clearInterval(clock)
-                              that.content = '重新发送验证码'
+                              that.content = '重发'
                               that.totalTime = 60
                               that.isAble = false;
                             }
                           }, 1000)
-                          that.correctCode = res.body.code;
+                          that.correctCode = res.body.code;//这里有错误，body值为code和email
+                          console.log(res.body.code)
+                          debugger;
                         } else {
                           that.$message({
                             message: "发送失败",
@@ -222,8 +233,9 @@ export default {
     },
 
     register() {
+      console.log(this.ruleForm.vericode)
       debugger;
-      if (this.code === this.correctCode) {
+      if (this.ruleForm.vericode === this.correctCode) {
         this.$md5('holle') //     密码加密
         this.registering = true;
         this.$refs.ruleForm.validate((valid) => {
@@ -275,7 +287,7 @@ export default {
           message: "验证码错误，请重新确认",
           type: 'error'
         });
-        this.code = '';
+        this.ruleForm.vericode = '';
       }
     },
 

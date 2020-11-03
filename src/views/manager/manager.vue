@@ -28,17 +28,17 @@
             <img id="userAvatar" src="../../assets/timg.jpg" height="100" width="100" />
           </div>
           <div style="left: 15%;padding-left: 10%;">
-             <table border="0" class="manager-font" cellspacing="20">
-                <tr>
-                   <td>ID:</td>
-                   <td id="userid">{{name}}</td>
-                </tr>
-                <tr>
-                   <td>权限:</td>
-                   <td id="userrole">{{role}}</td>
-                </tr>
-               <el-button type="success" icon="el-icon-info" @click="getUsersInfo">个人资料</el-button>
-             </table>
+            <table border="0" class="manager-font" cellspacing="20">
+              <tr>
+                <td>ID:</td>
+                <td id="userid">{{name}}</td>
+              </tr>
+              <tr>
+                <td>权限:</td>
+                <td id="userrole">{{role}}</td>
+              </tr>
+              <el-button type="success" icon="el-icon-info" @click="getUsersInfo">个人资料</el-button>
+            </table>
           </div>
         </div>
 
@@ -58,9 +58,9 @@
     <!--    用户信息详情弹窗-->
 
     <el-dialog
-            title="用户详情"
-            :visible.sync="dialogUserInfoVisible"
-            width="60%">
+        title="用户详情"
+        :visible.sync="dialogUserInfoVisible"
+        width="60%">
       <div style="text-align:center;">
         <table border="0" class="dialog-font" cellspacing="30" :data="userTableData">
           <tr>
@@ -92,78 +92,149 @@
     </el-dialog>
 
 
-    </el-container>
+  </el-container>
 
 </template>
 
 <script>
 
 
-    export default {
-        name: "manager",
-        components: {
+export default {
+  name: "manager",
+  components: {
 
-        },
-        data() {
-            return {
-              name: JSON.parse(sessionStorage.user).name,
-              role: JSON.parse(sessionStorage.user).role,
-              isManager: false
-            }
-        },
-      mounted() {
-        this.avatarURL=JSON.parse(sessionStorage.user).icon;
-        this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
-        this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
-        if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
-          this.isManager=true;
-        }
-        //内存中的模板已经挂载到页面中，页面渲染完成。
-      },
-        methods:{
-          goBackIndex(){
-            this.$router.push('/index')
-          },
-          logout(){
-            this.$store.commit('setRole','visitor')
-            this.$router.push('/index')
-          },
-          goTomanager(){
-            this.$router.push('/manager/data')
-          },
-          goTolog(){
-            this.$router.push('/manager/log')
-          },
-          goTouser(){
-            this.$router.push('/manager/user')
-          },
-        }
+  },
+  data() {
+    return {
+      name: JSON.parse(sessionStorage.user).name,
+      role: JSON.parse(sessionStorage.user).role,
+      isManager: false,
+      avatarURL:"",
+      dialogUserInfoVisible:false,
+      userTableData:{}
+
     }
+  },
+  mounted() {
+    this.avatarURL=JSON.parse(sessionStorage.user).icon;
+    this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
+    this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
+    document.getElementById("userAvatar").src=this.avatarURL
+    if(JSON.parse(sessionStorage.getItem('user')).role=="manager"){
+      this.isManager=true;
+    }
+    //内存中的模板已经挂载到页面中，页面渲染完成。
+  },
+  methods:{
+    goBackIndex(){
+      this.$router.push('/index')
+    },
+    logout(){
+      this.$store.commit('setRole','visitor')
+      this.$router.push('/index')
+    },
+    goTomanager(){
+      this.$router.push('/manager/data')
+    },
+    goTolog(){
+      this.$router.push('/manager/log')
+    },
+    goTouser(){
+      this.$router.push('/manager/user')
+    },
+    getUsersInfo()
+    {
+      let that=this;
+      that.dialogUserInfoVisible = true
+      let userName=this.$store.getters.username
+      let userSearchURL=that.$URL.searchUsersByName+userName
+      that.$axios.get(userSearchURL,"").then(
+          res => {
+            if (res.code == 1002){
+              that.$message({
+                message: "查询失败",
+                type: 'warning'
+              });
+            }
+            else if(res.code == 200){
+              that.$message({
+                message: "查询成功",
+                type: 'success'
+              });
+              let userInfo={
+                id: res.body.id,
+                name: res.body.name,
+                phone: res.body.phone,
+                email:res.body.email,
+                userPrivileges:res.body.role,
+              }
+              document.getElementById("name").innerText=res.body.name
+              try{
+                document.getElementById("phone").innerText=res.body.phone;
+              }catch(err){
+                document.getElementById("phone").innerText='';
+              }
+              try{
+                document.getElementById("email").innerText=res.body.email;
+              }catch(err){
+                document.getElementById("email").innerText='';
+              }
+              try{
+                document.getElementById("COUNTRY").innerText=res.body.country;
+              }catch(err){
+                document.getElementById("COUNTRY").innerText='';
+              }
+              try{
+                document.getElementById("NSTITUTE").innerText=res.body.institute;
+              }catch(err){
+                document.getElementById("NSTITUTE").innerText='';
+              }
+              try{
+                document.getElementById("INSTITUTETYPE").innerText=res.body.institutetype;
+              }catch(err){
+                document.getElementById("INSTITUTETYPE").innerText='';
+              }
+              try{
+                document.getElementById("FIELD").innerText=res.body.field;
+              }catch(err){
+                document.getElementById("FIELD").innerText='';
+              }
+              try{
+                document.getElementById("PURPOSE").innerText=res.body.purpose;
+              }catch(err){
+                document.getElementById("PURPOSE").innerText='';
+              }
+            }
+          }
+      )
+    },
+  }
+}
 </script>
 
 <style>
-  .asideButton{
-    text-align:left;
-    width: 70%;
-    padding-left: 15%;
-    padding-top: 10%;
-  }
-  .asideButton-manager{
-    text-align:left;
-    width: 70%;
-    padding-left: 15%;
-    padding-top: 10%;
-  }
-  .manager-font{
-    color: white;
-    font-size: 20px;
-  }
-  .dialog-font{
-    color: #000000;
-    font-size: 20px;
-  }
-  td{
-    width:400px
-  }
+.asideButton{
+  text-align:left;
+  width: 70%;
+  padding-left: 15%;
+  padding-top: 10%;
+}
+.asideButton-manager{
+  text-align:left;
+  width: 70%;
+  padding-left: 15%;
+  padding-top: 10%;
+}
+.manager-font{
+  color: white;
+  font-size: 20px;
+}
+.dialog-font{
+  color: #000000;
+  font-size: 20px;
+}
+td{
+  width:300px
+}
 
 </style>

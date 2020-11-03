@@ -85,6 +85,7 @@ const store = new Vuex.Store({
     state:{
         username:"游客",
         role:"visitor",
+        height:-1
     },
     mutations:{
       setUsername(state,username){
@@ -92,6 +93,10 @@ const store = new Vuex.Store({
       },
         setRole(state,role){
             this.state.role=role
+        },
+        setHeight(state,height)
+        {
+            this.state.height=height;
         }
     },
     getters:{
@@ -121,22 +126,22 @@ router.afterEach((to, from, next) => {
 });
 function getWH()
 {
+    debugger;
     let pagewidth=window.innerWidth;
     let pageheight=window.innerHeight;
     if(typeof pagewidth!='number')
     {
         if(document.compatMode===''){
-            pagewidth=document.documentElement.clientWidth;
             pageheight=document.documentElement.clientHeight;
         }else{
-            pagewidth=document.body.clientWidth;
             pageheight=document.body.clientHeight;
         }
     }
-    Vue.prototype.$window.height=pageheight;
-    Vue.prototype.$window.width=pagewidth;
+    store.commit('setHeight',pageheight);
 }
 getWH();
+window.addEventListener('resize',getWH);
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

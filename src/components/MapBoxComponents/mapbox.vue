@@ -1,6 +1,5 @@
 <template>
     <div style="width: 100%; height: 100%;">
-
             <div ref="basicMapbox" style="height: 100%;width: 100%"
                  id="map">
                 <controlAll

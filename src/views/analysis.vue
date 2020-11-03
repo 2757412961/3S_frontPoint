@@ -1,5 +1,5 @@
 <template>
-    <el-container :style="{height:$window.height+'px'}">
+    <el-container id="myAnalysis" :style="{height:$store.state.height+'px'}">
         <el-aside width="200">
             <el-menu
                     default-active="1"
@@ -20,7 +20,7 @@
                     任务监控
                 </el-menu-item>
                 <el-menu-item index="5"
-                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,mapBoxdis=true,resizeMap()">
+                              @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,resizeMap()">
                     数据上图
                 </el-menu-item>
 
@@ -67,8 +67,7 @@
                 totalCount: 0
             }
         },
-        mounted() {
-        },
+        mounted() {},
         components: {
             workFlow,
             modelManager,
@@ -85,11 +84,9 @@
                 console.log(key, keyPath);
             },
             resizeMap() {
-                this.$Bus.$emit('showdataItem');
+                this.$Bus.$emit('showdataItem',this.mapBoxdis);
                 // this.$Bus.$emit('resizeMap', 'something');
-                setTimeout(() => {
-                    this.$globalMap.map.resize();
-                }, 100);
+                this.mapBoxdis=true;
                 setTimeout(() => {
                     this.$globalConstant.map.resize();
                 }, 100);

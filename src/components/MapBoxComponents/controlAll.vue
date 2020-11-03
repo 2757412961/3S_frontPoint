@@ -65,17 +65,18 @@
                 }
             },
             //控制数据功能面板的开关及sidebar样式调整
-            showDataitem() {
+            showDataitem(bl) {
                 debugger;
                 this.layerCon = true;
                 dataItem.style.display = (dataItem.style.display==='block')?'none':'block';
+                if(!bl) dataItem.style.display='block';
 
             }
         },
         created() {
             let that=this;
             this.$Bus.$on('showdataItem',pa=>{
-                that.showDataitem();
+                that.showDataitem(pa);
             })
         }
     }

@@ -20,6 +20,7 @@
                 </el-button>
                 <loginDialog></loginDialog>
                 <verifyDialog></verifyDialog>
+                <resetDialog></resetDialog>
                 <!-- 注册按钮 -->
                 <el-button id="signin" v-if="!isLogin" size="mini" type="primary" plain @click="showRegisterDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">注册
@@ -54,7 +55,8 @@
     import menuBar2 from './menuBar2'
     import pageFooter from './pageFooter'
     import loginDialog from "../components/Dialog/loginDialog"
-    import verifyDialog from "../components/Dialog/verifyDialog";
+    import verifyDialog from "../components/Dialog/verifyDialog"
+    import resetDialog from "../components/Dialog/resetDialog";
     import registerDialog from "../components/Dialog/registerDialog"
 
     export default {
@@ -63,6 +65,7 @@
             pageFooter,
             loginDialog,
             verifyDialog,
+            resetDialog,
             registerDialog
         },
         data() {
@@ -145,10 +148,8 @@
           //   document.getElementById("signin").style.display='none'
           // }
           if (sessionStorage.getItem('user') == null) {
-            debugger;
             this.isLogin = false;
           } else {
-            debugger;
             this.isLogin = true;
           }
         }

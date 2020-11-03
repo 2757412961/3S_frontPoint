@@ -66,5 +66,7 @@ const URL = {
     uploadLecture:"/lecture/insert",
     uploadOnlinetools:"/onlinetools/insert",
     uploadMapservice:"/mapservice/insert",
+    //注册发送验证码
+    check:"/user/check/",
 };
 export default URL;

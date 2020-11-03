@@ -124,8 +124,10 @@
             	})
             },
             verifyCode() {
-            	if (this.$refs.ruleForm.vericode === this.correctCode) {
-            		this.$Bus.$emit('showResetPW');
+            	if (this.ruleForm.vericode === this.correctCode) {
+            		this.$Bus.$emit('showResetPW',{
+            		    username: this.ruleForm.username,
+                    });
             	} else {
             		this.$message({
             			message: "验证码错误，请重新确认",
@@ -138,6 +140,9 @@
         created() {
             this.$Bus.$on('showVerify', () => {
                 this.verifyDialogVisible = true;
+            })
+            this.$Bus.$on('closeVerify', () => {
+                this.verifyDialogVisible = false;
             })
         }
     }

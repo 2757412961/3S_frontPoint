@@ -47,44 +47,22 @@
                 options: [{
                     value: '选项1',
                     label: 'Python'
-                }, {
-                    value: '选项2',
-                    label: 'Java'
-                }, {
-                    value: '选项3',
-                    label: 'C'
-                }, {
-                    value: '选项4',
-                    label: 'Cpp'
-                }],
+                }
+                // , {
+                //     value: '选项2',
+                //     label: 'Java'
+                // }, {
+                //     value: '选项3',
+                //     label: 'C'
+                // }, {
+                //     value: '选项4',
+                //     label: 'Cpp'
+                // }
+                ],
                 value: 'Python',
                 textarea1: '',
                 textarea2: '',
-                codeLS: "\"\"\"一元函数线性拟合样例\"\"\"\n" +
-                    "x = [1, 2, 3, 4, 5, 6, 7];\n" +
-                    "y = [0.5, 2.5, 2, 4, 3.5, 6, 5.5]\n" +
-                    "def liner_fitting(data_x,data_y):\n" +
-                    "      size = len(data_x);\n" +
-                    "      i=0\n" +
-                    "      sum_xy=0\n" +
-                    "      sum_y=0\n" +
-                    "      sum_x=0\n" +
-                    "      sum_sqare_x=0\n" +
-                    "      average_x=0;\n" +
-                    "      average_y=0;\n" +
-                    "      while i<size:\n" +
-                    "          sum_xy+=data_x[i]*data_y[i];\n" +
-                    "          sum_y+=data_y[i]\n" +
-                    "          sum_x+=data_x[i]\n" +
-                    "          sum_sqare_x+=data_x[i]*data_x[i]\n" +
-                    "          i+=1\n" +
-                    "      average_x=sum_x/size\n" +
-                    "      average_y=sum_y/size\n" +
-                    "      return_k=(size*sum_xy-sum_x*sum_y)/(size*sum_sqare_x-sum_x*sum_x)\n" +
-                    "      return_b=average_y-average_x*return_k\n" +
-                    "      return [return_k,return_b]\n" +
-                    "parameter = liner_fitting(x,y)\n" +
-                    "print('y = ', parameter[0], '* x',' + ',parameter[1]);"
+                codeLS: ""
             }
         },
         methods: {

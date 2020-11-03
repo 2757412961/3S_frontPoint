@@ -9,7 +9,7 @@
             </el-form-item>
             <el-form-item prop="vericode" label="点击获取验证码，邮件将发送至绑定邮箱">
                 <el-input type="text" v-model="ruleForm.vericode" placeholder="请在此处输入验证码" style="width: 55%;"></el-input>
-                <el-button type="primary" plain :disabled="isAble" style="width: 40%; margin-left: 5%; float: right" @click="sendVeriCode">{{content}}</el-button>
+                <el-button type="primary" plain style="width: 40%; margin-left: 5%; float: right" @click="sendVeriCode">{{content}}</el-button>
             </el-form-item>
             <el-form-item>
             	<el-button type="text" @click="verifyCode">下一步</el-button>
@@ -21,12 +21,18 @@
 <script>
 	import resetDialog from "./resetDialog"
 
+
+
     export default {
         name: "verifyDialog",
         components: {
         	resetDialog,
         },
         data() {
+
+
+
+
           return {
               content: '获取验证码',
               totalTime: 60,
@@ -53,23 +59,20 @@
             closeDialog() {
                 this.verifyDialogVisible = false;
                 this.$refs.ruleForm.resetFields();
-
             },
 
             sendVeriCode() {
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
             			let that = this;
-                  //that.isAble=true;
-            			that.$axios.get(that.$URL.checkByName+that.ruleForm.username).then(
+                        debugger;
+            			that.$axios.get(that.$URL.checkByName+that.ruleForm.username).then( 
             				function(res) {
-                      console.log(res);
             					if (res.code === 200) {
             						that.$message({
             							message: "已向该账户绑定的邮箱发送验证邮件，请查收",
             							type: 'success'
-            						});
-
+            						},);
 
             						that.content = that.totalTime + 's后重新发送' //这里解决60秒不见了的问题
                                     let clock = window.setInterval(() => {
@@ -77,14 +80,13 @@
                                         that.content = that.totalTime + 's后重新发送'
                                       that.isAble=true;
                                         if (that.totalTime < 0) {     //当倒计时小于0时清除定时器
-
                                             window.clearInterval(clock)
                                             that.content = '重新发送验证码'
                                             that.totalTime = 60
                                            that.isAble=false
                                         }
-                                        // else{this.isAble=true}
                                     },1000)
+
             						that.correctCode = res.body.code;
 
                        	} else{
@@ -100,22 +102,25 @@
             	})
             },
             verifyCode() {
-              let code =  this.ruleForm.vericode
-              console.log(code)
-            	if (code === this.correctCode) {
-            		this.$Bus.$emit('showResetPW');
+            	if (this.ruleForm.vericode === this.correctCode) {
+            		this.$Bus.$emit('showResetPW',{
+            		    username: this.ruleForm.username,
+                    });
             	} else {
             		this.$message({
             			message: "验证码错误，请重新确认",
             			type: 'error'
             		});
-            		this.ruleForm.vericode = '';
+            		this.$refs.ruleForm.vericode = '';
             	}
             }
         },
         created() {
             this.$Bus.$on('showVerify', () => {
                 this.verifyDialogVisible = true;
+            })
+            this.$Bus.$on('closeVerify', () => {
+                this.verifyDialogVisible = false;
             })
         }
     }

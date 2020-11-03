@@ -16,15 +16,20 @@
                                 style="width: 100%;max-height: 600px;overflow: auto"
                                 align="center">
                             <el-table-column
-                                    prop="nameOfDetails"
                                     label="项目名"
                                     width="150"
                                     align="left">
+<!--                              v-if="member!='photo' && nameOfDetails!='id'"-->
+                              <template slot-scope="scope">
+                                 <span v-if="scope.row.nameOfDetails!='photo' && scope.row.nameOfDetails!='id'">{{scope.row.nameOfDetails}}</span>
+                              </template>
                             </el-table-column>
                             <el-table-column
-                                    prop="detailValue"
                                     label="项目值"
                                     align="center">
+                              <template slot-scope="scope">
+                                <span v-if="scope.row.nameOfDetails!='photo' && scope.row.nameOfDetails!='id'">{{scope.row.detailValue}}</span>
+                              </template>
                             </el-table-column>
                         </el-table>
                         <el-card :body-style="{ padding: '0px' }" slot="reference">
@@ -168,6 +173,7 @@
                         }
                         that.mymemberLists2.push(templateInfo)
                     }
+                    console.log('ggg',that.mymemberLists2);
                 }).catch(err=>{});
             },
 

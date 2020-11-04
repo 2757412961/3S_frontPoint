@@ -51,8 +51,10 @@
                 label="操作"
                 width="200"
                 align="center">
-          <el-button type="warning" size="mini" @click="resetPassword">重置密码</el-button>
-          <el-button type="danger" size="mini" @click="deleteByUser">删除用户</el-button>
+          <template slot-scope="scope">
+            <el-button type="warning" size="mini" @click="resetPassword(scope.row)">重置密码</el-button>
+            <el-button type="danger" size="mini" @click="deleteByUser(scope.row)">删除用户</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <!-- 页码选择器-->
@@ -176,7 +178,7 @@
           )
         }
       },
-      deleteByUser(){
+      deleteByUser(event){
         let that=this;
         let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
         let username=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild.innerText
@@ -259,26 +261,26 @@
 
       },
 
-      resetPassword(){
-        let that=this;
-        let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
-        let username=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild.innerText
-        let resetParams={id: userId, password:123456}
+      resetPassword(row){
+          let that=this;
+          let userId=row.id;
+          let username=row.name;
+          let resetParams={id: userId, password:123456}
         that.$axios.post(that.$URL.updateUserInfo,resetParams).then(
-                res => {
-                  if (res.code == 9002){
-                    that.$message({
-                      message: "重置失败",
-                      type: 'warning'
-                    });
-                  }
-                  else if(res.code == 200){
-                    that.$message({
-                      message: "重置成功",
-                      type: 'success'
-                    })
-                  }
-                }
+            res => {
+              if (res.code == 9002){
+                that.$message({
+                  message: "重置失败",
+                  type: 'warning'
+                });
+              }
+              else if(res.code == 200){
+                that.$message({
+                  message: "重置成功",
+                  type: 'success'
+                })
+              }
+            }
         )
 
         let timestamp = (new Date()).getTime();
@@ -288,25 +290,72 @@
         let logParams = {actId:this.$store.getters.username,role:this.$store.getters.role,time:timelist,tableName:'user',objectId:username,type:'修改'};
         console.log(logParams)
         that.$axios.put(that.$URL.addLog,logParams).then(
-                res => {
-                  if (res.code == 9002){
-                    that.$message({
-                      message: "写入失败",
-                      type: 'warning'
-                    });
-                  }
-                  else if(res.code == 200){
-                    that.$message({
-                      message: "写入成功",
-                      type: 'success'
-                    })
-                  }
-                }
+            res => {
+              if (res.code == 9002){
+                that.$message({
+                  message: "写入失败",
+                  type: 'warning'
+                });
+              }
+              else if(res.code == 200){
+                that.$message({
+                  message: "写入成功",
+                  type: 'success'
+                })
+              }
+            }
         )
 
 
-
       },
+      // resetPassword(){
+      //   let that=this;
+      //   let userId=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.firstChild.innerText
+      //   let username=event.target.parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild.innerText
+      //   let resetParams={id: userId, password:123456}
+      //   that.$axios.post(that.$URL.updateUserInfo,resetParams).then(
+      //           res => {
+      //             if (res.code == 9002){
+      //               that.$message({
+      //                 message: "重置失败",
+      //                 type: 'warning'
+      //               });
+      //             }
+      //             else if(res.code == 200){
+      //               that.$message({
+      //                 message: "重置成功",
+      //                 type: 'success'
+      //               })
+      //             }
+      //           }
+      //   )
+      //
+      //   let timestamp = (new Date()).getTime();
+      //   let timelist=that.transferTime(timestamp)
+      //
+      //   console.log(timelist)
+      //   let logParams = {actId:this.$store.getters.username,role:this.$store.getters.role,time:timelist,tableName:'user',objectId:username,type:'修改'};
+      //   console.log(logParams)
+      //   that.$axios.put(that.$URL.addLog,logParams).then(
+      //           res => {
+      //             if (res.code == 9002){
+      //               that.$message({
+      //                 message: "写入失败",
+      //                 type: 'warning'
+      //               });
+      //             }
+      //             else if(res.code == 200){
+      //               that.$message({
+      //                 message: "写入成功",
+      //                 type: 'success'
+      //               })
+      //             }
+      //           }
+      //   )
+      //
+      //
+      //
+      // },
 
     },
   }

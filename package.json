@@ -14,7 +14,7 @@
     "@mapbox/mapbox-gl-language": "^0.10.0",
     "crypto": "^1.0.1",
     "deck.gl": "7.0.3",
-    "echarts": "^4.1.0",
+    "echarts": "^4.9.0",
     "element-ui": "^2.13.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",

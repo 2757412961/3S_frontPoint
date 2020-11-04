@@ -30,6 +30,11 @@ const platformUrl= {
    projectSubmit:'/file/projectSubmit', //向存储工程json路径提交工程json
    datafileSubmit:'/file/datafileSubmit', //向存储数据json路径提交json文件
    dataJsonSubmit:'/file/dataJsonSubmit',//接收json对象以及文件名，将json对象写入数据路径的对应的文件中
-   deleteData:'/file/dataDelete/' //在存储数据json路径删除指定文件
+   deleteData:'/file/dataDelete/', //在存储数据json路径删除指定文件
+
+   //地图交互，从空间数据中获取数据列表
+   DataBaseGeoData: '/geodata/allselect'
+
+
 }
 export default platformUrl;

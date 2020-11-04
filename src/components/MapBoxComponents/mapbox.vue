@@ -1,17 +1,20 @@
 <template>
     <div style="width: 100%; height: 100%;">
-            <div ref="basicMapbox" style="height: 100%;width: 100%"
-                 id="map">
-                <controlAll
-                        @drawLayer="drawLayer"
-                        @showSavepro="showSavepro"
-                        @addjsonData="addjsonData"
-                        @uploadData="uploadData">
-                </controlAll>
-            </div>
+        <div ref="basicMapbox" style="height: 100%;width: 100%"
+             id="map">
+            <controlAll
+                    @drawLayer="drawLayer"
+                    @showSavepro="showSavepro"
+                    @addjsonData="addjsonData"
+                    @uploadData="uploadData"
+                    @addDBData="addDBData"
+            >
+            </controlAll>
+        </div>
 
         <div>
             <dataList></dataList>
+            <dbDataList></dbDataList>
             <uploadData></uploadData>
         </div>
     </div>
@@ -30,18 +33,19 @@
     import savePro from "./savePro";
     import openPro from "./openPro";
     import dataList from "./dataList";
+    import dbDataList from "./DBDataList"
     import uploadData from "./uploadData";
 
-    let layerids=[];
+    let layerids = [];
     let draw;
     let mymap;
     export default {
         data() {
             return {
-                layerNames:layerids,
-                drawTool:draw,
-                myMap:mymap,
-                drawTime:0
+                layerNames: layerids,
+                drawTool: draw,
+                myMap: mymap,
+                drawTime: 0
             }
         },
         components: {
@@ -50,55 +54,50 @@
             controlAll,
             layerContent,
             dataList,
+            dbDataList,
             uploadData
         },
         mounted() {
-            mymap=this.init();
-            this.drawTool=draw;
-            this.myMap=mymap;
+            mymap = this.init();
+            this.drawTool = draw;
+            this.myMap = mymap;
         },
         methods: {
             init() {
                 let that = this;
                 //读取缓存数据内容:地图样式以及图层列表
-                let styleJson=sessionStorage.getItem('mapstyle');
-                let layers=sessionStorage.getItem('layers');
-                let pos=0;
-                if(layers)
-                {
+                let styleJson = sessionStorage.getItem('mapstyle');
+                let layers = sessionStorage.getItem('layers');
+                let pos = 0;
+                if (layers) {
                     //若图层列表不为空，则更新layerids中内容，使其与缓存一致
                     let settemp;
-                    for(let i=0;i<layers.length;i++)
-                    {
-                        settemp=new Set(layerids);
-                        if(layers[i]===',')
-                        {
-                            if(!settemp.has(layers.substr(pos,i-pos)))
-                                layerids.push(layers.substr(pos,i-pos));
-                            pos=i+1;
+                    for (let i = 0; i < layers.length; i++) {
+                        settemp = new Set(layerids);
+                        if (layers[i] === ',') {
+                            if (!settemp.has(layers.substr(pos, i - pos)))
+                                layerids.push(layers.substr(pos, i - pos));
+                            pos = i + 1;
                         }
-                        if(i===layers.length-1)
-                        {
-                            if(!settemp.has(layers.substr(pos,i+1-pos)))
-                                layerids.push(layers.substr(pos,i+1-pos));
+                        if (i === layers.length - 1) {
+                            if (!settemp.has(layers.substr(pos, i + 1 - pos)))
+                                layerids.push(layers.substr(pos, i + 1 - pos));
                         }
 
                     }
                 }
-                mapboxgl.accessToken = mapUrl.MapaccessToken ;
-              //若已有缓存样式，则加载地图样式为缓存样式
-                if(styleJson){
+                mapboxgl.accessToken = mapUrl.MapaccessToken;
+                //若已有缓存样式，则加载地图样式为缓存样式
+                if (styleJson) {
                     this.$globalConstant.map = new mapboxgl.Map({
                         container: "map",
                         style: JSON.parse(styleJson),
                         center: [121.64, 29.70],
                         zoom: 4,
-                        version:8,
+                        version: 8,
                         interactive: true,
                     });
-                }
-                else
-                {
+                } else {
                     //缓存数据库中无内容，初始化地图，加载天地图底图和注记
                     this.$globalConstant.map = new mapboxgl.Map({
                         container: "map",
@@ -111,7 +110,7 @@
                                     "tiles": [mapUrl.tdtvecUrl],
                                     "tileSize": 256,
                                 },
-                                "tdtcva":{
+                                "tdtcva": {
                                     "type": "raster",
                                     "tiles": [mapUrl.tdtcvaUrl],
                                     "tileSize": 256,
@@ -121,7 +120,7 @@
                                     "tiles": [mapUrl.tdtimgUrl],
                                     "tileSize": 256,
                                 },
-                                "tdtcia":{
+                                "tdtcia": {
                                     "type": "raster",
                                     "tiles": [mapUrl.tdtciaUrl],
                                     "tileSize": 256,
@@ -131,7 +130,7 @@
                                     "tiles": [mapUrl.tdtterUrl],
                                     "tileSize": 256,
                                 },
-                                "tdtcta":{
+                                "tdtcta": {
                                     "type": "raster",
                                     "tiles": [mapUrl.tdtctaUrl],
                                     "tileSize": 256,
@@ -139,64 +138,64 @@
                             },
                             "layers": [
                                 {
-                                    "id":"tdtvec",
-                                    "type":"raster",
-                                    "source":"tdtvec",
+                                    "id": "tdtvec",
+                                    "type": "raster",
+                                    "source": "tdtvec",
                                     "layout": {
                                         'visibility': 'visible',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 },
                                 {
-                                    "id":"tdtcva",
-                                    "type":"raster",
-                                    "source":"tdtcva",
+                                    "id": "tdtcva",
+                                    "type": "raster",
+                                    "source": "tdtcva",
                                     "layout": {
                                         'visibility': 'visible',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 },
                                 {
-                                    "id":"tdtimg",
-                                    "type":"raster",
-                                    "source":"tdtimg",
+                                    "id": "tdtimg",
+                                    "type": "raster",
+                                    "source": "tdtimg",
                                     "layout": {
                                         'visibility': 'none',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 },
                                 {
-                                    "id":"tdtcia",
-                                    "type":"raster",
-                                    "source":"tdtcia",
+                                    "id": "tdtcia",
+                                    "type": "raster",
+                                    "source": "tdtcia",
                                     "layout": {
                                         'visibility': 'none',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 },
                                 {
-                                    "id":"tdtter",
-                                    "type":"raster",
-                                    "source":"tdtter",
+                                    "id": "tdtter",
+                                    "type": "raster",
+                                    "source": "tdtter",
                                     "layout": {
                                         'visibility': 'none',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 },
                                 {
-                                    "id":"tdtcta",
-                                    "type":"raster",
-                                    "source":"tdtcta",
+                                    "id": "tdtcta",
+                                    "type": "raster",
+                                    "source": "tdtcta",
                                     "layout": {
                                         'visibility': 'none',
                                     },
-                                    "minzoom":0,
-                                    "maxzoom":17
+                                    "minzoom": 0,
+                                    "maxzoom": 17
                                 }
                             ]
                         },
@@ -211,7 +210,7 @@
                     controls: {
                         polygon: true,
                         point: true,
-                        line_string:true,
+                        line_string: true,
                         trash: true
                     }
                 });
@@ -258,179 +257,181 @@
                 return that.$globalConstant.map;
             },
             drawLayer() {
-                let feas=draw.getSelected().features;
-                let pointfeatures=turf.featureCollection([]);
-                let polygonfeatures=turf.featureCollection([]);
-                let linefeatures=turf.featureCollection([]);
-                let layername=0;
-                if(layerids.length)
-                {
-                    for(let i=0;i<layerids.length;i++)
-                    {
-                        let index=layerids[i].lastIndexOf('_');
-                        if(index!==-1)
-                        {
-                            if(layername<parseInt(layerids[i].substr(index+1,layerids[0].length))+1)
-                                layername=parseInt(layerids[i].substr(index+1,layerids[0].length))+1;
+                let feas = draw.getSelected().features;
+                let pointfeatures = turf.featureCollection([]);
+                let polygonfeatures = turf.featureCollection([]);
+                let linefeatures = turf.featureCollection([]);
+                let layername = 0;
+                if (layerids.length) {
+                    for (let i = 0; i < layerids.length; i++) {
+                        let index = layerids[i].lastIndexOf('_');
+                        if (index !== -1) {
+                            if (layername < parseInt(layerids[i].substr(index + 1, layerids[0].length)) + 1)
+                                layername = parseInt(layerids[i].substr(index + 1, layerids[0].length)) + 1;
                         }
 
                     }
                 }
-                if(feas.length===0) {this.$message.warning('当前未选中任何图形对象');return;}
+                if (feas.length === 0) {
+                    this.$message.warning('当前未选中任何图形对象');
+                    return;
+                }
                 //将点线面分别归置到对应的featureCollection当中
-                for(let i=0;i<feas.length;i++)
-                {
-                    let type=feas[i].geometry.type;
-                    if(type==='Point')
-                    {
+                for (let i = 0; i < feas.length; i++) {
+                    let type = feas[i].geometry.type;
+                    if (type === 'Point') {
                         pointfeatures.features.push(feas[i]);
-                    }
-                    else if(type==='Polygon')
-                    {
+                    } else if (type === 'Polygon') {
                         polygonfeatures.features.push(feas[i]);
-                    }
-                    else
-                    {
+                    } else {
                         linefeatures.features.push(feas[i]);
                     }
                     draw.delete(feas[i].id);
                 }
                 //以点线面featurecollection作为数据源，如不为空则添加对应图层
-                let map=this.myMap;
-                if(polygonfeatures.features.length>0)
-                {
+                let map = this.myMap;
+                if (polygonfeatures.features.length > 0) {
                     //上传绘制数据到服务器，通过url的方式加载数据
                     //axios.post('http://127.0.0.1:13000/summer/file/temp/datajsonSubmit',{
-                  axios.post(this.$platfromUrl.dataJsonSubmit,{
+                    axios.post(this.$platfromUrl.dataJsonSubmit, {
                         polygonfeatures
-                    },{
-                        params:{
-                            name:'polygon_'+layername+'.json'
+                    }, {
+                        params: {
+                            name: 'polygon_' + layername + '.json'
                         }
-                    }).then(re=>{
+                    }).then(re => {
                         map.addLayer({
-                            'id': 'polygon_'+layername,
-                            'type':'fill',
+                            'id': 'polygon_' + layername,
+                            'type': 'fill',
                             'source': {
                                 'type': 'geojson',
                                 //'data0': 'http://127.0.0.1:13000/summer/file/temp/dataJson/'+'polygon_'+layername+'.json',
-                                'data':this.$platfromUrl.readDataFile+'polygon_'+layername+'.json'
+                                'data': this.$platfromUrl.readDataFile + 'polygon_' + layername + '.json'
                             },
                             'paint': {
                                 'fill-color': '#4682B4',
                                 'fill-opacity': 0.5,
-                                'fill-outline-color':'#0e2944'
+                                'fill-outline-color': '#0e2944'
                             }
 
                         });
                         //更新图层列表以及数据库缓存
-                        this.addLayerid('polygon_'+layername);
+                        this.addLayerid('polygon_' + layername);
                     }).catch()
 
                 }
-                if(linefeatures.features.length>0)
-                {
-                    axios.post(this.$platfromUrl.dataJsonSubmit,{
+                if (linefeatures.features.length > 0) {
+                    axios.post(this.$platfromUrl.dataJsonSubmit, {
                         linefeatures
-                    },{
-                        params:{
-                            name:'line_'+layername+'.json'
+                    }, {
+                        params: {
+                            name: 'line_' + layername + '.json'
                         }
-                    }).then(re=> {
+                    }).then(re => {
                         map.addLayer({
-                            'id': 'line_'+layername,
-                            'type':'line',
+                            'id': 'line_' + layername,
+                            'type': 'line',
                             'source': {
                                 'type': 'geojson',
-                                'data': this.$platfromUrl.readDataFile+'line_'+layername+'.json'
+                                'data': this.$platfromUrl.readDataFile + 'line_' + layername + '.json'
                             },
-                            'paint':{
-                                'line-color':'#4682B4'
+                            'paint': {
+                                'line-color': '#4682B4'
                             }
                         });
                         //更新图层列表以及数据库缓存
-                        this.addLayerid('line_'+layername);
+                        this.addLayerid('line_' + layername);
                     }).catch()
 
                 }
-                if(pointfeatures.features.length>0)
-                {
-                    axios.post(this.$platfromUrl.dataJsonSubmit,{
+                if (pointfeatures.features.length > 0) {
+                    axios.post(this.$platfromUrl.dataJsonSubmit, {
                         pointfeatures
-                    },{
-                        params:{
-                            name:'point_'+layername+'.json'
+                    }, {
+                        params: {
+                            name: 'point_' + layername + '.json'
                         }
-                    }).then(re=> {
+                    }).then(re => {
                         map.addLayer({
-                            'id': 'point_'+layername,
-                            'type':'circle',
+                            'id': 'point_' + layername,
+                            'type': 'circle',
                             'source': {
                                 'type': 'geojson',
-                                'data': this.$platfromUrl.readDataFile+'point_'+layername+'.json'
+                                'data': this.$platfromUrl.readDataFile + 'point_' + layername + '.json'
                             },
-                            'paint':{
-                                'circle-color':'#4682B4'
+                            'paint': {
+                                'circle-color': '#4682B4'
                             }
                         });
                         //更新图层列表以及数据库缓存
-                        this.addLayerid('point_'+layername);
+                        this.addLayerid('point_' + layername);
                     }).catch()
 
                 }
             },
-            showSavepro()
-            {
-                this.$Bus.$emit('savePropara',{
-                    myMap:mymap,
-                    layerNames:layerids
+            showSavepro() {
+                this.$Bus.$emit('savePropara', {
+                    myMap: mymap,
+                    layerNames: layerids
                 })
             },
-            showOpenpro()
-            {
+            showOpenpro() {
                 //控制工程保存控件的显示和隐藏
-                let display=this.$refs.openPro.displayForm;
-                this.$refs.openPro.displayForm=(display==='none')?'block':'none';
+                let display = this.$refs.openPro.displayForm;
+                this.$refs.openPro.displayForm = (display === 'none') ? 'block' : 'none';
             },
-            addjsonData()
-            {
+            addjsonData() {
                 //获取样例数据列表
-                axios.get(this.$platfromUrl.getTempFileList,{
-                    params:{
-                        type:2
+                axios.get(this.$platfromUrl.getTempFileList, {
+                    params: {
+                        type: 2
                     }
-                }).then(response=>{
-                    let jsonData=[];
-                    let dataArray=response.data.body;
-                    for(let i=0;i<dataArray.length;i++)
-                    {
-                        let obdata={data:dataArray[i]};
+                }).then(response => {
+                    let jsonData = [];
+                    let dataArray = response.data.body;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        let obdata = {data: dataArray[i]};
                         jsonData.push(obdata);
                     }
                     //弹出组件dataList
-                    this.$Bus.$emit('dataListpara',{
-                        title:'样例数据',
-                        dialogVisible:true,
-                        tableData:jsonData
+                    this.$Bus.$emit('dataListpara', {
+                        title: '数据列表',
+                        dialogVisible: true,
+                        tableData: jsonData
                     })
-                }).catch(error=>{
+                }).catch(error => {
                     this.$message.error("数据列表请求失败");
                     console.log(error);
                 })
             },
-            uploadData()
-            {
-                //弹出组件uploadData
-                this.$Bus.$emit('uploadDatapara',{
-                    title:'上传数据',
-                    dialogVisible:true
+            addDBData() {
+                //获取样例数据列表
+                axios.get(this.$platfromUrl.DataBaseGeoData, {}).then(res => {
+                    let result = res.data.body.result;
+                    //处理空间数据表
+
+
+                    this.$Bus.$emit('getDBDtaList', {
+                        title: '数据列表',
+                        dialogVisible: true,
+                        tableData: result
+                    })
+                }).catch(error => {
+                    this.$message.error("数据列表请求失败");
+                    console.log(error);
                 })
             },
-            refreshStorage()
-            {
-                sessionStorage.setItem('layers',layerids);
+            uploadData() {
+                //弹出组件uploadData
+                this.$Bus.$emit('uploadDatapara', {
+                    title: '上传数据',
+                    dialogVisible: true
+                })
+            },
+            refreshStorage() {
+                sessionStorage.setItem('layers', layerids);
                 let styleJson = this.myMap.getStyle();
-                sessionStorage.setItem('mapstyle',JSON.stringify(styleJson));
+                sessionStorage.setItem('mapstyle', JSON.stringify(styleJson));
             },
             addLayerid(str) {
                 //在map上添加图层后调用此函数，更新图层数组，更新数据库缓存
@@ -545,11 +546,13 @@
         box-sizing: border-box;
         display: block;
     }
-    .mapboxgl-ctrl-scale{
+
+    .mapboxgl-ctrl-scale {
         position: absolute;
-        top:550px;
-        right:0px
+        top: 550px;
+        right: 0px
     }
+
     .control {
         box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
     }

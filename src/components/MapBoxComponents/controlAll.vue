@@ -20,6 +20,10 @@
                                 <i class="el-icon-plus"></i>
                                 <span @click="show('addjsonData')">添加数据</span>
                             </div>
+                            <div class="tool-panel-data-add">
+                                <i class="el-icon-plus"></i>
+                                <span @click="show('addDBData')">添加数据</span>
+                            </div>
 <!--                            <div class="tool-panel-data-add">-->
 <!--                                <i class="el-icon-plus"></i>-->
 <!--                                <span @click="show('drawLayer')">绘制数据</span>-->
@@ -66,11 +70,10 @@
             },
             //控制数据功能面板的开关及sidebar样式调整
             showDataitem(bl) {
-                debugger;
                 this.layerCon = true;
-                dataItem.style.display = (dataItem.style.display==='block')?'none':'block';
-                if(!bl) dataItem.style.display='block';
-
+                dataItem.style.display='block';
+                // dataItem.style.display = (dataItem.style.display==='block')?'none':'block';
+                // if(!bl) dataItem.style.display='block';
             }
         },
         created() {

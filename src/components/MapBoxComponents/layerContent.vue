@@ -170,7 +170,7 @@ export default {
               map.fitBounds(newbbox);
             }
           })
-          .catch(err => console.log(error));
+          .catch(err => console.log(err));
       }
     },
     //删除选中图层

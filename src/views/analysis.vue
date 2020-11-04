@@ -21,7 +21,7 @@
                 </el-menu-item>
                 <el-menu-item index="5"
                               @click="modelManagedis=false,workFlowdis=false,jobMonitordis=false,mapVisualdis=false,resizeMap()">
-                    数据上图
+                    地图交互
                 </el-menu-item>
 
             </el-menu>

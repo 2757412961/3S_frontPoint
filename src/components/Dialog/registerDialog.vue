@@ -26,8 +26,8 @@
         </el-form-item>
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="更多信息">
-            <el-form-item prop="country" label="国家(地区)">
-              <el-select v-model="selectedCountry" style="width: 60%" placeholder="请选择国家(地区)">
+            <el-form-item prop="selectedCountry" label="国家(地区)">
+              <el-select v-model="ruleForm.selectedCountry" style="width: 60%" placeholder="请选择国家(地区)">
                 <el-option
                     v-for="item in countryOptions"
                     :key="item.short"
@@ -38,8 +38,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item prop="instituteType" label="机构类型">
-              <el-select v-model="selectedType" style="width: 60%" placeholder="请选择机构类型">
+            <el-form-item prop="selectedType" label="机构类型">
+              <el-select v-model="ruleForm.selectedType" style="width: 60%" placeholder="请选择机构类型">
                 <el-option
                     v-for="item in instituteOptions"
                     :key="item.index"
@@ -51,8 +51,8 @@
             <el-form-item prop="institute" label="机构">
               <el-input type="text" v-model="ruleForm.institute" style="width: 60%" placeholder="请输入机构名称"></el-input>
             </el-form-item>
-            <el-form-item prop="field" label="专业领域">
-              <el-select v-model="selectedField" style="width: 60%" placeholder="请选择专业领域">
+            <el-form-item prop="selectedField" label="专业领域">
+              <el-select v-model="ruleForm.selectedField" style="width: 60%" placeholder="请选择专业领域">
                 <el-option
                     v-for="item in fieldOptions"
                     :key="item.index"
@@ -61,8 +61,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item prop="purpose" label="用途">
-              <el-select v-model="selectedPurpose" style="width: 60%" placeholder="请选择用途">
+            <el-form-item prop="selectedPurpose" label="用途">
+              <el-select v-model="ruleForm.selectedPurpose" style="width: 60%" placeholder="请选择用途">
                 <el-option
                     v-for="item in purposeOptions"
                     :key="item.index"
@@ -88,6 +88,7 @@
 
 <script>
 import countryOps from '../../../static/json/country.json'
+import {validateEMail,validatePhone,isPassword,validateName} from  '../../util/validator.js'
 
 export default {
   name: "registerDialog",
@@ -98,7 +99,7 @@ export default {
       registerDialogVisible: false,
       registering: false,
       isAble: false,
-      countryOptions: [],
+      countryOptions: '',
       selectedCountry: '',
       instituteOptions: [
         {index: '1', value: '政府'},
@@ -125,22 +126,28 @@ export default {
         phone: '',
         email: '',
         institute: '',
-        instituteType:'',
-        country:'',
+        selectedField: '',
+        selectedType: '',
+        selectedCountry: '',
+        selectedPurpose: '',
         vericode: '',
       },
-      rules: {
+      rules: {//验证规则在util下的validator文件中
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
+          {validator:validateName,trigger: 'blur'}
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
+          {validator:isPassword,trigger: 'blur'}
         ],
         phone: [
           {required: true, message: '请输入手机号', trigger: 'blur'},
+          {validator:validatePhone,trigger: 'blur'}
         ],
         email: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {validator:validateEMail,trigger: 'blur'}
           // {
           //   validator: function (rule, value, callback) {
           //     if (value === '') {
@@ -158,8 +165,11 @@ export default {
           //   }, trigger: 'blur'
           // }
         ],
+        selectedField:[],
         vericode: [],
-        country:[],
+        selectedType: [],
+        selectedCountry:[],
+        selectedPurpose: [],
 
       },
       correctCode: '',
@@ -173,8 +183,6 @@ export default {
     closeDialog() {
       this.registerDialogVisible = false;
       this.$refs.ruleForm.resetFields();
-      this.ruleForm.vericode='';
-      this.selectedField='请选择专业领域';
     },
 
 

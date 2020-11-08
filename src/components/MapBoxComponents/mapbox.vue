@@ -406,17 +406,23 @@
             },
             addDBData() {
                 //获取样例数据列表
-                axios.get(this.$platfromUrl.DataBaseGeoData, {}).then(res => {
-                    let result = res.data.body.result;
-                    //处理空间数据表
-
-
-                    this.$Bus.$emit('getDBDtaList', {
-                        title: '数据列表',
-                        dialogVisible: true,
-                        tableData: result
+                axios
+                    .get(this.$platfromUrl.DataBaseGeoData, {
+                        params: {
+                            pageSize: 200
+                        }
                     })
-                }).catch(error => {
+                    .then(res => {
+                        let result = res.data.body.result;
+                        //处理空间数据表
+
+
+                        this.$Bus.$emit('getDBDtaList', {
+                            title: '数据列表',
+                            dialogVisible: true,
+                            tableData: result
+                        })
+                    }).catch(error => {
                     this.$message.error("数据列表请求失败");
                     console.log(error);
                 })

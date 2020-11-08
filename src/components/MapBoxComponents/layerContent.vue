@@ -28,21 +28,23 @@
                    @click="destroy(layerName)"
                    class="el-icon-delete"></i>
             </el-button>
-            <polygonRender
-                    v-if="( myMap.getLayer(layerName).type==='fill'||
-                            myMap.getLayer(layerName).type==='fill-extrusion')"
-                    :layername="layerName"
-                    :myMap="myMap"
-                    @refreshStorage="refreshStorage">
+            <polygonRender v-if="myMap.getSource(layerName).type==='geojson'&&
+                                (myMap.getLayer(layerName).type==='fill'||
+                                 myMap.getLayer(layerName).type==='fill-extrusion')"
+                           :layername="layerName"
+                           :myMap="myMap"
+                           @refreshStorage="refreshStorage">
             </polygonRender>
-            <pointRender v-if="(myMap.getLayer(layerName).type==='circle'||
+            <pointRender v-if=" myMap.getSource(layerName).type==='geojson'&&
+                               (myMap.getLayer(layerName).type==='circle'||
                                 myMap.getLayer(layerName).type==='symbol'||
                                 myMap.getLayer(layerName).type==='heatmap')"
                          :layername="layerName"
                          :myMap="myMap"
                          @refreshStorage="refreshStorage">
             </pointRender>
-            <lineRenderer v-if="(myMap.getLayer(layerName).type==='line')"
+            <lineRenderer v-if=" myMap.getSource(layerName).type==='geojson'&&
+                                (myMap.getLayer(layerName).type==='line')"
                           :layername="layerName"
                           :myMap="myMap"
                           @refreshStorage="refreshStorage">
@@ -136,8 +138,9 @@
                 // 访问服务器存储数据文件夹的路径获取得到数据源，如有外来数据则此功能需要修改
                 let map = this.myMap;
                 let url = map.getSource(layerName)._data;
-                let filename = url.substr(url.lastIndexOf("/") + 1, url.length);
-                if (filename) {
+
+                if (url.match("/summer/file/dataJson/") != null) {
+                    let filename = url.substr(url.lastIndexOf("/") + 1, url.length);
                     axios
                         .get(this.$platfromUrl.readProjectFile + filename, {
                             params: {
@@ -161,6 +164,31 @@
                             }
                         })
                         .catch(err => console.log(err));
+                } else {
+                    var request = new XMLHttpRequest();
+                    // make a GET request to parse the GeoJSON at the url
+                    request.open('GET', url, true);
+                    request.onload = function () {
+                        if (this.status >= 200 && this.status < 400) {
+                            // retrieve the JSON from the response
+                            var jsonData = JSON.parse(this.response);
+
+                            //利用turf的bbox函数，为jsonData数据构建外包盒
+                            let bbox1 = turf.bbox(jsonData);
+                            //将bbox1增加一个1经纬度的外包盒，以免缩放至单点图层出错
+                            let newbbox = [
+                                bbox1[0] - 0.01 < -180 ? -180 : bbox1[0] - 0.01,
+                                bbox1[1] - 0.01 < -90 ? -90 : bbox1[1] - 0.01,
+                                bbox1[2] + 0.01 > 180 ? 180 : bbox1[2] + 0.01,
+                                bbox1[3] + 0.01 > 90 ? 90 : bbox1[3] + 0.01
+                            ];
+                            if (newbbox[0] == Infinity) alert("选中图层未在视野内");
+                            else {
+                                map.fitBounds(newbbox);
+                            }
+                        }
+                    };
+                    request.send();
                 }
             },
             //删除选中图层

@@ -10,8 +10,8 @@
         <el-scrollbar style="height:400px">
             <el-row v-for="data in tableData" :key="data.id">
                 <el-col :span="21" style="padding: 12px 20px; ">{{ data.title }}</el-col>
-                <el-col :span="3">
-                    <el-button @click="loadLayer( data.title, data.id )" type="text" size="small">加载</el-button>
+                <el-col :span="3" style="padding: 2px 20px; ">
+                    <el-button @click="loadLayer( data.id, data.title )" type="text" size="small">加载</el-button>
                 </el-col>
             </el-row>
         </el-scrollbar>
@@ -39,7 +39,7 @@
         mounted() {
         },
         methods: {
-            loadLayer(title, id) {
+            loadLayer(id, title) {
                 let that = this;
                 //axios get(http://127.0.0.1:13000/summer/file/temp/dataJson/)
                 // 返回的对象是JsonElement
@@ -53,10 +53,20 @@
                         }
                     })
                     .then(res => {
-                        let geoType = 'tmpForFrontEnd';
-                        // let geoUrl = 'http://10.79.231.81:90/bigGeoPlatform/viz/tmpForFrontEnd/line.json';
-                        let geoUrl = 'https://docs.mapbox.com/mapbox-gl-js/assets/hike.geojson';
+                        if (res.data == null) {
+                            this.$message.error("服务器找不到该数据");
+                            return;
+                        }
+                        let geoType = 'LineString';
+                        let geoUrl = '';
                         let layerName = title;
+
+                        // delete after testing
+                        if (layerName == 'DEM Image Layer') {
+                            geoType = 'Raster'
+                        } else if (layerName == 'WorldMap Tile') {
+                            geoType = 'PolygonTile'
+                        }
 
                         // is existing in map
                         if (that.$parent.myMap.getLayer(layerName)) {
@@ -67,36 +77,12 @@
                             return;
                         }
 
-                        //确定当前数据为FeatureCollection或Feature否则不符合规范，根据geojson的数据规范，获取到数据类型
-                        //Point, LineString, Polygon, MultiPoint, MultiLineString, and MultiPolygon
-                        let jsonData = res.data.body;
-                        let type = '';
-                        // if (jsonData.type == "FeatureCollection") {
-                        //     type = jsonData.features[0].geometry.type;
-                        // } else if (jsonData.type == "Feature") {
-                        //     type = jsonData.geometry.type;
-                        // } else {
-                        //     this.$message({
-                        //         message: '数据不符合要求',
-                        //         type: 'error'
-                        //     });
-                        //     return;
-                        // }
-
                         // 添加图层至地图
-                        if (geoType === 'tmpForFrontEnd') {
-                            that.$parent.myMap.addLayer({
-                                'id': layerName,
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': geoUrl
-                                },
-                                'paint': {
-                                    'line-color': '#4682B4'
-                                }
-                            });
-                        } else if (type == "Point" || type == 'MultiPoint') {
+                        // Point, LineString, Polygon,
+                        // MultiPoint, MultiLineString, MultiPolygon,
+                        // PointTile, LineTile, PolygonTile
+                        // Raster
+                        if (geoType == "Point" || geoType == 'MultiPoint') {
                             that.$parent.myMap.addLayer({
                                 'id': layerName,
                                 'type': 'circle',
@@ -108,19 +94,20 @@
                                     'circle-color': '#4682B4'
                                 }
                             });
-                        } else if (type == "LineString" || type == 'MultiLineString') {
+                        } else if (geoType == "LineString" || geoType == 'MultiLineString') {
                             that.$parent.myMap.addLayer({
                                 'id': layerName,
                                 'type': 'line',
                                 'source': {
                                     'type': 'geojson',
-                                    'data': geoUrl
+                                    // let geoUrl = 'http://10.79.231.81:90/bigGeoPlatform/viz/tmpForFrontEnd/line.json';
+                                    'data': 'https://docs.mapbox.com/mapbox-gl-js/assets/hike.geojson'
                                 },
                                 'paint': {
                                     'line-color': '#4682B4'
                                 }
                             });
-                        } else if (type == "Polygon" || type == 'MultiPolygon') {
+                        } else if (geoType == "Polygon" || geoType == 'MultiPolygon') {
                             that.$parent.myMap.addLayer({
                                 'id': layerName,
                                 'type': 'fill',
@@ -134,6 +121,68 @@
                                     'fill-outline-color': '#0e2944'
                                 }
                             });
+                        } else if (geoType == "PointTile") {
+                            that.$parent.myMap.addLayer({
+                                "id": layerName,
+                                "type": "circle",
+                                'source': {
+                                    "type": "vector",
+                                    "scheme": "tms",
+                                    "tiles": [geoUrl],
+                                    "minzoom": 1,
+                                    "maxzoom": 14
+                                },
+                                "source-layer": layerName,
+                            });
+                        } else if (geoType == "LineTile") {
+                            that.$parent.myMap.addLayer({
+                                "id": layerName,
+                                "type": "line",
+                                'source': {
+                                    "type": "vector",
+                                    "scheme": "tms",
+                                    "tiles": [
+                                        "http://10.79.231.81:90/bigGeoPlatform/viz/vectorTileMVT/{z}/{x}_{y}.mvt"
+                                    ],
+                                    "minzoom": 1,
+                                    "maxzoom": 14
+                                },
+                                "source-layer": layerName,
+                            });
+                        } else if (geoType == "PolygonTile") {
+                            that.$parent.myMap.addLayer({
+                                "id": layerName,
+                                "type": "fill",
+                                'source': {
+                                    "type": "vector",
+                                    "scheme": "tms",
+                                    "tiles": [
+                                        "http://localhost:8080/geoserver/gwc/service/tms/1.0.0/Class_3S%3Aval@EPSG%3A900913@pbf/{z}/{x}/{y}.pbf"
+                                    ],
+                                    "minzoom": 1,
+                                    "maxzoom": 14
+                                },
+                                "source-layer": 'val',
+                                "paint": {
+                                    "fill-color": "#d28d19",
+                                    "fill-opacity": 0.8
+                                },
+                            });
+                        } else if (geoType == "Raster") {
+                            that.$parent.myMap.addLayer({
+                                "id": layerName,
+                                "type": "raster",
+                                'source': {
+                                    'type': 'image',
+                                    'url': "http://localhost:8080/geoserver/sf/wms?service=WMS&version=1.1.0&request=GetMap&layers=sf:sfdem&styles=&bbox=589980.0,4913700.0,609000.0,4928010.0&width=768&height=577&srs=EPSG:26713&format=image%2Fpng",
+                                    'coordinates': [
+                                        [76.54, 39.18],
+                                        [70.00, 39.18],
+                                        [70.00, 36.00],
+                                        [76.54, 36.00]
+                                    ]
+                                },
+                            });
                         } else {
                             this.$message({
                                 message: '数据不符合要求',
@@ -141,6 +190,7 @@
                             });
                             return;
                         }
+
                         //更新图层列表以及数据库缓存
                         that.$parent.addLayerid(layerName);
                     })

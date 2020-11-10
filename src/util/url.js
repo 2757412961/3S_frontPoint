@@ -71,7 +71,7 @@ const URL = {
     getpublicdataList:'/geodata/getFileInfoList',
     previewData:function (type) {
         return '/userSpace/preview/'+type;
-    }
+    },
 
     statisticData:"/user/statistic"
 };

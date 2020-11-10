@@ -13,6 +13,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^0.10.0",
     "crypto": "^1.0.1",
+    "d3": "^6.2.0",
     "deck.gl": "7.0.3",
     "echarts": "^4.1.0",
     "element-ui": "^2.13.2",

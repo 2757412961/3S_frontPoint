@@ -4,6 +4,7 @@ import router from '../main'
 // axios 配置
 axios.defaults.timeout = 1800000;
 
+// axios.defaults.baseURL = 'http://192.168.137.116:13000/summer';
 // axios.defaults.baseURL = 'http://localhost:13000/summer';
 axios.defaults.baseURL = 'http://10.79.231.81:13000/summer';
 let AUTH_TOKEN = (function () {

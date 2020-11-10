@@ -72,5 +72,7 @@ const URL = {
     previewData:function (type) {
         return '/userSpace/preview/'+type;
     }
+
+    statisticData:"/user/statistic"
 };
 export default URL;

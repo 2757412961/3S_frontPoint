@@ -12,14 +12,14 @@
         </div>
         <el-tabs type="border-card" v-model="activeName" @tab-click="ChangeUse" style="height: 100%">
             <el-tab-pane v-for="usage in myusageList" :key="usage.name" :label="usage.name" :name="usage.name" style="height: 100%">
-                <el-row :style="{'min-height': $window.height*0.61+'px',clear:'right'}">
+                <el-row :style="{'height': $store.state.height*0.7+'px',clear:'right'}">
                     <el-col :style="{width:'12%',height:'40%',margin:'10px'}" :span="8" v-for="model in mymodelList" :key="model.id">
-                        <el-card :body-style="{ padding: '0px' }">
+                        <el-card :style="{ width:'100%',height:'100%',padding: '0px' }">
                             <!--后续将图片的url也构成数组中的某个元素-->
                             <img :src="model.picpath"
-                                 :style="{position:'relative',left:'15px',top:'5px',width:'100px',height:'100px'}"
+                                 :style="{position:'relative',width:'100px',height:'100px'}"
                                  class="image">
-                            <div style="padding-left: 15px;padding-bottom: 25px">
+                            <div style="padding-bottom: 25px">
                                 <div><span>{{model.name}}</span></div>
                                 <div style="float:left">
                                     <el-tag size="mini">{{model.isPublic}}</el-tag>

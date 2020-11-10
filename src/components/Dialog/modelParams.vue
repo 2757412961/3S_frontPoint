@@ -13,7 +13,15 @@
                                          placeholder=""
                                          style="width:90%"
                         ></el-autocomplete>
-                        <span v-if="item.in!==''" style="margin-left: 10px"><i @click="chooseFile(index)" class="el-icon-tickets"></i></span>
+                        <span v-if="item.in!==''" style="margin-left: 10px"><i @click="chooseFile(index,'file')" class="el-icon-tickets"></i></span>
+                        <div v-else-if="item.out!==''">
+                            <el-autocomplete v-model="item.value"
+                                             :fetch-suggestions="querySearch"
+                                             placeholder=""
+                                             style="width:90%"
+                            ></el-autocomplete>
+                            <span style="margin-left: 10px"><i @click="chooseFile(index,'folder')" class="el-icon-tickets"></i></span>
+                        </div>
                         <el-select v-else-if="item.option.length" v-model="item.value" placeholder="请选择" style="width:90%">
                             <el-option
                                     v-for="item in item.option"
@@ -35,7 +43,7 @@
                 </el-form>
 
         </el-dialog>
-        <file-selector></file-selector>
+        <file-selector @chosenFile="chosenFile(arguments)"></file-selector>
     </div>
 
 </template>
@@ -49,28 +57,35 @@
             return{
                 dialogVisible:false,
                 formData:[],
-                outputList:[]
+                outputList:[],
+                filePath:''
             }
         },
         components:{
             fileSelector
         },
         methods: {
-            chooseFile(index)
+            chosenFile(args)
             {
-                this.$Bus.$emit('fileSelector',index)
-              //   axios.post(this.$platfromUrl.getAllFiles,'{}',{
-              //       headers:{
-              //           'Content-Type':'text/plain'
-              //       }
-              //   }).then(res=>{
-              //     debugger;
-              //     let fileList=res.data.body;
-              //     for(let item of fileList)
-              //     {
-              //         this.outputList.push({'value':item});
-              //     }
-              // }).catch(err=>{});
+                debugger
+                this.formData[args[0]].value=args[1]
+            },
+            chooseFile(index,str)
+            {
+                let that=this;
+                this.$axios.postAdvanced(this.$URL.getfileList,{'path':'/'},{
+                    headers:{
+                        'Content-Type':'text/plain'
+                    }}).then(res1=>{
+                    that.$axios.postAdvanced(that.$URL.getpublicdataList,{'path':'/'},{
+                            headers:{
+                                'Content-Type':'text/plain'
+                            }}).then(res2=>{
+                                debugger;
+                            that.$Bus.$emit('fileSelector',index,res1.body,res2.body,str);
+                        }).catch(err=>{})
+
+                });
             },
             submitParams()
             {

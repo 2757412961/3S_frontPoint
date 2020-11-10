@@ -66,5 +66,11 @@ const URL = {
     uploadLecture:"/lecture/insert",
     uploadOnlinetools:"/onlinetools/insert",
     uploadMapservice:"/mapservice/insert",
+
+    getfileList:'/userSpace/getFileInfoList',
+    getpublicdataList:'/geodata/getFileInfoList',
+    previewData:function (type) {
+        return '/userSpace/preview/'+type;
+    }
 };
 export default URL;

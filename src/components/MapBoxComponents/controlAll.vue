@@ -12,10 +12,10 @@
                 <div class="sidebar-tool-panel-content">
                     <el-scrollbar style="height:100%">
                         <div class="data-list-wrap" style="margin:15px;">
-                            <div class="tool-panel-data-add">
-                                <i class="el-icon-plus"></i>
-                                <span @click="show('uploadData')">上传数据</span>
-                            </div>
+<!--                            <div class="tool-panel-data-add">-->
+<!--                                <i class="el-icon-plus"></i>-->
+<!--                                <span @click="show('uploadData')">上传数据</span>-->
+<!--                            </div>-->
                             <div class="tool-panel-data-add">
                                 <i class="el-icon-plus"></i>
                                 <span @click="show('addjsonData')">添加数据</span>

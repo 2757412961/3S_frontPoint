@@ -85,6 +85,7 @@ export default {
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
                   console.log(this.$store.getters.role)
+                  debugger;
                   this.$router.go({path: '/index'});
                   // if(this.$store.getters.role=='visitor'){
                   //   console.log(this.$store.getters.role)

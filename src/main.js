@@ -66,6 +66,7 @@ Vue.prototype.$axios = {
     patch,
     put,
     remove,
+    postAdvanced
 };
 Vue.prototype.$date = {
     time2FormatStr,

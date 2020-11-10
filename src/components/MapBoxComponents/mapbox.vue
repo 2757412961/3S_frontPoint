@@ -395,28 +395,42 @@
             addjsonData()
             {
                 //获取样例数据列表
-                axios.get(this.$platfromUrl.getTempFileList,{
-                    params:{
-                        type:2
-                    }
-                }).then(response=>{
-                    let jsonData=[];
-                    let dataArray=response.data.body;
-                    for(let i=0;i<dataArray.length;i++)
-                    {
-                        let obdata={data:dataArray[i]};
-                        jsonData.push(obdata);
-                    }
-                    //弹出组件dataList
-                    this.$Bus.$emit('dataListpara',{
-                        title:'样例数据',
-                        dialogVisible:true,
-                        tableData:jsonData
-                    })
-                }).catch(error=>{
-                    this.$message.error("数据列表请求失败");
-                    console.log(error);
-                })
+                let that=this;
+                this.$axios.postAdvanced(this.$URL.getfileList,{'path':'/'},{
+                    headers:{
+                        'Content-Type':'text/plain'
+                    }}).then(res1=>{
+                    that.$axios.postAdvanced(that.$URL.getpublicdataList,{'path':'/'},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res2=>{
+                        debugger;
+                        that.$Bus.$emit('dataListpara',res1.body,res2.body);
+                    }).catch(err=>{})
+
+                });
+                // axios.get(this.$platfromUrl.getTempFileList,{
+                //     params:{
+                //         type:2
+                //     }
+                // }).then(response=>{
+                //     let jsonData=[];
+                //     let dataArray=response.data.body;
+                //     for(let i=0;i<dataArray.length;i++)
+                //     {
+                //         let obdata={data:dataArray[i]};
+                //         jsonData.push(obdata);
+                //     }
+                //     //弹出组件dataList
+                //     this.$Bus.$emit('dataListpara',{
+                //         title:'样例数据',
+                //         dialogVisible:true,
+                //         tableData:jsonData
+                //     })
+                // }).catch(error=>{
+                //     this.$message.error("数据列表请求失败");
+                //     console.log(error);
+                // })
             },
             uploadData()
             {
@@ -434,6 +448,11 @@
             },
             addLayerid(str) {
                 //在map上添加图层后调用此函数，更新图层数组，更新数据库缓存
+                let tempset=new Set(layerids);
+                if(tempset.has(str))
+                {
+                    return false;
+                }
                 layerids.push(str);
                 if (layerids.length > 1) {
                     for (let i = layerids.length - 1; i > 0; i--) {
@@ -446,6 +465,7 @@
                     message: str + '图层添加成功',
                     type: 'success'
                 });
+                return true;
             },
             created() {
                 let that = this;

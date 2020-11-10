@@ -12,7 +12,7 @@
                     模型管理
                 </el-menu-item>
                 <el-menu-item index="2"
-                              @click="modelManagedis=false,workFlowdis=true,jobMonitordis=false,mapVisualdis=false,mapBoxdis=false">
+                              @click="modelManagedis=false,workFlowdis=true,jobMonitordis=false,mapVisualdis=false,mapBoxdis=false,resizeEchart()">
                     工作流构建
                 </el-menu-item>
                 <el-menu-item index="3"
@@ -30,7 +30,7 @@
         <el-container>
             <el-main>
                 <modelManager v-show="modelManagedis"></modelManager>
-                <workFlow v-show="workFlowdis"></workFlow>
+                <workFlow ref="workflow" v-show="workFlowdis"></workFlow>
                 <taskMonitor v-show="jobMonitordis"></taskMonitor>
                 <mapBoxFromSummer v-show="mapBoxdis"></mapBoxFromSummer>
             </el-main>
@@ -90,6 +90,10 @@
                 setTimeout(() => {
                     this.$globalConstant.map.resize();
                 }, 100);
+            },
+            resizeEchart()
+            {
+                this.$refs.workflow.resize();
             }
         }
     }

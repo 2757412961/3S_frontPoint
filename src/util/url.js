@@ -66,5 +66,7 @@ const URL = {
     uploadLecture:"/lecture/insert",
     uploadOnlinetools:"/onlinetools/insert",
     uploadMapservice:"/mapservice/insert",
+
+    statisticData:"/user/statistic"
 };
 export default URL;

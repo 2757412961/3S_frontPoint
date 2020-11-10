@@ -126,7 +126,6 @@ router.afterEach((to, from, next) => {
 });
 function getWH()
 {
-    debugger;
     let pagewidth=window.innerWidth;
     let pageheight=window.innerHeight;
     if(typeof pagewidth!='number')

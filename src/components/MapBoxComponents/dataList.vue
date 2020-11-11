@@ -2,160 +2,300 @@
 当点击加载，向后端请求对应数据，
 判别数据的类型，加载数据至地图中-->
 <template>
-    <el-dialog
-            :title="title"
-            :visible.sync="dialogVisible"
-            width="35%">
-        <el-table
-                :data="tableData"
-                stripe
-                style="width: 100%"
-                height="250"
-                :row-style="{height:'20px'}"
-                :cell-style="{padding:'0px'}"
-                :show-header=false>
-            <el-table-column
-                    fixed="left"
-                    prop="data"
-                    width="220px">
-            </el-table-column>
-
-            <el-table-column
-                    fixed="left"
-                    width="80px">
-                <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">加载</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <div>
+        <el-dialog
+                :title="title"
+                :visible.sync="dialogVisible"
+                width="35%">
+            <el-tabs type="border-card" v-model="activeTab">
+                <el-tab-pane label="公共数据" style="min-height: 300px" name="publicData">
+                    <el-tree @node-click="markNodePublic"
+                             :props="props"
+                             :load="loadNodeData"
+                             lazy>
+                    </el-tree>
+                </el-tab-pane>
+                <el-tab-pane label="个人数据" style="min-height: 300px" name="personalData">
+                    <el-tree @node-click="markNodePerson"
+                             :props="props"
+                             :load="loadNodePerson"
+                             lazy>
+                    </el-tree>
+                </el-tab-pane>
+            </el-tabs>
+            <span slot="footer" class="dialog-footer">
+                <el-form>
+                   <el-form-item label="如需上图，请输入几何字段">
+                       <el-popover
+                               placement="top-start"
+                               title="说明"
+                               trigger="hover"
+                               content="请输入数据中符合wkt的空间列序号">
+                       <span slot="reference"><i class="el-icon-info"></i></span>
+                        </el-popover>
+                       <el-input v-model="geomIndex"></el-input>
+                   </el-form-item>
+                </el-form>
+    <el-button type="primary" @click="preview">预 览</el-button>
+    <el-button type="success" @click="addtoMap">上 图</el-button>
   </span>
-    </el-dialog>
+        </el-dialog>
+        <table-preview></table-preview>
+    </div>
 
 </template>
 
 <script>
     import axios from "../../util/axios"
+    import tablePreview from "../tableData/tablePreview"
     export default {
         name: "dataList",
+        components:{
+            tablePreview
+        },
         data(){
             return {
                 title:'',
                 tableData:[],
-                dialogVisible:false
+                dialogVisible:false,
+                activeTab:'publicData',
+                props: {
+                    label: 'name',
+                    children: 'leaves',
+                    isLeaf: 'isFile'
+                },
+                geomIndex:0,
+                pathStr:null,
+                fileList:[],
+                dataList:[],
+
+                // 判斷是否是公共数据
+                ispublic:null,
+
             }
         },
         mounted() {},
         methods:{
-            handleClick(row){
-                let that=this;
-                //axios get(http://127.0.0.1:13000/summer/file/temp/dataJson/)
-                // 返回的对象是JsonElement
-                // 网页打开对应url直接读取可以读取到
-                // 但axios会跳转到error
+            preview()
+            {
+                if(this.pathStr===null)
+                {
+                    this.$message.warning('请选择一个文件');
+                }
+                else
+                {
+                    // 判斷是否是公共数据
+                    let params = {'path':this.pathStr,size:10};
+                    if (this.ispublic===true){
+                        params = {
+                            'path':"public:"+this.pathStr,
+                            size:10
+                        };
+                    }
 
-                axios.get(this.$platfromUrl.readProjectFile+row.data,{
-                    params:{
-                        type:2
-                    }
-                })
-                .then(res=>{
-                    console.log(this.$platfromUrl.readDataFile+row.data)
-                    //确定当前数据为FeatureCollection或Feature否则不符合规范，根据geojson的数据规范，获取到数据类型
-                    //Point, LineString, Polygon, MultiPoint, MultiLineString, and MultiPolygon
-                    let jsonData=res.data.body;
-                    let type='';
-                    if(jsonData.type=="FeatureCollection")
-                    {
-                        type=jsonData.features[0].geometry.type;
-                    }
-                    else if(jsonData.type=="Feature")
-                    {
-                        type=jsonData.geometry.type;
-                    }
-                    else {
-                        this.$message({
-                            message: '数据不符合要求',
-                            type: 'error'
-                        });
-                        return;
-                    }
-                    let layername=row.data.substr(0,row.data.lastIndexOf('.'));
-                    if(that.$parent.myMap.getLayer(layername))
-                    {
-                        this.$message({
-                            message: '同名同层已存在',
-                            type: 'error'
-                        });
-                        return ;
-                    }
-                    if(type=="Point"||type=='MultiPoint')
-                    that.$parent.myMap.addLayer({
-                        'id':layername,
-                        'type':'circle',
-                        'source': {
-                            'type': 'geojson',
-                            'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
-                        },
-                        'paint':{
-                            'circle-color':'#4682B4'
+                    this.$axios.postAdvanced(this.$URL.previewData('table'),params,{
+                        headers:{
+                            'Content-Type':'text/plain'
                         }
-                    });
+                    }).then(res=>{
+                        debugger;
+                        console.log(JSON.parse(res.body.structuredData).table);
+                        let table=JSON.parse(res.body.structuredData).table;
+                        if(table.length)
+                        {
+                            this.$Bus.$emit('tablePreview',table,table[0])
+                        }
+                        else
+                        {
+                            this.$message.warning('暂无表格数据');
+                        }
+                    }).catch(err=>{})
+                }
+            },
+            addtoMap()
+            {
+                if(this.pathStr===null)
+                {
+                    this.$message.warning('请选择一个文件');
+                }
+                else
+                {
+                    // 判斷是否是公共数据
+                    let params = {'path':this.pathStr,'geomIndex':parseInt(this.geomIndex),'offset':1};
+                    if (this.ispublic===true){
+                        params = {
+                            'path':"public:"+this.pathStr,
+                            'geomIndex':parseInt(this.geomIndex),
+                            'offset':1
+                        };
+                    }
 
-                    else if(type=="LineString"||type=='MultiLineString')
-                        that.$parent.myMap.addLayer({
-                            'id': layername,
-                            'type':'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
-                            },
-                            'paint':{
-                                'line-color':'#4682B4'
+                    debugger;
+                    this.$axios.postAdvanced(this.$URL.previewData('map'),params,{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }
+                    }).then(res=>{
+                        debugger;
+                        let layername=this.pathStr.substr(this.pathStr.lastIndexOf('/')+1,this.pathStr.length);
+                        if(res.code!=200)
+                        {
+                            this.$message.warning('上图失败');
+                            return;
+                        }
+                        if(res.body.geomType.lastIndexOf('Polygon')!==-1)
+                        {
+                            if(!this.$parent.addLayerid(layername))
+                            {
+                                this.$message.warning('该图层已存在');
+                                return;
                             }
-                        });
+                            this.$globalConstant.map.addLayer({
+                                'id': layername,
+                                'type':'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': JSON.parse(res.body.geomData)
+                                },
+                                'paint': {
+                                    'fill-color': '#4682B4',
+                                    'fill-opacity': 0.5,
+                                    'fill-outline-color':'#0e2944'
+                                }
 
-                    else if(type=="Polygon"||type=='MultiPolygon'){
-                      console.log(this.$platfromUrl.readDataFile)
-                      that.$parent.myMap.addLayer({
-                        'id': layername,
-                        'type':'fill',
-                        'source': {
-                          'type': 'geojson',
-                          'data': 'http://localhost:13000/summer/file/dataJson/'+row.data
-                        },
-                        'paint': {
-                          'fill-color': '#4682B4',
-                          'fill-opacity': 0.5,
-                          'fill-outline-color':'#0e2944'
+                            });
+                            this.$globalConstant.map.fitBounds(res.body.bbox);
                         }
-
-                      });
+                        else if(res.body.geomType.lastIndexOf('Point')!==-1)
+                        {
+                            if(!this.$parent.addLayerid(layername))
+                            {
+                                this.$message.warning('该图层已存在');
+                                return;
+                            }
+                            this.$globalConstant.map.addLayer({
+                                'id':layername,
+                                'type':'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': JSON.parse(res.body.geomData)
+                                },
+                                'paint':{
+                                    'circle-color':'#4682B4'
+                                }
+                            });
+                            this.$globalConstant.map.fitBounds(res.body.bbox);
+                        }
+                        else if(res.body.geomType.lastIndexOf('LineString')!==-1)
+                        {
+                            if(!this.$parent.addLayerid(layername))
+                            {
+                                this.$message.warning('该图层已存在');
+                                return;
+                            }
+                            this.$globalConstant.map.addLayer({
+                                'id': layername,
+                                'type':'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': JSON.parse(res.body.geomData)
+                                },
+                                'paint':{
+                                    'line-color':'#4682B4'
+                                }
+                            });
+                            this.$globalConstant.map.fitBounds(res.body.bbox);
+                        }
+                        else
+                        {
+                            this.$message.warning('类型不符合');
+                            return;
+                        }
+                    }).catch(err=>{})
+                }
+            },
+            loadNodePerson(node, resolve) {
+                debugger;
+                if(node.isLeaf) return;
+                if (node.level === 0) {
+                    return resolve(this.fileList);
+                }
+                else
+                {
+                    let pathStr='';
+                    let times=node.level;
+                    for (let i = 0; i < times; i++) {
+                        pathStr = "/" + node.label + pathStr;
+                        node = node.parent;
                     }
-
-                    else {
-                        this.$message({
-                            message: '数据不符合要求',
-                            type: 'error'
-                        });
-                        return;
+                    this.$axios.postAdvanced(this.$URL.getfileList,{'path':pathStr},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res=>{
+                        if(res.body.length===0) return resolve([{'name':'暂无数据','isFile':true}]);
+                        return resolve(res.body);
+                    });
+                }
+            },
+            loadNodeData(node,resolve)
+            {
+                if(node.isLeaf) return;
+                if (node.level === 0) {
+                    return resolve(this.dataList);
+                }
+                else
+                {
+                    let pathStr='';
+                    let times=node.level;
+                    for (let i = 0; i < times; i++) {
+                        pathStr = "/" + node.label + pathStr;
+                        node = node.parent;
                     }
-                    //更新图层列表以及数据库缓存
-                    that.$parent.addLayerid(layername);
-                })
-                .catch(err=>{
-                    this.$message.error("数据加载失败");
-                    console.log(err);
-                })
+                    this.$axios.postAdvanced(this.$URL.getpublicdataList,{'path':pathStr},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res=>{
+                        if(res.body.length===0) return resolve([{'name':'暂无数据','isFile':true}]);
+                        return resolve(res.body);
+                    });
+                }
+            },
+            markNodePerson(data,Node)
+            {
+                if(Node.isLeaf&&Node.label!=='暂无数据')
+                {
+                    let pathStr='';
+                    let times=Node.level;
+                    for (let i = 0; i < times; i++) {
+                        pathStr = "/" + Node.label + pathStr;
+                        Node = Node.parent;
+                    }
+                    this.pathStr=pathStr;
+                    this.isPublic = false;
+                }
+            },
+            markNodePublic(data,Node)
+            {
+                if(Node.isLeaf&&Node.label!=='暂无数据')
+                {
+                    let pathStr='';
+                    let times=Node.level;
+                    for (let i = 0; i < times; i++) {
+                        pathStr = "/" + Node.label + pathStr;
+                        Node = Node.parent;
+                    }
+                    this.pathStr=pathStr;
+                    this.isPublic = true;
+                }
             }
         },
         created() {
             let that=this;
-            this.$Bus.$on("dataListpara",para=>{
-                that.dialogVisible=para.dialogVisible,
-                that.tableData=para.tableData,
-                that.title=para.title
+            this.$Bus.$on("dataListpara",(filePaths,dataPaths)=>{
+                that.dialogVisible=true;
+                that.fileList=filePaths;
+                that.dataList=dataPaths;
+                that.pathStr=null
             })
         }
 

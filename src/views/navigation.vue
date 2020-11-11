@@ -64,7 +64,7 @@
                 <div slot="header" class="clearfix">
                   <span>统计数据</span>
                 </div>
-                <statisticalData></statisticalData>
+                <statisticChart></statisticChart>
               </el-card>
             </el-col>
           </el-row>
@@ -73,11 +73,11 @@
     </div>
 </template>
 <script>
-  import statisticalData from "../components/statisticalData";
+import statisticChart from "../components/statisticChart";
 
     export default {
         components:{
-          statisticalData
+          statisticChart
         },
         data() {
             //TODO 初始化Nginx指定图片服务路径下的资源
@@ -96,6 +96,9 @@
         },
         methods: {
             //TODO 首页图片跑马灯跳转至详情页
+          init: async function () {
+
+          },
             imgLink(link) {
               this.$router.push(link);
             },

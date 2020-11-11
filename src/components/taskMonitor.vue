@@ -3,7 +3,7 @@
         <div class="search">
             <el-button icon="el-icon-refresh" circle @click="refresh"></el-button>
         </div>
-        <el-table :data="taskList" style="height: 100%;overflow: auto;" id="taskListTable"
+        <el-table :data="taskList" style="height: 92%;overflow: auto;" id="taskListTable"
                   :row-key='getTableRowKeys'
                   :expand-row-keys="expands"
                   @expand-change="expandChange">

@@ -64,12 +64,12 @@ export default {
       this.$refs.ruleForm.resetFields();
     },
     login() {
-      this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043 密码加密
+      //this.$md5('holle')  密码加密
       this.logining = true;
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let that=this;
-          let loginParams = {name: that.ruleForm.username, password: that.ruleForm.password};
+          let loginParams = {name: that.ruleForm.username, password: this.$md5(that.ruleForm.password)};
           that.$axios.post(that.$URL.userLogin, loginParams).then(
               res => {
                 if (res.code == 200) {
@@ -85,6 +85,7 @@ export default {
                   this.$store.commit('setUsername',JSON.parse(sessionStorage.user).name)
                   this.$store.commit('setRole',JSON.parse(sessionStorage.user).role)
                   console.log(this.$store.getters.role)
+                  debugger;
                   this.$router.go({path: '/index'});
                   // if(this.$store.getters.role=='visitor'){
                   //   console.log(this.$store.getters.role)

@@ -1,5 +1,5 @@
 <template>
-    <el-container>
+    <el-container style="background-image: url('static/img/sm3.jpeg');background-attachment:fixed;">
         <!-- 左侧检索栏 -->
         <el-aside width="270px">
             <div class="primarySearch">

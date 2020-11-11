@@ -145,33 +145,13 @@ export default {
       //注：此功能实现过程假设所有的数据都存在服务器端，
       // 访问服务器存储数据文件夹的路径获取得到数据源，如有外来数据则此功能需要修改
       let map = this.myMap;
-      let url = map.getSource(layerName)._data;
-      let filename = url.substr(url.lastIndexOf("/") + 1, url.length);
-      if (filename) {
-        axios
-          .get(this.$platfromUrl.readProjectFile + filename, {
-            params: {
-              type: 2
-            }
-          })
-          .then(res => {
-            let jsonData = res.data.body;
-            //利用turf的bbox函数，为jsonData数据构建外包盒
-            let bbox1 = turf.bbox(jsonData);
-            //将bbox1增加一个1经纬度的外包盒，以免缩放至单点图层出错
-            let newbbox = [
-              bbox1[0] - 0.01 < -180 ? -180 : bbox1[0] - 0.01,
-              bbox1[1] - 0.01 < -90 ? -90 : bbox1[1] - 0.01,
-              bbox1[2] + 0.01 > 180 ? 180 : bbox1[2] + 0.01,
-              bbox1[3] + 0.01 > 90 ? 90 : bbox1[3] + 0.01
-            ];
-            if (newbbox[0] == Infinity) alert("选中图层未在视野内");
-            else {
-              map.fitBounds(newbbox);
-            }
-          })
-          .catch(err => console.log(error));
-      }
+
+        let bbox1 = turf.bbox({
+            "type": "FeatureCollection",
+            "features":map.querySourceFeatures(layerName)});
+        map.fitBounds(bbox1);
+
+
     },
     //删除选中图层
     destroy(layerName) {

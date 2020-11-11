@@ -21,9 +21,9 @@
     <el-submenu class="menuItemCla" index="7" style="color: white">
       <template slot="title">教学案例</template>
       <el-menu-item class="menuItemCla" index="7-1" @click="goToMarket">案例仓库</el-menu-item>
-      <el-menu-item class="menuItemCla" index="7-2" @click="goToMarkdown">标记语言</el-menu-item>
+<!--      <el-menu-item class="menuItemCla" index="7-2" @click="goToMarkdown">标记语言</el-menu-item>-->
       <el-menu-item class="menuItemCla" index="7-3" @click="goToCodeOnline">在线编译</el-menu-item>
-      <el-menu-item class="menuItemCla" index="7-4" @click="goToJupyter">交互式笔记本</el-menu-item>
+<!--      <el-menu-item class="menuItemCla" index="7-4" @click="goToJupyter">交互式笔记本</el-menu-item>-->
     </el-submenu>
     <el-menu-item class="menuItemCla" index="8" @click="goToPlatform">分析平台</el-menu-item>
     <el-submenu class="menuItemCla" index="9" style="color: white">
@@ -78,7 +78,11 @@ name: "menuBar2",
       this.$router.push('/eduCase/markdown')
     },
     goToCodeOnline(){
-      this.$router.push('/eduCase/codeOnline')
+      const { href } = this.$router.resolve({
+        path: "/eduCase/codeOnline"
+      });
+      window.open(href, '_blank');
+      // this.$router.push('/eduCase/codeOnline')
     },
     goToJupyter(){
       this.$router.push('/eduCase/jupyter')

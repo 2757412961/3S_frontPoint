@@ -20,6 +20,7 @@
                 </el-button>
                 <loginDialog></loginDialog>
                 <verifyDialog></verifyDialog>
+                <resetDialog></resetDialog>
                 <!-- 注册按钮 -->
                 <el-button id="signin" v-if="!isLogin" size="mini" type="primary" plain @click="showRegisterDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">注册
@@ -54,7 +55,8 @@
     import menuBar2 from './menuBar2'
     import pageFooter from './pageFooter'
     import loginDialog from "../components/Dialog/loginDialog"
-    import verifyDialog from "../components/Dialog/verifyDialog";
+    import verifyDialog from "../components/Dialog/verifyDialog"
+    import resetDialog from "../components/Dialog/resetDialog";
     import registerDialog from "../components/Dialog/registerDialog"
 
     export default {
@@ -63,6 +65,7 @@
             pageFooter,
             loginDialog,
             verifyDialog,
+            resetDialog,
             registerDialog
         },
         data() {
@@ -96,7 +99,7 @@
                 let that=this;
                 that.$axios.post(that.$URL.userLogout).then(
                     res => {
-                      if (res.code == 200) {
+                      if (res.code === 200) {
                         that.$message({
                           message: "用户登出成功",
                           type: 'success'
@@ -130,7 +133,6 @@
         computed: {
         },
         mounted() {
-          debugger;
           this.$store.dispatch('initial', {})
           // if(this.$store.getters.role=='visitor'){
           //   console.log(this.$store.getters.role)
@@ -145,10 +147,8 @@
           //   document.getElementById("signin").style.display='none'
           // }
           if (sessionStorage.getItem('user') == null) {
-            debugger;
             this.isLogin = false;
           } else {
-            debugger;
             this.isLogin = true;
           }
         }

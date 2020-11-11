@@ -21,8 +21,8 @@
                         :auto-upload="false"
                         :on-success="handleRes">
                     <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                    <el-button size="small" type="plain" @click="downloadRelated">上传说明</el-button>
                     <div slot="tip" class="el-upload__tip">请上传注册模型所需的xml、jar、png/jpg文件，所有文件需符合格式要求</div>
-
                 </el-upload>
             </el-form-item>
         </el-form>
@@ -46,6 +46,10 @@
             }
         },
         methods:{
+          downloadRelated()
+          {
+              window.open('http://10.79.231.81:90/bigGeoPlatform/modelImages/模型注册说明.zip');
+          },
           submitUpload()
           {
               let that=this;

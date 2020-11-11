@@ -133,6 +133,7 @@
             that.$Bus.$emit('modelParams',{
                 dialogVisible:true,
                 formData:that.NodesInfo[dataIndex].params,
+                modelName:that.Nodes[dataIndex][2],
                 outputList:outputlist
             })
         }

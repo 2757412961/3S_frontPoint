@@ -116,7 +116,7 @@
             },
             download(){
             //    src="http://10.79.231.81:90/images/"
-                let url = "http://10.79.231.81:90/images/";
+                let url = "http://10.79.231.81:90/eduCase/";
                 window.open(url);
 
             }

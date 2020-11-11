@@ -25,7 +25,16 @@
             </el-tabs>
             <span slot="footer" class="dialog-footer">
                 <el-form>
-                   <el-form-item label="如需上图，请输入几何字段"><el-input v-model="geomIndex"></el-input></el-form-item>
+                   <el-form-item label="如需上图，请输入几何字段">
+                       <el-popover
+                               placement="top-start"
+                               title="说明"
+                               trigger="hover"
+                               content="请输入数据中符合wkt的空间列序号">
+                       <span slot="reference"><i class="el-icon-info"></i></span>
+                        </el-popover>
+                       <el-input v-model="geomIndex"></el-input>
+                   </el-form-item>
                 </el-form>
     <el-button type="primary" @click="preview">预 览</el-button>
     <el-button type="success" @click="addtoMap">上 图</el-button>
@@ -75,7 +84,7 @@
                 }
                 else
                 {
-                    this.$axios.postAdvanced(this.$URL.previewData('table'),{'path':this.pathStr},{
+                    this.$axios.postAdvanced(this.$URL.previewData('table'),{'path':this.pathStr,size:10},{
                         headers:{
                             'Content-Type':'text/plain'
                         }

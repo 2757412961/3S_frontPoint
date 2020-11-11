@@ -29,7 +29,7 @@
 
         <el-container>
             <el-main>
-                <modelManager v-show="modelManagedis"></modelManager>
+                <modelManager v-if="modelManagedis"></modelManager>
                 <workFlow ref="workflow" v-show="workFlowdis"></workFlow>
                 <taskMonitor v-show="jobMonitordis"></taskMonitor>
                 <mapBoxFromSummer v-show="mapBoxdis"></mapBoxFromSummer>

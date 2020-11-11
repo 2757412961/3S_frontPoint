@@ -53,16 +53,16 @@
                 this.$refs.ruleForm.resetFields();
             },
             resetPW() {
-              this.$md5('holle') // bcecb35d0a12baad472fbe0392bcc043 密码加密
+              //this.$md5('holle') 32位小写 密码加密
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
             		    let that = this;
                         that.$axios.get(that.$URL.searchUsersByName+that.username).then(
                             function(res){
                                 if (res.code === 200) {
-                                    debugger;
                                     that.id=res.body.id;
-                                    let resetParams = {id: that.id, password: that.ruleForm.newPW};
+                                    debugger;
+                                    let resetParams = {id: that.id, password: that.$md5(that.ruleForm.newPW)};
                                     that.$axios.post(that.$URL.updateUserInfo, resetParams).then(
                                         function(res) {
                                             if (res.code === 200) {

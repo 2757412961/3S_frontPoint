@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-image: url('static/img/sm3.jpeg');background-attachment:fixed;">
         <el-container>
             <el-aside width="260px">
                 <el-col>

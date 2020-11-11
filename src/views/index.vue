@@ -99,7 +99,7 @@
                 let that=this;
                 that.$axios.post(that.$URL.userLogout).then(
                     res => {
-                      if (res.code == 200) {
+                      if (res.code === 200) {
                         that.$message({
                           message: "用户登出成功",
                           type: 'success'

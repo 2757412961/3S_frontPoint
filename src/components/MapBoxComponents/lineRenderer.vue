@@ -6,9 +6,9 @@
             <el-form-item label="渲染方式">
                 <el-radio-group v-model="radio"  @change="changeModel">
                     <el-radio :label="0" style="padding:8px">直接渲染</el-radio>
-                    <el-radio :label="1" style="padding:8px">分级渲染</el-radio>
-                    <el-radio :label="2" style="padding:8px">使用图案</el-radio>
-                    <el-radio :label="3" style="padding:8px">唯一值渲染</el-radio>
+<!--                    <el-radio :label="1" style="padding:8px">分级渲染</el-radio>-->
+<!--                    <el-radio :label="2" style="padding:8px">使用图案</el-radio>-->
+<!--                    <el-radio :label="3" style="padding:8px">唯一值渲染</el-radio>-->
                 </el-radio-group>
             </el-form-item>
 
@@ -46,13 +46,13 @@
                 <el-color-picker v-model="color" ></el-color-picker>
             </el-form-item>
 
-            <el-form-item label="图案样式" v-show="is[2]">
-                <el-radio-group v-model="icon0" >
-                    <el-radio v-for="item in icons" :key="item" :value="item" :label="item">
-                        <el-image :src="imgurl+item+'.png'"></el-image>
-                    </el-radio>
-                </el-radio-group>
-            </el-form-item>
+<!--            <el-form-item label="图案样式" v-show="is[2]">-->
+<!--                <el-radio-group v-model="icon0" >-->
+<!--                    <el-radio v-for="item in icons" :key="item" :value="item" :label="item">-->
+<!--                        <el-image :src="imgurl+item+'.png'"></el-image>-->
+<!--                    </el-radio>-->
+<!--                </el-radio-group>-->
+<!--            </el-form-item>-->
 
             <el-form-item label="最小值颜色" v-show="is[1]" >
                 <el-color-picker v-model="mincolor" @change="showColor"></el-color-picker>
@@ -125,50 +125,50 @@
         },
         created() {
             let that=this;
-            that.initfields();
-            that.loadImage();
+          //  that.initfields();
+           // that.loadImage();
         },
         computed:{},
         mounted() {},
         methods: {
-            initfields(){
-                let map=this.myMap;
-                let url= map.getSource(this.layername)._data;
-                let filename=url.substr(url.lastIndexOf('/')+1,url.length);
-                if(filename)
-                {
-                    axios.get(this.$platfromUrl.readProjectFile+filename,{
-                        params:{
-                            type:2
-                        }
-                    }).then(res=>{
-                        let jsonData=res.data.body;
-                        let feature=null;
-                        //判别数据类型是否符合要求
-                        this.featurecollections=jsonData.features;
-                        if(jsonData.type==='Feature') feature=jsonData;
-                        else if(jsonData.type==='FeatureCollection')
-                        {
-                            if(jsonData.features.length) feature=jsonData.features[0];
-                            else this.$message({
-                                message: '当前图层数据为空',
-                                type: 'warning'
-                            });
-                        }
-                        if(feature)
-                        {
-                            //分别滤出值为数字和字符串的字段
-                            for (let i in feature.properties) {
-                                if (typeof (feature.properties[i]) === "number")
-                                    this.fields.add(i);
-                                else if(typeof (feature.properties[i]) === "string")
-                                    this.strFields.add(i);
-                            }
-                        }
-                        return this.fields;
-                    })
-                }
-            },
+            // initfields(){
+            //     let map=this.myMap;
+            //     let url= map.getSource(this.layername)._data;
+            //     let filename=url.substr(url.lastIndexOf('/')+1,url.length);
+            //     if(filename)
+            //     {
+            //         axios.get(this.$platfromUrl.readProjectFile+filename,{
+            //             params:{
+            //                 type:2
+            //             }
+            //         }).then(res=>{
+            //             let jsonData=res.data.body;
+            //             let feature=null;
+            //             //判别数据类型是否符合要求
+            //             this.featurecollections=jsonData.features;
+            //             if(jsonData.type==='Feature') feature=jsonData;
+            //             else if(jsonData.type==='FeatureCollection')
+            //             {
+            //                 if(jsonData.features.length) feature=jsonData.features[0];
+            //                 else this.$message({
+            //                     message: '当前图层数据为空',
+            //                     type: 'warning'
+            //                 });
+            //             }
+            //             if(feature)
+            //             {
+            //                 //分别滤出值为数字和字符串的字段
+            //                 for (let i in feature.properties) {
+            //                     if (typeof (feature.properties[i]) === "number")
+            //                         this.fields.add(i);
+            //                     else if(typeof (feature.properties[i]) === "string")
+            //                         this.strFields.add(i);
+            //                 }
+            //             }
+            //             return this.fields;
+            //         })
+            //     }
+            // },
             loadImage()
             {
                 let map=this.myMap;

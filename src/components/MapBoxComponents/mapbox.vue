@@ -60,6 +60,7 @@
         methods: {
             init() {
                 let that = this;
+                debugger;
                 //读取缓存数据内容:地图样式以及图层列表
                 let styleJson=sessionStorage.getItem('mapstyle');
                 let layers=sessionStorage.getItem('layers');
@@ -84,6 +85,7 @@
                         }
 
                     }
+                    this.layerNames=layerids;
                 }
                 mapboxgl.accessToken = mapUrl.MapaccessToken ;
               //若已有缓存样式，则加载地图样式为缓存样式
@@ -442,9 +444,9 @@
             },
             refreshStorage()
             {
-                sessionStorage.setItem('layers',layerids);
-                let styleJson = this.myMap.getStyle();
-                sessionStorage.setItem('mapstyle',JSON.stringify(styleJson));
+                // sessionStorage.setItem('layers',layerids);
+                // let styleJson = this.myMap.getStyle();
+                // sessionStorage.setItem('mapstyle',JSON.stringify(styleJson));
             },
             addLayerid(str) {
                 //在map上添加图层后调用此函数，更新图层数组，更新数据库缓存

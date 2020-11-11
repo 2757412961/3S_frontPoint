@@ -39,17 +39,20 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button size="small" type="primary" @click="submitParams">提交参数</el-button>
+                        <el-button size="small" type="plain" @click="modelInfos">模型说明</el-button>
                     </el-form-item>
                 </el-form>
 
         </el-dialog>
         <file-selector @chosenFile="chosenFile(arguments)"></file-selector>
+        <model-info v-if="dialogVisible"></model-info>
     </div>
 
 </template>
 
 <script>
     import fileSelector from "./fileSelector";
+    import modelInfo from "./modelInfo";
     //此组件中参数输入完成后，需要返回到父组件中，修改NodesInfo
     export default {
         name: "modelParams",
@@ -58,13 +61,41 @@
                 dialogVisible:false,
                 formData:[],
                 outputList:[],
-                filePath:''
+                filePath:'',
+                modelName:''
             }
         },
         components:{
-            fileSelector
+            fileSelector,
+            modelInfo
         },
         methods: {
+            modelInfos()
+            {
+                debugger;
+                this.$axios.get(this.$platfromUrl.getModelbyId+this.modelName).then(res=>{
+                    debugger;
+                let temp=res.body;
+                let re={};
+                // let params=temp.params;
+                //  console.log(JSON.parse(params));
+                re['模型名']=temp.artifactId;
+                re['用途']=temp.usages;
+                re['关键词']=temp.keywords;
+                re['描述']=temp.description;
+                if(temp.isPublic) re['权限']='公有';
+                else re['权限']='私有';
+                for(let key in re)
+                {
+                    if(re[key]==='') re[key]='暂无信息';
+                }
+                this.$Bus.$emit('modelInfo',{
+                    dialogVisible:true,
+                    formData:re
+                })
+            }).catch(err=>{})
+
+            },
             chosenFile(args)
             {
                 debugger
@@ -109,8 +140,10 @@
             let that=this;
             debugger;
             this.$Bus.$on('modelParams',params=>{
+                debugger;
                 that.dialogVisible=params.dialogVisible;
                 that.formData=params.formData;
+                that.modelName=params.modelName;
                 that.outputList=params.outputList
             })
         }

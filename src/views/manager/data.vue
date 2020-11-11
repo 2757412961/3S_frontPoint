@@ -261,7 +261,11 @@
                 let timelist=that.transferTime(timestamp)
 
                 console.log(timelist)
-                let logParams = {actId:this.$store.getters.username,role:this.$store.getters.role,time:timelist,tableName:that.typevalue,objectId:dataName,type:'删除'};
+                let logParams = {actId:this.$store.getters.username,
+                  role:this.$store.getters.role,
+                  time:timelist,
+                  tableName:that.typevalue,
+                  objectId:dataName,type:'删除'};
                 console.log(logParams)
                 that.$axios.put(that.$URL.addLog,logParams).then(
                     res => {

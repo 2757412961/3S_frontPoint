@@ -30,7 +30,11 @@ import spaceDialog from './spaceDialog'
                 currentPage: 1
             }
         },
-        props: ['tableData'],
+        props:
+            {
+                tableData:Array,
+                visible:true
+            },
         components:{
             spaceDialog
         },

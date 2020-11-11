@@ -28,18 +28,31 @@
                 </el-col>
             </el-aside>
             <el-main>
-                <div class="hm">
-                    <el-breadcrumb separator-class="el-icon-arrow-right">
-                        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>空间数据</el-breadcrumb-item>
-                    </el-breadcrumb>
-                    <el-button type="primary" style="margin-top: 10px" @click="Popular">热门数据</el-button>
-                </div>
-                <spaceList ref="spaceList" :tableData="tableData"></spaceList>
-                <!--分页-->
-                <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
-                               layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
-                </el-pagination>
+                    <div class="hm">
+                        <el-breadcrumb separator-class="el-icon-arrow-right">
+                            <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>空间数据</el-breadcrumb-item>
+                        </el-breadcrumb>
+                        <el-button type="primary" style="margin-top: 10px" @click="Popular">热门数据</el-button>
+                    </div>
+
+                        <el-table :data="tableData" v-show="true">
+                            <el-table-column label="文件名" prop="name">
+                            </el-table-column>
+                            <el-table-column label="类型" prop="isFile">
+                                <template slot="scope">
+                                    <span v-if="scope.row.isFile">文件</span>
+                                    <span v-else>文件夹</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    <spaceList ref="spaceList" :tableData="tableData" :visible="chosenMine"></spaceList>
+
+                    <!--分页-->
+                    <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
+                                   layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
+                    </el-pagination>
+
             </el-main>
         </el-container>
     </div>
@@ -52,6 +65,7 @@
         data() {
             return {
                 input: '',
+                chosenMine:false,
                 menuList: [
                     {
                         index: '0',
@@ -146,6 +160,10 @@
                                 title: '作物数据'
                             },
                         ]
+                    },
+                    {
+                        index:'6',
+                        title:'我的数据'
                     }
                 ],
                 dataLength: 0,
@@ -267,17 +285,34 @@
                 ).catch(err=>{})
             },
             filterByType1(type1) {
-                this.currentPage = 1
+                this.currentPage = 1;
                 this.$refs.spaceList.currentPage = 1;
-                if (type1 == '全部资源') {
-                    this.queryData.type=3
-                    this.queryData.value=''
-                    this.tableData=this.selectAll(this)
+                if(type1=='我的数据')
+                {
+                    debugger;
+                    this.chosenMine=true;
+
+                    this.$axios.postAdvanced(this.$URL.getfileList,{'path':'/'},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res=>{
+                            debugger;
+                        let list=res.body;
+                        this.tableData=list;
+                    });
+
+                }
+                else if (type1 == '全部资源') {
+                    this.queryData.type=3;
+                    this.queryData.value='';
+                    this.tableData=this.selectAll(this);
+                    this.chosenMine=false;
                 }
                 else{
-                    this.queryData.type=2
-                    this.queryData.value=type1
-                    this.tableData=this.getFilterByType1(this,type1)
+                    this.queryData.type=2;
+                    this.queryData.value=type1;
+                    this.tableData=this.getFilterByType1(this,type1);
+                    this.chosenMine=false;
                 }
             },
             getFilterByType1(that,type1){

@@ -9,14 +9,14 @@
                 width="35%">
             <el-tabs type="border-card" v-model="activeTab">
                 <el-tab-pane label="公共数据" style="min-height: 300px" name="publicData">
-                    <el-tree @node-click="markNode"
+                    <el-tree @node-click="markNodePublic"
                              :props="props"
                              :load="loadNodeData"
                              lazy>
                     </el-tree>
                 </el-tab-pane>
                 <el-tab-pane label="个人数据" style="min-height: 300px" name="personalData">
-                    <el-tree @node-click="markNode"
+                    <el-tree @node-click="markNodePerson"
                              :props="props"
                              :load="loadNodePerson"
                              lazy>
@@ -84,7 +84,16 @@
                 }
                 else
                 {
-                    this.$axios.postAdvanced(this.$URL.previewData('table'),{'path':this.pathStr,size:10},{
+                    // 判斷是否是公共数据
+                    let params = {'path':this.pathStr,size:10};
+                    if (this.ispublic===true){
+                        params = {
+                            'path':"public:"+this.pathStr,
+                            size:10
+                        };
+                    }
+
+                    this.$axios.postAdvanced(this.$URL.previewData('table'),params,{
                         headers:{
                             'Content-Type':'text/plain'
                         }
@@ -251,7 +260,7 @@
                     });
                 }
             },
-            markNode(data,Node)
+            markNodePerson(data,Node)
             {
                 if(Node.isLeaf&&Node.label!=='暂无数据')
                 {
@@ -262,6 +271,21 @@
                         Node = Node.parent;
                     }
                     this.pathStr=pathStr;
+                    this.isPublic = false;
+                }
+            },
+            markNodePublic(data,Node)
+            {
+                if(Node.isLeaf&&Node.label!=='暂无数据')
+                {
+                    let pathStr='';
+                    let times=Node.level;
+                    for (let i = 0; i < times; i++) {
+                        pathStr = "/" + Node.label + pathStr;
+                        Node = Node.parent;
+                    }
+                    this.pathStr=pathStr;
+                    this.isPublic = true;
                 }
             }
         },

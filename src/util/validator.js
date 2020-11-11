@@ -20,7 +20,8 @@ export function validatePhone(rule, value,callback) {//电话号码验证
 }
 
 export function validateEMail(rule, value,callback) {//邮箱验证
-    const reg =/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/;
+    //const reg =/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/;
+    const reg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if(value===''||value===undefined||value==null){
         callback();
     }else{

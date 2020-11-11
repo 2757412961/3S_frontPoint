@@ -133,7 +133,6 @@
         computed: {
         },
         mounted() {
-          debugger;
           this.$store.dispatch('initial', {})
           // if(this.$store.getters.role=='visitor'){
           //   console.log(this.$store.getters.role)

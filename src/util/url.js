@@ -66,7 +66,13 @@ const URL = {
     uploadLecture:"/lecture/insert",
     uploadOnlinetools:"/onlinetools/insert",
     uploadMapservice:"/mapservice/insert",
-    //注册发送验证码
-    check:"/user/check/",
+
+    getfileList:'/userSpace/getFileInfoList',
+    getpublicdataList:'/geodata/getFileInfoList',
+    previewData:function (type) {
+        return '/userSpace/preview/'+type;
+    },
+
+    statisticData:"/user/statistic"
 };
 export default URL;

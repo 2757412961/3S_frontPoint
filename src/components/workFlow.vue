@@ -133,6 +133,7 @@
             that.$Bus.$emit('modelParams',{
                 dialogVisible:true,
                 formData:that.NodesInfo[dataIndex].params,
+                modelName:that.Nodes[dataIndex][2],
                 outputList:outputlist
             })
         }
@@ -973,6 +974,17 @@
 
 
 
+            },
+            resize()
+            {
+                let that=this;
+                this.$nextTick(function () {
+                    let myChart = this.$echarts.getInstanceByDom(document.getElementById('WorkSpace'));
+                    if(myChart)
+                    {
+                        myChart.resize();
+                    }
+                })
             }
         }
     }

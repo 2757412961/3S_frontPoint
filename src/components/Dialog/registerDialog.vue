@@ -244,7 +244,7 @@ export default {
       console.log(this.ruleForm.vericode)
       debugger;
       if (this.ruleForm.vericode === this.correctCode) {
-        this.$md5('holle') //     密码加密
+       // this.$md5('holle')      密码加密
         this.registering = true;
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
@@ -253,7 +253,7 @@ export default {
             let url = that.$URL.addUser;
             let registerParams = {
               name: that.ruleForm.username,
-              password: that.ruleForm.password,
+              password:  this.$md5(that.ruleForm.password),
               phone: that.ruleForm.phone,
               email: that.ruleForm.email,
               country: that.selectedCountry,

@@ -13,7 +13,7 @@
             <el-col :span="4" class="title">
                 <!-- 个人中心按钮 -->
                 <el-button id="personalcenter" v-if="isLogin" @click="toUserCenter" style="height: 40px; width: 40px; margin-top: 10px; float: right" type="primary" icon="el-icon-user" circle></el-button>
-<!--                <el-button v-if="" style="height: 40px; width: 40px; margin-top: 10px;" type="primary" icon="el-icon-user" circle></el-button>-->
+                <userInfoDialog></userInfoDialog>
                 <!-- 登录按钮 -->
                 <el-button id="login" v-if="!isLogin" size="mini" type="primary" plain @click="showLoginDialog"
                            style="margin-top: 16px; margin-left: 12px; float: right">登录
@@ -46,7 +46,7 @@
                 <router-view></router-view>
             </div>
             <!-- 页脚 -->
-            <pageFooter v-if="this.$globalConstant.page==''"></pageFooter>
+            <pageFooter v-if="this.$globalConstant.page===''"></pageFooter>
         </el-main>
     </el-container>
 </template>
@@ -56,8 +56,9 @@
     import pageFooter from './pageFooter'
     import loginDialog from "../components/Dialog/loginDialog"
     import verifyDialog from "../components/Dialog/verifyDialog"
-    import resetDialog from "../components/Dialog/resetDialog";
+    import resetDialog from "../components/Dialog/resetDialog"
     import registerDialog from "../components/Dialog/registerDialog"
+    import userInfoDialog from "../components/Dialog/userInfoDialog"
 
     export default {
         components: {
@@ -66,7 +67,8 @@
             loginDialog,
             verifyDialog,
             resetDialog,
-            registerDialog
+            registerDialog,
+            userInfoDialog,
         },
         data() {
             return {
@@ -74,20 +76,16 @@
                 searchParam: '',
                 value: '',
                 isLogin: false,
+                isManager: false,
             }
         },
         methods: {
-            isLogin() {
-                this.$axios.get(this.$URL.userLoginStatus).then(
-                    function(res) {
-                        //如果当前是登录状态，则显示用户/管理员中心
-                        return res.code == 200 ? true : false;
-                    }
-                );
-                return false;
-            },
             toUserCenter() {
-              this.$router.push('/manager/manager');
+                if (this.isManager) {
+                    this.$router.push('/manager/manager');
+                } else {
+                    this.$Bus.$emit('showUserInfo');
+                }
             },
             showLoginDialog() {
                 this.$Bus.$emit('showLogin');
@@ -146,10 +144,13 @@
           //   document.getElementById("login").style.display='none'
           //   document.getElementById("signin").style.display='none'
           // }
-          if (sessionStorage.getItem('user') == null) {
-            this.isLogin = false;
-          } else {
+          if (sessionStorage.getItem('user')) {
             this.isLogin = true;
+            if(JSON.parse(sessionStorage.getItem('user')).role === "manager") {
+                this.isManager = true;
+            }
+          } else {
+            this.isLogin = false;
           }
         }
     }

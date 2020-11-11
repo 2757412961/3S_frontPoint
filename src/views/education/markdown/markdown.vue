@@ -350,7 +350,7 @@
 
 <style scoped>
     .content {
-        padding: 8px 8px;
+        padding: 48px 48px;
         font-size: 20px;
     }
     .body {

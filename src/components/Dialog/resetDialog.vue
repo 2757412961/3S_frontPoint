@@ -53,7 +53,7 @@
                 this.$refs.ruleForm.resetFields();
             },
             resetPW() {
-              //this.$md5('holle')  密码加密
+              //this.$md5('holle') 32位小写 密码加密
             	this.$refs.ruleForm.validate((valid) => {
             		if (valid) {
             		    let that = this;

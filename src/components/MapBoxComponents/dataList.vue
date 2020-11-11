@@ -25,7 +25,7 @@
             </el-tabs>
             <span slot="footer" class="dialog-footer">
                 <el-form>
-                   <el-form-item label="如需上图，请输入几何字段">
+                   <el-form-item label="请输入几何字段">
                        <el-popover
                                placement="top-start"
                                title="说明"
@@ -34,6 +34,16 @@
                        <span slot="reference"><i class="el-icon-info"></i></span>
                         </el-popover>
                        <el-input v-model="geomIndex"></el-input>
+                   </el-form-item>
+                    <el-form-item label="请输入预览数据量">
+                       <el-popover
+                               placement="top-start"
+                               title="说明"
+                               trigger="hover"
+                               content="数据量表示对应数据表中数据条数">
+                       <span slot="reference"><i class="el-icon-info"></i></span>
+                        </el-popover>
+                       <el-input v-model="geomSize"></el-input>
                    </el-form-item>
                 </el-form>
     <el-button type="primary" @click="preview">预 览</el-button>
@@ -65,6 +75,7 @@
                     isLeaf: 'isFile'
                 },
                 geomIndex:0,
+                geomSize:10,
                 pathStr:null,
                 fileList:[],
                 dataList:[],
@@ -85,15 +96,8 @@
                 else
                 {
                     // 判斷是否是公共数据
-                    let params = {'path':this.pathStr,size:10};
-                    if (this.ispublic===true){
-                        params = {
-                            'path':"public:"+this.pathStr,
-                            size:10
-                        };
-                    }
-
-                    this.$axios.postAdvanced(this.$URL.previewData('table'),params,{
+                    if(this.activeTab==='publicData') this.pathStr='public:'+this.pathStr;
+                    this.$axios.postAdvanced(this.$URL.previewData('table'),{'path':this.pathStr,size:parseInt(this.geomSize)},{
                         headers:{
                             'Content-Type':'text/plain'
                         }
@@ -120,18 +124,8 @@
                 }
                 else
                 {
-                    // 判斷是否是公共数据
-                    let params = {'path':this.pathStr,'geomIndex':parseInt(this.geomIndex),'offset':1};
-                    if (this.ispublic===true){
-                        params = {
-                            'path':"public:"+this.pathStr,
-                            'geomIndex':parseInt(this.geomIndex),
-                            'offset':1
-                        };
-                    }
-
                     debugger;
-                    this.$axios.postAdvanced(this.$URL.previewData('map'),params,{
+                    this.$axios.postAdvanced(this.$URL.previewData('map'),{'path':this.pathStr,'geomIndex':parseInt(this.geomIndex),'offset':1,size:parseInt(this.geomSize)},{
                         headers:{
                             'Content-Type':'text/plain'
                         }

@@ -153,7 +153,7 @@
                     else
                     {
                         if(this.activeTab==='publicData')
-                            this.pathStr='publicdata:'+this.pathStr;
+                            this.pathStr='public:'+this.pathStr;
                         this.$emit('chosenFile',this.index,this.pathStr);
                         this.dialogVisible=false;
                     }

@@ -28,6 +28,7 @@
                 </el-col>
             </el-aside>
             <el-main>
+                <div v-show="!chosenMine">
                     <div class="hm">
                         <el-breadcrumb separator-class="el-icon-arrow-right">
                             <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
@@ -36,36 +37,71 @@
                         <el-button type="primary" style="margin-top: 10px" @click="Popular">热门数据</el-button>
                     </div>
 
-                        <el-table :data="tableData" v-show="true">
-                            <el-table-column label="文件名" prop="name">
-                            </el-table-column>
-                            <el-table-column label="类型" prop="isFile">
-                                <template slot="scope">
-                                    <span v-if="scope.row.isFile">文件</span>
-                                    <span v-else>文件夹</span>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    <spaceList ref="spaceList" :tableData="tableData" :visible="chosenMine"></spaceList>
+
+                    <spaceList ref="spaceList" :tableData="tableData"></spaceList>
 
                     <!--分页-->
                     <el-pagination @current-change="paginationCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
                                    layout="total, prev, pager, next, jumper" :total="dataLength" align="center">
                     </el-pagination>
+                </div>
+                <div v-show="chosenMine">
+                    <div>
+                        <div>
+                            <el-button type="primary" plain @click="downloadBatch">下载&nbsp<i id="downBatch" class="fa fa-download"></i></el-button>
+                            <el-button type="primary" plain @click="uploadFiles">上传&nbsp<i class="fa fa-upload"></i></el-button>
+                            <el-button type="primary" plain @click="newFolder">新建文件夹&nbsp<i style="font-weight: 600"
+                                                                                            class="el-icon-folder-add"></i>
+                            </el-button>
+                        </div>
+                        <el-button style="margin-top: 10px" type="text" @click="backUp">返回上一级 | {{pathStr}}</el-button>
+                    </div>
+                    <el-table :data="tableData" @selection-change="handleSelectionChange">
+                        <el-table-column
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column label="文件名" prop="name">
+                            <template slot-scope="scope">
+                                <span @click="goIn(scope.row.name,scope.row.isFile)">{{scope.row.name}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="类型" prop="isFile">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.isFile">文件</span>
+                                <span v-else>文件夹</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="更改时间" prop="modificationTime">
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <span @click="deleteFile(scope.row.name)"><i class="el-icon-delete"></i></span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <user-mkdir @makeDir="makeDir(arguments)"></user-mkdir>
+                    <userUpload></userUpload>
+                </div>
 
             </el-main>
         </el-container>
+
     </div>
 </template>
 
 <script>
-    import axios from 'axios'
+    import userMkdir from "../components/Dialog/userMkdir";
     import spaceList from '../components/spaceList'
+    import userUpload from "../components/Dialog/userUpload";
+    import axios from '../util/axios'
     export default {
         data() {
             return {
                 input: '',
                 chosenMine:false,
+                pathStr:'/',
+                checkedList:[],
                 menuList: [
                     {
                         index: '0',
@@ -212,6 +248,125 @@
             }
         },
         methods: {
+            uploadFiles()
+            {
+                this.$Bus.$emit('userUpload',{'path':this.pathStr})
+            },
+            deleteFile(item)
+            {
+                debugger;
+                let that=this;
+                this.$axios.remove(this.$URL.userSpaceDelete,{
+                    data:{
+                        path:this.pathStr+item
+                    },
+                    headers:{
+                    'Content-Type':'text/plain'
+                    }}).then(res=>{
+                    that.$axios.postAdvanced(that.$URL.getfileList,{'path':that.pathStr},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res=>{
+                        that.tableData=res.body;
+                    });
+                }).catch(err=>{})
+            },
+            makeDir(args)
+            {
+                let that=this;
+               this.$axios.postAdvanced(this.$URL.userSpaceMkdir,{'path':this.pathStr+args[0]},{headers:{
+                   'Content-Type':'text/plain'
+                   }}).then(res=>{
+                       that.$axios.postAdvanced(that.$URL.getfileList,{'path':that.pathStr},{
+                           headers:{
+                               'Content-Type':'text/plain'
+                           }}).then(res=>{
+                           that.tableData=res.body;
+                       });
+               }).catch(err=>{})
+            },
+            newFolder()
+            {
+                this.$Bus.$emit('userMkdir',{});
+            },
+            backUp()
+            {
+                if(this.pathStr==='/') return;
+               this.pathStr=this.pathStr.substr(0,this.pathStr.length-1);
+               this.pathStr=this.pathStr.substr(0,this.pathStr.lastIndexOf('/')+1);
+                this.$axios.postAdvanced(this.$URL.getfileList,{'path':this.pathStr},{
+                    headers:{
+                        'Content-Type':'text/plain'
+                    }}).then(res=>{
+                    this.tableData=res.body;
+                });
+            },
+            goIn(name,bl)
+            {
+                if(!bl)
+                {
+                    this.pathStr=this.pathStr+name+'/';
+                    this.$axios.postAdvanced(this.$URL.getfileList,{'path':this.pathStr},{
+                        headers:{
+                            'Content-Type':'text/plain'
+                        }}).then(res=>{
+                        this.tableData=res.body;
+                    });
+                }
+            },
+            handleSelectionChange(val)
+            {
+                debugger;
+                let templist=[];
+                for(let item of val)
+                {
+                    if(item.isFile)
+                    templist.push(this.pathStr+item.name);
+                }
+                console.log(templist);
+                this.checkedList=templist;
+            },
+            downloadBatch()
+            {
+                 this.$axios.postAdvanced(this.$URL.userSpaceDown,{
+                     // 传参
+                     'fileList':this.checkedList
+                 },
+                {
+                    headers:{
+                      'Content-Type':'text/plain'
+                    },
+                    //二进制流
+                    responseType: 'blob'
+                }).then(res=>{
+                debugger;
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    let blob = new Blob([res], {
+                        type: 'application/vnd.ms-excel'
+                    });
+                    window.navigator.msSaveOrOpenBlob(blob,
+                        new Date().getTime() + '.zip')
+                } else {
+
+                    let blob = new Blob([res]);
+                    let downloadElement = document.createElement('a');
+                    let href = window.URL.createObjectURL(blob);
+                    downloadElement.href = href;
+                    downloadElement.download = new Date().getTime() + '.zip';
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click();
+                    document.body.removeChild(downloadElement);
+                    window.URL.revokeObjectURL(href);
+                }
+                this.loading=false;
+            }).catch(err=>{
+                debugger;
+                console.log('error');
+                console.log(err.data);
+
+
+            })
+            },
             //换页
             paginationCurrentChange(val){
                 this.currentPage=val
@@ -376,7 +531,9 @@
             }
         },
         components: {
-            spaceList
+            spaceList,
+            userMkdir,
+            userUpload
         },
         mounted () {
             this.tableData=this.selectAll(this)

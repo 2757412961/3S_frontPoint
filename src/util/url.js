@@ -67,6 +67,10 @@ const URL = {
     uploadOnlinetools:"/onlinetools/insert",
     uploadMapservice:"/mapservice/insert",
 
+    userSpaceDown:'/userSpace/download',
+    userSpaceMkdir:'/userSpace/mkdir',
+    userSpaceDelete:'/userSpace/delete',
+    userSpaceUpload:'/userSpace/upload',
     getfileList:'/userSpace/getFileInfoList',
     getpublicdataList:'/geodata/getFileInfoList',
     previewData:function (type) {

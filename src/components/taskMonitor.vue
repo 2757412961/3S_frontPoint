@@ -133,7 +133,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from '../util/axios'
     export default {
         name: "taskMonitor",
         data(){

@@ -60,9 +60,9 @@
                         that.$axios.get(that.$URL.searchUsersByName+that.username).then(
                             function(res){
                                 if (res.code === 200) {
-                                    debugger;
                                     that.id=res.body.id;
-                                    let resetParams = {id: that.id, password: this.$md5(that.ruleForm.newPW)};
+                                    debugger;
+                                    let resetParams = {id: that.id, password: that.$md5(that.ruleForm.newPW)};
                                     that.$axios.post(that.$URL.updateUserInfo, resetParams).then(
                                         function(res) {
                                             if (res.code === 200) {

@@ -59,6 +59,10 @@
                 pathStr:null,
                 fileList:[],
                 dataList:[],
+
+                // 判斷是否是公共数据
+                ispublic:null,
+
             }
         },
         mounted() {},
@@ -98,8 +102,18 @@
                 }
                 else
                 {
+                    // 判斷是否是公共数据
+                    let params = {'path':this.pathStr,'geomIndex':parseInt(this.geomIndex),'offset':1};
+                    if (this.ispublic===true){
+                        params = {
+                            'path':"public:"+this.pathStr,
+                            'geomIndex':parseInt(this.geomIndex),
+                            'offset':1
+                        };
+                    }
+
                     debugger;
-                    this.$axios.postAdvanced(this.$URL.previewData('map'),{'path':this.pathStr,'geomIndex':parseInt(this.geomIndex),'offset':1},{
+                    this.$axios.postAdvanced(this.$URL.previewData('map'),params,{
                         headers:{
                             'Content-Type':'text/plain'
                         }
